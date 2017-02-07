@@ -1,0 +1,17 @@
+name: test
+description: Utilities used in testing Open DICOMweb packages.
+version: 0.1.0
+authors:
+  - Jim Philbin <jfphilbin@gmail.com>
+
+homepage: https://github.com/OpenDICOMweb/test
+
+environment:
+  sdk: ^1.0.0
+
+dependencies:
+
+dev_dependencies:
+  benchmark_harness: ^1.0.4
+  grinder: ^0.8.0
+  test: ^0.12.0
