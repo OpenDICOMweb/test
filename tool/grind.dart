@@ -1,52 +1,67 @@
 // Copyright (c) 2016, Open DICOMweb Project. All rights reserved.
 // Use of this source code is governed by the open source license
 // that can be found in the LICENSE file.
-// Original author: Jim Philbin <jfphilbin@gmail.edu> - 
+// Original author: Jim Philbin <jfphilbin@gmail.edu> -
 // See the AUTHORS file for other contributors.
 
-// Copyright 2015 Google. All rights reserved. Use of this source code is
-// governed by a BSD-style license that can be found in the LICENSE file.
+import 'dart:async';
+import 'dart:io';
 
 import 'package:grinder/grinder.dart';
 
-import 'grind_core.dart';
+/// The dartdoc [Directory].
+Directory dartDocDir = new Directory('doc');
+Directory apiDocDir = new Directory('doc/api');
 
-main(args) => grind(args);
-
-// Uncomment if needed
-/* @Task('Initializing...')
-init() {
-  log("Initializing stuff...");
-}
-*/
+Future main(args) => grind(args);
 
 @DefaultTask('Running Default Tasks...')
 myDefault() {
+  log("Running Defaults...");
   test();
-  testformat();
+  format();
 }
+
 @Task('Testing Dart...')
 test() {
   new PubApp.local('test').run([]);
 }
 
-
 @Task('Cleaning...')
 clean() {
   log("Cleaning...");
   delete(buildDir);
-  delete(dartDocDir);
+  delete(apiDocDir);
 }
 
 @Task('Dry Run of Formating Source...')
 testformat() {
   log("Formatting Source...");
-  DartFmt.dryRun('lib', lineLength: 100);
+  log("Test Formatting bin/...");
+  DartFmt.dryRun('bin', lineLength: 80);
+  log("Test Formatting lib/...");
+  DartFmt.dryRun('lib', lineLength: 80);
+  // log("Test Formatting example/...");
+  // DartFmt.dryRun('example', lineLength: 80);
+  log("Test Formatting test/...");
+  DartFmt.dryRun('test', lineLength: 80);
+  log("Test Formatting tool/...");
+  DartFmt.dryRun('tool', lineLength: 80);
 }
+
 @Task('Formating Source...')
 format() {
   log("Formatting Source...");
-  DartFmt.dryRun('lib', lineLength: 100);
+  log("Formatting bin/...");
+  DartFmt.format('bin', lineLength: 80);
+  log("Formatting lib/...");
+  DartFmt.format('lib', lineLength: 80);
+  // log("Formatting example/...");
+  // DartFmt.format('example', lineLength: 80);
+  log("Formatting test/...");
+  DartFmt.format('test', lineLength: 80);
+  log("Formatting tool/...");
+  DartFmt.format('tool', lineLength: 80);
 }
 
 @Task('DartDoc')
@@ -74,7 +89,6 @@ buildRelease() {
 compile() {
   log("Compiling...");
 }
-
 
 @Task('Testing JavaScript...')
 @Depends(build)
