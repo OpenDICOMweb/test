@@ -7,9 +7,12 @@ authors:
 homepage: https://github.com/OpenDICOMweb/test_tools.git
 
 environment:
-  sdk: ^1.22.0
+  sdk: ^1.21.1
 
 dependencies:
+  common:
+    path: C:/odw/sdk/common-develop
+    version: ^0.5.2
 
 dev_dependencies:
   benchmark_harness: ^1.0.4
