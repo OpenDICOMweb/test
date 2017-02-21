@@ -11,7 +11,7 @@ environment:
 
 dependencies:
   common:
-    path: C:/odw/sdk/common-develop
+    path: C:/odw/sdk/common
     version: ^0.5.2
 
 dev_dependencies:
