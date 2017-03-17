@@ -11,7 +11,7 @@ import 'dart:typed_data';
 //TODO: there should be a better way to do this.
 /// TODO: doc
 class RandomList {
-  static final _rng = new Random(1);
+  static final Random _rng = new Random(1);
   final String name;
   final Type type;
   final int elementSizeInBytes;
