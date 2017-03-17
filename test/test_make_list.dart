@@ -4,7 +4,7 @@
 // Author: Jim Philbin <jfphilbin@gmail.edu>
 // See the AUTHORS file for other contributors.
 
-import 'package:test_tools/test_tools.dart';
+import 'package:test_tools/tools.dart';
 
 void main() {
   print('int8List: ${RandomList.int8(8)}');

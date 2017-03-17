@@ -7,46 +7,44 @@
 import 'dart:math';
 import 'dart:typed_data';
 
-//TODO: move to test repository or common/integer
-//TODO: there should be a better way to do this.
-/// TODO: doc
+//TODO: Merge with common/random/rng.dart
+/// TODO: doc or delete
 class RandomList {
   static final Random _rng = new Random(1);
   final String name;
   final Type type;
-  final int elementSizeInBytes;
   final num max;
 
-  const RandomList(this.name, this.type, this.elementSizeInBytes, this.max);
+  const RandomList(this.name, this.type, this.max);
 
   //TODO: add Type variable T
   static const RandomList int8 =
-      const RandomList("Int8", Int8List, 1, (1 << 8));
+      const RandomList("Int8", Int8List, (1 << 8));
   static const RandomList uint8 =
-      const RandomList("Uint8", Uint8List, 1, (1 << 8));
+      const RandomList("Uint8", Uint8List, (1 << 8));
   static const RandomList int16 =
-      const RandomList("Int16", Int16List, 2, (1 << 16));
+      const RandomList("Int16", Int16List, (1 << 16));
   static const RandomList uint16 =
-      const RandomList("Uint16", Uint16List, 2, (1 << 16));
+      const RandomList("Uint16", Uint16List, (1 << 16));
   static const RandomList int32 =
-      const RandomList("Int32", Int32List, 4, (1 << 32));
+      const RandomList("Int32", Int32List, (1 << 32));
   static const RandomList uint32 =
-      const RandomList("Uint32", Uint32List, 4, (1 << 32));
+      const RandomList("Uint32", Uint32List, (1 << 32));
 
   static const RandomList int64 =
-      const RandomList("Int64", Int64List, 8, (1 << 32));
+      const RandomList("Int64", Int64List, (1 << 32));
   static const RandomList uint64 =
-      const RandomList("Uint64", Uint64List, 8, (1 << 32));
+      const RandomList("Uint64", Uint64List,  (1 << 32));
   static const RandomList float32 =
-      const RandomList("Float32", Float32List, 4, null);
+      const RandomList("Float32", Float32List, null);
   static const RandomList float64 =
-      const RandomList("Float64", Float64List, 4, null);
+      const RandomList("Float64", Float64List, null);
 
   List call(int length) {
     return _makeList(length);
   }
 
-  List _makeList(int length) {
+  List _makeList<E>(int length) {
     List list;
     //log.debug('name: $name, type: $type, max: $max');
     //log.debug('length: $length');
@@ -84,7 +82,7 @@ class RandomList {
     return list;
   }
 
-  List _fill64List(List list) {
+  List _fill64List<E>(List list) {
     for (int i = 0; i < list.length; i++) {
       int sign = (i.isEven) ? -1 : 1;
       int n1 = _rng.nextInt(1 << 32);

@@ -1,10 +1,10 @@
 // Copyright (c) 2016, Open DICOMweb Project. All rights reserved.
 // Use of this source code is governed by the open source license
 // that can be found in the LICENSE file.
-// Author: Sharath chandra  <sharath.ch@mwebware.com>
-// See the AUTHORS file for other contributors.
+// See the AUTHORS file for contributors.
 
 import 'dart:math';
+
 import 'package:common/common.dart';
 
 String randomString(int length,
