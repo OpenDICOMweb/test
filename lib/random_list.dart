@@ -7,45 +7,50 @@
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:common/number.dart';
+
 //TODO: Merge with common/random/rng.dart
 /// TODO: doc or delete
 class RandomList {
   static final Random _rng = new Random(1);
+  /// The name of the RandomList] generator.
   final String name;
+  /// The type of the RandomList] generator.
   final Type type;
+  /// The maximum value that can be generated.
   final num max;
 
   const RandomList(this.name, this.type, this.max);
 
   //TODO: add Type variable T
   static const RandomList int8 =
-      const RandomList("Int8", Int8List, (1 << 8));
+      const RandomList("Int8", Int8List, Int8.maxValue);
   static const RandomList uint8 =
-      const RandomList("Uint8", Uint8List, (1 << 8));
+      const RandomList("Uint8", Uint8List, Uint8.maxValue);
   static const RandomList int16 =
-      const RandomList("Int16", Int16List, (1 << 16));
+      const RandomList("Int16", Int16List, Int16.maxValue);
   static const RandomList uint16 =
-      const RandomList("Uint16", Uint16List, (1 << 16));
+      const RandomList("Uint16", Uint16List, Uint16.maxValue);
   static const RandomList int32 =
-      const RandomList("Int32", Int32List, (1 << 32));
+      const RandomList("Int32", Int32List, Int32.maxValue);
   static const RandomList uint32 =
-      const RandomList("Uint32", Uint32List, (1 << 32));
+      const RandomList("Uint32", Uint32List, Uint32.maxValue);
 
   static const RandomList int64 =
-      const RandomList("Int64", Int64List, (1 << 32));
+      const RandomList("Int64", Int64List, Int64.maxValue);
   static const RandomList uint64 =
-      const RandomList("Uint64", Uint64List,  (1 << 32));
+      const RandomList("Uint64", Uint64List,  Uint64.maxValue);
   static const RandomList float32 =
       const RandomList("Float32", Float32List, null);
   static const RandomList float64 =
       const RandomList("Float64", Float64List, null);
 
-  List call(int length) {
+  List<num> call(int length) {
     return _makeList(length);
   }
 
-  List _makeList<E>(int length) {
-    List list;
+  List<num> _makeList<E>(int length) {
+    List<num> list;
     //log.debug('name: $name, type: $type, max: $max');
     //log.debug('length: $length');
     if (name == "Int8") {
@@ -82,17 +87,17 @@ class RandomList {
     return list;
   }
 
-  List _fill64List<E>(List list) {
+  List<int> _fill64List<E>(List<int> list) {
     for (int i = 0; i < list.length; i++) {
-      int sign = (i.isEven) ? -1 : 1;
+  //    int sign = (i.isEven) ? -1 : 1;
       int n1 = _rng.nextInt(1 << 32);
       int n2 = _rng.nextInt(1 << 32);
-      list[i] = sign * n1 * n2;
+      list[i] = (n1 << 32) + n2;
     }
     return list;
   }
 
-  List _fillFloatList(List list) {
+  List<double> _fillFloatList(List<double> list) {
     for (int i = 0; i < list.length; i++) list[i] = _rng.nextDouble();
     return list;
   }

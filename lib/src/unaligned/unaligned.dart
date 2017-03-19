@@ -4,8 +4,8 @@
 // Original author: Jim Philbin <jfphilbin@gmail.edu> - 
 // See the AUTHORS file for other contributors.
 
-import 'dart:collection';
-import 'dart:typed_data';
+// import 'dart:collection';
+// import 'dart:typed_data';
 
 //TODO: finish
 /// A class used for creating and initializing unaligned TypedData.
