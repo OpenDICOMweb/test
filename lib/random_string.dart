@@ -7,6 +7,9 @@ import 'dart:math';
 
 import 'package:common/common.dart';
 
+typedef String StringGenerator([int min, int max]);
+
+//TODO: doc and remove dead code
 /// Returns a random [String].
 String randomString(int length,
     {bool noLowerCase = true,
@@ -124,10 +127,15 @@ String randomString(int length,
 
 Random rand = new Random();
 
+int getLength(int min, int max) {
+  int n = rand.nextInt(max);
+  while (n < min || n > max);
+  return n;
+}
 
 int nextChar() {
   int c = rand.nextInt(127);
-  while(!isDcmTextChar(c)) c = rand.nextInt(kDelete - 1);
+  while (!isDcmTextChar(c)) c = rand.nextInt(kDelete - 1);
   return c;
 }
 
@@ -147,25 +155,53 @@ CharFilter charPredicate(CharPredicate predicate) => (int index) {
       return char;
     };
 
-/// Returns a DICOM String character (SH, LO, UC)
+/// Returns a DICOM String character (SH, LO, UC).
+/// Visible ASCII characters, except Backslash.
 CharFilter getDcmChar = charPredicate(isDcmChar);
 
 /// Returns a DICOM Text character (ST, LT, UT)
-CharFilter getTextChar = charPredicate(isDcmChar);
+CharFilter getTextChar = charPredicate(isDcmTextChar);
 
 /// Generates DICOM String characters
 /// Visible ASCII characters, except Backslash.
-String generateDcmChar(int length) {
+String generateDcmString(int minLength, int maxLength) {
+  int length = getLength(minLength, maxLength);
   List<int> codeUnits = new List.generate(length, getDcmChar);
   return new String.fromCharCodes(codeUnits);
 }
 
+/// Generates a valid DICOM String for VR.kSH.
+String generateDcmSHString([int min = 0, int max = 16]) =>
+    generateDcmString(min, max);
+
+/// Generates a valid DICOM String for VR.kLO.
+String generateDcmLOString([int min = 0, int max = 64]) =>
+    generateDcmString(min, max);
+
+/// Generates a valid DICOM String for VR.kUC.
+String generateDcmUCString([int min = 0, int max = kMax32BitVFLength]) =>
+    generateDcmString(min, max);
+
 /// Generates DICOM Text characters. All visible ASCII characters
-/// are legal including Backslash.
-String generateTextChar(int length) {
+/// (including Backslash), plus CR, LF, FF, and HT.
+// TODO extend to handle valid ISO1022 escape sequences.
+String generateDcmTextString(int minLength, int maxLength) {
+  int length = getLength(minLength, maxLength);
   List<int> codeUnits = new List.generate(length, getTextChar);
   return new String.fromCharCodes(codeUnits);
 }
+
+/// Generates a valid DICOM String for VR.kSH.
+String generateDcmSTString([int min = 0, int max = 16]) =>
+    generateDcmTextString(min, max);
+
+/// Generates a valid DICOM String for VR.kLO.
+String generateDcmLTString([int min = 0, int max = 64]) =>
+    generateDcmTextString(min, max);
+
+/// Generates a valid DICOM String for VR.kUC.
+String generateDcmUTString([int min = 0, int max = kMax32BitVFLength]) =>
+    generateDcmTextString(min, max);
 
 /*
 /// Generates DICOM Text characters. All visible ASCII characters
@@ -188,7 +224,7 @@ String generateTextChar(int length) {
 
 /// Generates DICOM Code String(CS) characters.
 /// Visible ASCII characters, except Backslash.
-String generateCodeStringChar(int length) {
+String generateDcmCodeString(int length) {
   var rand = new Random();
   int iterations = 0;
   var codeUnits = new List.generate(length, (index) {
@@ -208,7 +244,7 @@ String generateCodeStringChar(int length) {
 
 /// Generates a random Person name with specified number of groups [nGroups],
 /// components [nComponents] and component length [maxComponentLength]
-String generatePersonName(
+String generateDcmPersonName(
     int nGroups, int nComponents, int maxComponentLength) {
   List<String> listGroup = <String>[];
   for (int i = 0; i < nGroups; i++) {

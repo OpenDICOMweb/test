@@ -8,23 +8,24 @@ import 'package:common/logger.dart';
 import 'package:dictionary/string.dart';
 import 'package:test_tools/src/random_string_generator.dart';
 
+/// Logger
 final Logger log = new Logger('rsg_test.dart', watermark: Severity.debug);
 
 void main() {
   RSG rsg = new RSG();
 
-  String s = rsg.dcmString(10);
+  String s = rsg.getSH(5, 10);
   log.debug('dcmString: (${s.length})"$s"');
   bool v = isSHString(s);
   log.debug('isValid dcmString: $v');
-/*
-  s = rsg.dcmTextString(10);
+
+  s = rsg.getLT(10);
   log.debug('dcmTextString: (${s.length})"$s"');
 
-  s = rsg.dcmCodeString(10);
+  s = rsg.getCS(10);
   log.debug('dcmCodeString: (${s.length})"$s"');
 
-  s = rsg.dcmDigitString(10);
+  s = rsg.getIS(10);
   log.debug('dcmDigitString: (${s.length})"$s"');
-*/
+
 }
