@@ -215,11 +215,11 @@ class RSG {
     const String tokens = 'DWMY';
     var tIndex = rng.nextInt(0, 3);
     var count = rng.nextInt(0, 999);
-    return '${tokens[tIndex]}${count.toString().padLeft(3, '0')}';
+    return '${count.toString().padLeft(3, '0')}${tokens[tIndex]}';
   }
 
   /// Generates a valid DICOM String for VR.kCS.
-  String getCS([int minLength = 1]) {
+  String getCS([int minLength = 1, int maxLength = 8]) {
     bool isValid(int c) =>
         isUppercaseChar(c) || isDigitChar(c) || c == kSpace || c == kUnderscore;
 

@@ -224,7 +224,7 @@ String generateTextChar(int length) {
 
 /// Generates DICOM Code String(CS) characters.
 /// Visible ASCII characters, except Backslash.
-String generateDcmCodeString(int length) {
+String generateDcmCSString(int length) {
   var rand = new Random();
   int iterations = 0;
   var codeUnits = new List.generate(length, (index) {

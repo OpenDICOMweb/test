@@ -4,5 +4,6 @@
 // Original author: Jim Philbin <jfphilbin@gmail.edu> - 
 // See the AUTHORS file for other contributors.
 
+export 'package:test_tools/src/random_string_generator.dart';
 export 'package:test_tools/random_list.dart';
 export 'package:test_tools/random_string.dart';
