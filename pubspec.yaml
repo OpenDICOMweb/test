@@ -13,6 +13,9 @@ dependencies:
   common:
     path: C:/odw/sdk/common
     version: ^0.5.4
+  dictionary:
+    path: C:/odw/sdk/dictionary
+    version: ^0.5.4
 
 dev_dependencies:
   benchmark_harness: ^1.0.4

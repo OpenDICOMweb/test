@@ -7,45 +7,70 @@
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:common/number.dart';
+
 //TODO: Merge with common/random/rng.dart
 /// TODO: doc or delete
 class RandomList {
   static final Random _rng = new Random(1);
+  /// The name of the RandomList] generator.
   final String name;
+  /// The type of the RandomList] generator.
   final Type type;
+  /// The minimum value that can be generated.
+  final num min;
+  /// The maximum value that can be generated.
   final num max;
 
-  const RandomList(this.name, this.type, this.max);
+  const RandomList._(this.name, this.type, this.min, this.max);
 
   //TODO: add Type variable T
+  /// A generator for [Int8List]s.
   static const RandomList int8 =
-      const RandomList("Int8", Int8List, (1 << 8));
+      const RandomList._("Int8", Int8List, Int8.minValue, Int8.maxValue);
+
+  /// A generator for [Uint8List]s.
   static const RandomList uint8 =
-      const RandomList("Uint8", Uint8List, (1 << 8));
+      const RandomList._("Uint8", Uint8List, 0, Uint8.maxValue);
+
+  /// A generator for [Int16List]s.
   static const RandomList int16 =
-      const RandomList("Int16", Int16List, (1 << 16));
+      const RandomList._("Int16", Int16List, Int16.minValue, Int16.maxValue);
+
+  /// A generator for [Uint16List]s.
   static const RandomList uint16 =
-      const RandomList("Uint16", Uint16List, (1 << 16));
+      const RandomList._("Uint16", Uint16List, 0, Uint16.maxValue);
+
+  /// A generator for [Int32List]s.
   static const RandomList int32 =
-      const RandomList("Int32", Int32List, (1 << 32));
+      const RandomList._("Int32", Int32List, Int32.minValue, Int32.maxValue);
+
+  /// A generator for [Uint32List]s.
   static const RandomList uint32 =
-      const RandomList("Uint32", Uint32List, (1 << 32));
+      const RandomList._("Uint32", Uint32List, 0, Uint32.maxValue);
 
+  /// A generator for [Int64List]s.
   static const RandomList int64 =
-      const RandomList("Int64", Int64List, (1 << 32));
+      const RandomList._("Int64", Int64List, Int64.minValue, Int64.maxValue);
+
+  /// A generator for [Uint64List]s.
   static const RandomList uint64 =
-      const RandomList("Uint64", Uint64List,  (1 << 32));
+      const RandomList._("Uint64", Uint64List,  0, Uint64.maxValue);
+
+  /// A generator for [Float32List]s.
   static const RandomList float32 =
-      const RandomList("Float32", Float32List, null);
+      const RandomList._("Float32", Float32List, null, null);
+
+  /// A generator for [Float64List]s.
   static const RandomList float64 =
-      const RandomList("Float64", Float64List, null);
+      const RandomList._("Float64", Float64List, null, null);
 
-  List call(int length) {
-    return _makeList(length);
-  }
+  /// Returns a [List<num>] containing [length] values;
+  List<num> call(int length) => _makeList(length);
 
-  List _makeList<E>(int length) {
-    List list;
+
+  List<num> _makeList<E>(int length) {
+    List<num> list;
     //log.debug('name: $name, type: $type, max: $max');
     //log.debug('length: $length');
     if (name == "Int8") {
@@ -82,20 +107,19 @@ class RandomList {
     return list;
   }
 
-  List _fill64List<E>(List list) {
+  List<int> _fill64List<E>(List<int> list) {
     for (int i = 0; i < list.length; i++) {
-      int sign = (i.isEven) ? -1 : 1;
+  //    int sign = (i.isEven) ? -1 : 1;
       int n1 = _rng.nextInt(1 << 32);
       int n2 = _rng.nextInt(1 << 32);
-      list[i] = sign * n1 * n2;
+      list[i] = (n1 << 32) + n2;
     }
     return list;
   }
 
-  List _fillFloatList(List list) {
+  List<double> _fillFloatList(List<double> list) {
     for (int i = 0; i < list.length; i++) list[i] = _rng.nextDouble();
     return list;
   }
-
 
 }
