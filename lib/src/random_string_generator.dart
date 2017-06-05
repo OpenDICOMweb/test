@@ -8,7 +8,6 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:common/common.dart';
-import 'package:dictionary/dictionary.dart';
 
 //Enhancement: if performance needs to be improved us StringBuffer.
 //Enhancement: show that a normal distribution is generated
@@ -277,7 +276,7 @@ class RSG {
       throw new UnimplementedError();
 
   /// Generates a valid DICOM String for VR.kUC.
-  String getUC([int min = 0, int max = kMax32BitVFLength]) =>
+  String getUC([int min = 1, int max = kMax32BitVFLength]) =>
       _dcmString(min, max);
 
   /// Generates a valid DICOM String for VR.kUC.
@@ -506,9 +505,9 @@ class RSG {
   /// Returns a [List<String>] of VR.kUC values;
   List<String> getUCList(
           [int minLLength = 1,
-          int maxLLength = kUndefinedLength - 1,
+          int maxLLength = kMax32BitVFLength,
           int minVLength = 1,
-          int maxVLength = 16]) =>
+          int maxVLength = 1024]) =>
       _getList(getUC, minLLength, maxLLength, minVLength, maxVLength);
 
   /// Returns a [List<String>] of VR.kUR values;
