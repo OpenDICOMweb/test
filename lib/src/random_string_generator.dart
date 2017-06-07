@@ -223,9 +223,9 @@ class RSG {
   String getIS([int minLength = 1, int maxLength = 12]) {
     RangeError.checkValueInInterval(minLength, 0, 12);
     RangeError.checkValueInInterval(maxLength, minLength, 12);
-    int v = rng.nextInt(minLength, maxLength);
-    var s = v.toString();
-    return (s.length < 12 && rng.nextBool) ? '+$s' : s;
+    String s = rng.nextIntString(minLength, maxLength);
+    RangeError.checkValidRange(1, s.length, 12);
+    return s;
   }
 
 
@@ -238,8 +238,21 @@ class RSG {
   /// Generates a valid DICOM String for VR.kSH.
   String getPN([int min = 1, int max = 64]) => _getPNString(min, max);
 
-  String _getPNString(int minLength, int maxLength) =>
-      throw new UnimplementedError();
+  //Urgent: this needs to generate the entire range of PN strings.
+  String _getPNString([int minLength = 1, int maxLength = 64]) {
+    int nParts = rng.getLength(1,  5);
+    int partMax = maxLength ~/ 5;
+    var sList = new List<String>(nParts);
+    for(int i = 0; i < nParts; i++) {
+      int length = rng.getLength(1, partMax);
+      sList[i] = getDcmString(1, partMax);
+    }
+    var s = sList.join('^');
+    log.debug('s.length: ${s.length}');
+    RangeError.checkValidRange(1, s.length, 64);
+    return s;
+  }
+
 
   /// Generates a valid DICOM String for VR.kSH.
   String getSH([int min = 1, int max = 16]) {
@@ -281,10 +294,10 @@ class RSG {
 
   /// Generates a valid DICOM String for VR.kIS.
   String _getIntString([int minLength = 1, int maxLength = 12]) {
-    RangeError.checkValueInInterval(minLength, 1, 12);
-    RangeError.checkValueInInterval(maxLength, minLength, 12);
+    RangeError.checkValueInInterval(minLength, 1, 16);
+    RangeError.checkValueInInterval(maxLength, minLength, 16);
     int limit = math.pow(10, 11);
-    int v = rng.nextInt(-limit, limit);
+    int v = rng.nextInt();
     var s = v.toString();
     RangeError.checkValueInInterval(s.length, 1, 12);
     return s;
@@ -329,7 +342,7 @@ class RSG {
 
   /// Generates a valid DICOM String for VR.kDS in fixed point format.
   /// Generates a valid DICOM String for VR.kDS in exponential format.
-  String getPrecisionDSString([int maxLength = 12]) {
+  String getPrecisionDSString([int maxLength = 11]) {
     int max = (maxLength > 12) ? 12 : maxLength;
     int pLength = _getLength(1, max);
     var v = _nextDouble();
