@@ -263,6 +263,12 @@ class RSG {
       getDcmString(min, max);
 
   /// Generates a valid DICOM String for VR.kUC.
+  String getUI([int min = 6, int max = 64]) {
+
+  }
+
+
+  /// Generates a valid DICOM String for VR.kUC.
   String getUR([int min = 7, int max = kMax32BitVFLength]) =>
       _getURString(min, max);
 
@@ -277,15 +283,11 @@ class RSG {
   String _getIntString([int minLength = 1, int maxLength = 12]) {
     RangeError.checkValueInInterval(minLength, 1, 12);
     RangeError.checkValueInInterval(maxLength, minLength, 12);
-
-    int v;
-    String s;
-
-    do {
-      v = rng.nextUint();
-      s = v.toString();
-    } while (s.length < min || s.length > max);
-    return s = _maybePlusPad(s, !v.isNegative, max);
+    int limit = math.pow(10, 11);
+    int v = rng.nextInt(-limit, limit);
+    var s = v.toString();
+    RangeError.checkValueInInterval(s.length, 1, 12);
+    return s;
   }
 
   /// Generates a valid DICOM String for VR.kDS in fixed point format.
@@ -447,7 +449,7 @@ class RSG {
   /// Returns a [List<String>] of VR.kLT values;
   List<String> getLTList(
           [int minLLength = 1,
-          int maxLLength = defaultMaxListLength,
+          int maxLLength = 1,
           int minVLength = 1,
           int maxVLength = 16]) =>
       _getList(getLT, minLLength, maxLLength, minVLength, maxVLength);
@@ -492,6 +494,14 @@ class RSG {
           int minVLength = 1,
           int maxVLength = 1024]) =>
       _getList(getUC, minLLength, maxLLength, minVLength, maxVLength);
+
+  /// Returns a [List<String>] of VR.kUI values;
+  List<String> getUIList(
+      [int minLLength = 1,
+        int maxLLength = defaultMaxListLength,
+        int minVLength = 1,
+        int maxVLength = 64]) =>
+      _getList(getUI, minLLength, maxLLength, minVLength, maxVLength);
 
   /// Returns a [List<String>] of VR.kUR values;
   List<String> getURList([int minVLength = 1, int maxVLength = 16]) =>
