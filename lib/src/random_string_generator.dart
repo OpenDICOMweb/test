@@ -129,7 +129,7 @@ class RSG {
 
 //  int _digitChar() => _charFilter(isDigitChar, _nextAscii);
 
-  int _getSign() => (rng.nextBool) ? 1 : -1;
+//  int _getSign() => (rng.nextBool) ? 1 : -1;
 
   String _maybePlusPad(String s, bool isPositive, int maxLength) {
     if (s.length == maxLength) return s;
@@ -142,14 +142,13 @@ class RSG {
     return out;
   }
 
-  int _getLength(int minLength, [int maxLength = 16]) {
-    log.debug1('minLength($minLength), maxLength($maxLength)');
-    int max = (maxLength == null) ? 16 : maxLength;
-    if (minLength == max) return minLength;
-    //  print('getLEngth: min($minLength) max($max)');
-    assert(minLength < max);
-    int length = rng.nextInt(minLength, max);
-    assert(length >= minLength && length <= max);
+  int _getLength(int min, [int max]) {
+    // If no max is given, or if min and max have the same value,
+    // then [min] is returned.
+    if (max == null || min == max) return min;
+    assert(min <= max, 'min($min) > max($max)');
+    int length = rng.nextUint(min, max);
+    assert(length >= min && length <= max);
     return length;
   }
 
@@ -160,14 +159,8 @@ class RSG {
     return new String.fromCharCodes(bytes);
   }
 
-  /// Returns a DICOM String character (SH, LO, UC)
-  // int _dcmChar() => _charFilter(_isDcmStringChar, _nextAscii);
-
   /// Returns a [String] conforming to a DICOM String VR (SH, LO, UC).
-/*  String _dcmString(int minLength, int maxLength) =>
-      _getString(_dcmChar, minLength, maxLength);
-  */
-  String _dcmString(int minLength, int maxLength) {
+  String getDcmString([int minLength, int maxLength]) {
     int _getChar() {
       int c = _nextAscii();
       return (c >= kSpace && c < kDelete && c != kBackslash) ? c : _getChar();
@@ -176,11 +169,8 @@ class RSG {
     return _getString(_getChar, minLength, maxLength);
   }
 
-  /// Returns a DICOM Text character (ST, LT, UT)
-  // int _textChar() => _charFilter(_isDcmTextChar, _nextUtf8);
-
   /// Returns a [String] conforming to a DICOM Text VR (ST, LT, UT).
-  String _dcmText(int minLength, int maxLength) {
+  String getDcmText(int minLength, int maxLength) {
     int _getChar() {
       int c = _nextUtf8();
       return (c >= kSpace && c < kDelete) ? c : _getChar();
@@ -188,23 +178,6 @@ class RSG {
 
     return _getString(_getChar, minLength, maxLength);
   }
-
-/*
-  /// Returns a [String] conforming to a DICOM Text VR (ST, LT, UT).
-  String _dcmCodeString(int minLength, int maxLength) {
-    int getChar() {
-      int c = _nextUtf8();
-      return (isUppercaseChar(c) ||
-              isDigitChar(c) ||
-              c == kSpace ||
-              c == kUnderscore)
-          ? c
-          : getChar();
-    }
-
-    return _getString(getChar, minLength, maxLength);
-  }
-*/
 
   /// Generates a valid DICOM String for VR.kAE.
   String getAE([int min = 0, int max = 16]) => getSH(min, max);
@@ -218,7 +191,7 @@ class RSG {
   }
 
   /// Generates a valid DICOM String for VR.kCS.
-  String getCS([int minLength = 1, int maxLength = 8]) {
+  String getCS([int minLength = 1, int maxLength = 16]) {
     bool isValid(int c) =>
         isUppercaseChar(c) || isDigitChar(c) || c == kSpace || c == kUnderscore;
 
@@ -247,14 +220,26 @@ class RSG {
       throw new UnimplementedError();
 
   /// Generates a valid DICOM String for VR.kDT.
-  String getIS([int minLength = 1, int maxLength = 12]) =>
-      _getIntString(minLength, maxLength);
+  String getIS([int minLength = 1, int maxLength = 12]) {
+    RangeError.checkValueInInterval(minLength, 0, 12);
+    RangeError.checkValueInInterval(maxLength, minLength, 12);
+
+  //  assert(minLength >= 0 && minLength <= maxLength);
+  //  assert(maxLength <= minLength && maxLength <= 12);
+   //   int max = (maxLength > 12) ? 12 : maxLength;
+   //   int min = (minLength > maxLength) ? maxLength : minLength;
+    int v = rng.nextUint(minLength, maxLength);
+    v = (rng.nextBool) ? -1 * v : v;
+    var s = v.toString();
+    return (s.length < 12 && rng.nextBool) ? '+$s' : s;
+  }
+
 
   /// Generates a valid DICOM String for VR.kLO.
-  String getLO([int min = 0, int max = 64]) => _dcmString(min, max);
+  String getLO([int min = 1, int max = 64]) => getDcmString(min, max);
 
   /// Generates a valid DICOM String for VR.kLO.
-  String getLT([int min = 0]) => _dcmText(min, 64);
+  String getLT([int min = 1, int max = 10240]) => getDcmText(min, max);
 
   /// Generates a valid DICOM String for VR.kSH.
   String getPN([int min = 1, int max = 64]) => _getPNString(min, max);
@@ -263,10 +248,14 @@ class RSG {
       throw new UnimplementedError();
 
   /// Generates a valid DICOM String for VR.kSH.
-  String getSH([int min = 0, int max = 16]) => _dcmString(min, max);
+  String getSH([int min = 1, int max = 16]) {
+    assert(min >= 1 && min <= 16);
+    assert(max >= 1 && max <= 16);
+    return getDcmString(min, max);
+  }
 
   /// Generates a valid DICOM String for VR.kSH.
-  String getST([int min = 0]) => _dcmText(min, 16);
+  String getST([int min = 1, int max = 1024]) => getDcmText(min, max);
 
   /// Generates a valid DICOM String for VR.kTM.
   String getTM([int minLength = 2, int maxLength = 14]) =>
@@ -277,7 +266,7 @@ class RSG {
 
   /// Generates a valid DICOM String for VR.kUC.
   String getUC([int min = 1, int max = kMax32BitVFLength]) =>
-      _dcmString(min, max);
+      getDcmString(min, max);
 
   /// Generates a valid DICOM String for VR.kUC.
   String getUR([int min = 7, int max = kMax32BitVFLength]) =>
@@ -287,21 +276,20 @@ class RSG {
       throw new UnimplementedError();
 
   /// Generates a valid DICOM String for VR.kUC.
-  String getUT([int min = 0, int max = kMax32BitVFLength]) =>
-      _dcmText(min, max);
+  String getUT([int min = 1, int max = kMax32BitVFLength]) =>
+      getDcmText(min, max);
 
   /// Generates a valid DICOM String for VR.kIS.
   String _getIntString([int minLength = 1, int maxLength = 12]) {
-    int max = (maxLength > 16 ) ? 16 : maxLength;
+    int max = (maxLength > 12) ? 12 : maxLength;
     int min = (minLength > maxLength) ? maxLength : minLength;
     //  print('getIntString: min($min) max($max)');
     int v;
     String s;
 
     do {
-      v = rng.nextInt32;
+      v = rng.nextUint(0, 99999999999);
       s = v.toString();
-
     } while (s.length < min || s.length > max);
     return s = _maybePlusPad(s, !v.isNegative, max);
   }
@@ -329,7 +317,6 @@ class RSG {
     //   return (s.length > 16) ? s.substring(0, 16 - fLength) : s;
   }
 
-
   /// Generates a valid DICOM String for VR.kDS in exponential format.
   String getExpoDSString([int maxLength = 10]) {
     int max = (maxLength > 16) ? 16 : maxLength;
@@ -355,21 +342,12 @@ class RSG {
     return s;
   }
 
-  double _nextDouble() {
-    int sign = (rng.nextBool) ? 1 : -1;
-    double d =  sign * rng.nextDouble;
-    //  print('nextDouble: $d');
-    return d;
-  }
+  double _nextDouble() => ((rng.nextBool) ? 1 : -1) * rng.nextDouble;
 
+  // Returns a decimal [String].
   String getDSString([int minLength = 1, int maxLength = 16]) {
     int max = (maxLength > 16) ? 16 : maxLength;
     int length = _getLength(minLength, max);
-  //  if (length <= 2) return _getIntString(length, length);
-    //  print('****');
-    var sign = _getSign();
-    var v = sign * rng.nextDouble;
-    //  print('v(${v.toString().length}): $v');
     var type = rng.nextUint7 >> 5;
     String s;
     int iLength = _getLength(2, 14);
@@ -391,7 +369,7 @@ class RSG {
       //  print('type3 s(${s.length}: $s');
     }
     //  print('s(${s.length}): $s');
-    return  s;
+    return s;
   }
 
   List<String> _getList(_StringGenerator generate, int minLLength,
@@ -402,13 +380,23 @@ class RSG {
     return v;
   }
 
+  List<String> getDcmStringList(
+          [int minLLength, int maxLLength, int minVLength, int maxVLength]) =>
+      _getList(getDcmString, minLLength, maxLLength, minVLength, maxVLength);
+
+  static const int defaultMaxListLength = 20;
+
   /// Returns a [List<String>] of VR.kAE values;
   List<String> getAEList(
-          [int minLLength = 1,
-          int maxLLength,
-          int minVLength = 1,
-          int maxVLength = 16]) =>
-      _getList(getAE, minLLength, maxLLength, minVLength, maxVLength);
+      [int minLLength = 1,
+      int maxLLength = defaultMaxListLength,
+      int minVLength = 1,
+      int maxVLength = 16]) {
+    //   if (maxVLength > 16) return null;
+    //   assert(minVLength > 0 && minVLength <= 16);
+    //   assert(maxVLength >= minVLength && maxVLength <= 16);
+    return _getList(getAE, minLLength, maxLLength, minVLength, maxVLength);
+  }
 
   /// Returns a [List<String>] of VR.kAS values;
   List<String> getASList([int minVLength = 1, int maxVLength = 16]) =>
@@ -417,7 +405,7 @@ class RSG {
   /// Returns a [List<String>] of VR.kCS values;
   List<String> getCSList(
           [int minLLength = 1,
-          int maxLLength,
+          int maxLLength = defaultMaxListLength,
           int minVLength = 1,
           int maxVLength = 16]) =>
       _getList(getCS, minLLength, maxLLength, minVLength, maxVLength);
@@ -425,7 +413,7 @@ class RSG {
   /// Returns a [List<String>] of VR.kDA values;
   List<String> getDAList(
           [int minLLength = 1,
-          int maxLLength,
+          int maxLLength = defaultMaxListLength,
           int minVLength = 1,
           int maxVLength = 16]) =>
       _getList(getDA, minLLength, maxLLength, minVLength, maxVLength);
@@ -433,7 +421,7 @@ class RSG {
   /// Returns a [List<String>] of VR.kDS values;
   List<String> getDSList(
           [int minLLength = 1,
-          int maxLLength,
+          int maxLLength = defaultMaxListLength,
           int minVLength = 1,
           int maxVLength = 16]) =>
       _getList(getAE, minLLength, maxLLength, minVLength, maxVLength);
@@ -441,7 +429,7 @@ class RSG {
   /// Returns a [List<String>] of VR.kDT values;
   List<String> getDTList(
           [int minLLength = 1,
-          int maxLLength,
+          int maxLLength = defaultMaxListLength,
           int minVLength = 1,
           int maxVLength = 16]) =>
       _getList(getDT, minLLength, maxLLength, minVLength, maxVLength);
@@ -449,15 +437,15 @@ class RSG {
   /// Returns a [List<String>] of VR.kIS values;
   List<String> getISList(
           [int minLLength = 1,
-          int maxLLength,
+          int maxLLength = defaultMaxListLength,
           int minVLength = 1,
-          int maxVLength = 16]) =>
+          int maxVLength = 12]) =>
       _getList(getIS, minLLength, maxLLength, minVLength, maxVLength);
 
   /// Returns a [List<String>] of VR.kLO values;
   List<String> getLOList(
           [int minLLength = 1,
-          int maxLLength,
+          int maxLLength = defaultMaxListLength,
           int minVLength = 1,
           int maxVLength = 16]) =>
       _getList(getLO, minLLength, maxLLength, minVLength, maxVLength);
@@ -465,7 +453,7 @@ class RSG {
   /// Returns a [List<String>] of VR.kLT values;
   List<String> getLTList(
           [int minLLength = 1,
-          int maxLLength,
+          int maxLLength = defaultMaxListLength,
           int minVLength = 1,
           int maxVLength = 16]) =>
       _getList(getLT, minLLength, maxLLength, minVLength, maxVLength);
@@ -473,7 +461,7 @@ class RSG {
   /// Returns a [List<String>] of VR.kPNvalues;
   List<String> getPNList(
           [int minLLength = 1,
-          int maxLLength,
+          int maxLLength = defaultMaxListLength,
           int minVLength = 1,
           int maxVLength = 16]) =>
       _getList(getPN, minLLength, maxLLength, minVLength, maxVLength);
@@ -481,7 +469,7 @@ class RSG {
   /// Returns a [List<String>] of VR.kSH values;
   List<String> getSHList(
           [int minLLength = 1,
-          int maxLLength,
+          int maxLLength = defaultMaxListLength,
           int minVLength = 1,
           int maxVLength = 16]) =>
       _getList(getSH, minLLength, maxLLength, minVLength, maxVLength);
@@ -489,7 +477,7 @@ class RSG {
   /// Returns a [List<String>] of VR.kST values;
   List<String> getSTList(
           [int minLLength = 1,
-          int maxLLength,
+          int maxLLength = defaultMaxListLength,
           int minVLength = 1,
           int maxVLength = 16]) =>
       _getList(getST, minLLength, maxLLength, minVLength, maxVLength);
@@ -497,7 +485,7 @@ class RSG {
   /// Returns a [List<String>] of VR.kTM values;
   List<String> getTMList(
           [int minLLength = 1,
-          int maxLLength,
+          int maxLLength = defaultMaxListLength,
           int minVLength = 1,
           int maxVLength = 16]) =>
       _getList(getTM, minLLength, maxLLength, minVLength, maxVLength);
@@ -505,7 +493,8 @@ class RSG {
   /// Returns a [List<String>] of VR.kUC values;
   List<String> getUCList(
           [int minLLength = 1,
-          int maxLLength = kMax32BitVFLength,
+          //    int maxLLength = kMax32BitVFLength,
+          int maxLLength = defaultMaxListLength,
           int minVLength = 1,
           int maxVLength = 1024]) =>
       _getList(getUC, minLLength, maxLLength, minVLength, maxVLength);
@@ -515,6 +504,7 @@ class RSG {
       _getList(getUR, 1, 1, minVLength, maxVLength);
 
   /// Returns a [List<String>] of VR.kUT values;
-  List<String> getUTList([int minVLength = 1, int maxVLength = 16]) =>
+  //TODO: test with larger max
+  List<String> getUTList([int minVLength = 1, int maxVLength = 10240]) =>
       _getList(getUT, 1, 1, minVLength, maxVLength);
 }

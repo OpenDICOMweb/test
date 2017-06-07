@@ -129,7 +129,7 @@ Random rand = new Random();
 
 int getLength(int min, int max) {
   int n = rand.nextInt(max);
-  while (n < min || n > max);
+  if (n < min || n > max) return getLength(min, max);
   return n;
 }
 
