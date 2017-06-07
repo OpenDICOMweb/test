@@ -79,9 +79,7 @@ void rsgDSTest() {
       for (int i = 0; i < count; i++) {
         var s = (rsg.getPrecisionDSString());
         var len = s.length.toString().padLeft(2, ' ');
-        if (s.length > 16) throw '"$s".length = ${s.length}';
-        if (s.length < 8) _log.debug('*** PDS $len: "$s".length');
-        if (s.length == 16) _log.debug1('*** PDS $len: "$s".length');
+        RangeError.checkValueInInterval(s.length, 1, 16, "String too Long");
         _log.debug1('    PDS $len: "$s"');
         expect(s.length <= 16, true);
         double x = double.parse(s);

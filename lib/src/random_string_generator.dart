@@ -223,13 +223,7 @@ class RSG {
   String getIS([int minLength = 1, int maxLength = 12]) {
     RangeError.checkValueInInterval(minLength, 0, 12);
     RangeError.checkValueInInterval(maxLength, minLength, 12);
-
-  //  assert(minLength >= 0 && minLength <= maxLength);
-  //  assert(maxLength <= minLength && maxLength <= 12);
-   //   int max = (maxLength > 12) ? 12 : maxLength;
-   //   int min = (minLength > maxLength) ? maxLength : minLength;
-    int v = rng.nextUint(minLength, maxLength);
-    v = (rng.nextBool) ? -1 * v : v;
+    int v = rng.nextInt(minLength, maxLength);
     var s = v.toString();
     return (s.length < 12 && rng.nextBool) ? '+$s' : s;
   }
@@ -288,7 +282,7 @@ class RSG {
     String s;
 
     do {
-      v = rng.nextUint(0, 99999999999);
+      v = rng.nextUint();
       s = v.toString();
     } while (s.length < min || s.length > max);
     return s = _maybePlusPad(s, !v.isNegative, max);
@@ -333,8 +327,8 @@ class RSG {
 
   /// Generates a valid DICOM String for VR.kDS in fixed point format.
   /// Generates a valid DICOM String for VR.kDS in exponential format.
-  String getPrecisionDSString([int maxLength = 16]) {
-    int max = (maxLength > 13) ? 13 : maxLength;
+  String getPrecisionDSString([int maxLength = 12]) {
+    int max = (maxLength > 12) ? 12 : maxLength;
     int pLength = _getLength(1, max);
     var v = _nextDouble();
     var s = v.toStringAsPrecision(pLength);
