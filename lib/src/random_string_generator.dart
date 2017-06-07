@@ -275,9 +275,9 @@ class RSG {
 
   /// Generates a valid DICOM String for VR.kIS.
   String _getIntString([int minLength = 1, int maxLength = 12]) {
-    int max = (maxLength > 12) ? 12 : maxLength;
-    int min = (minLength > maxLength) ? maxLength : minLength;
-    //  print('getIntString: min($min) max($max)');
+    RangeError.checkValueInInterval(minLength, 1, 12);
+    RangeError.checkValueInInterval(maxLength, minLength, 12);
+
     int v;
     String s;
 
