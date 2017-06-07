@@ -8,6 +8,7 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:common/common.dart';
+import 'package:dictionary/dictionary.dart';
 
 //Enhancement: if performance needs to be improved us StringBuffer.
 //Enhancement: show that a normal distribution is generated
@@ -21,7 +22,7 @@ typedef int _CharGenerator();
 typedef String _StringGenerator([int min, int max]);
 
 /// Logger
-final Logger log = new Logger('rsg_test.dart', watermark: Severity.info);
+final Logger log = new Logger('rsg_test.dart', watermark: Severity.debug);
 
 /*
 bool _isDcmStringChar(int char) =>
@@ -241,11 +242,10 @@ class RSG {
   //Urgent: this needs to generate the entire range of PN strings.
   String _getPNString([int minLength = 1, int maxLength = 64]) {
     int nParts = rng.getLength(1,  5);
-    int partMax = maxLength ~/ 5;
+    int partMax = 13;
     var sList = new List<String>(nParts);
     for(int i = 0; i < nParts; i++) {
-      int length = rng.getLength(1, partMax);
-      sList[i] = getDcmString(1, partMax);
+      sList[i] = rng.nextAsciiWord(1, partMax);
     }
     var s = sList.join('^');
     log.debug('s.length: ${s.length}');
@@ -264,12 +264,17 @@ class RSG {
   /// Generates a valid DICOM String for VR.kSH.
   String getST([int min = 1, int max = 1024]) => getDcmText(min, max);
 
+  //Urgent TODO:
   /// Generates a valid DICOM String for VR.kTM.
-  String getTM([int minLength = 2, int maxLength = 14]) =>
-      _getTMString(minLength, maxLength);
-
-  String _getTMString(int minLength, int maxLength) =>
-      throw new UnimplementedError();
+  String getTM([int minLength = 2, int maxLength = 14])  {
+    var dt = new DateTime.fromMillisecondsSinceEpoch(rng.nextUint32);
+    var dts = dt.toIso8601String();
+    var dtsDcm = dts.replaceAll(':', '');
+    log.debug('TM: $dts');
+    var ts = dtsDcm.substring(11);
+    log.debug('TM: $ts');
+    return ts;
+  }
 
   /// Generates a valid DICOM String for VR.kUC.
   String getUC([int min = 1, int max = kMax32BitVFLength]) =>
@@ -277,7 +282,9 @@ class RSG {
 
   /// Generates a valid DICOM String for VR.kUC.
   String getUI([int min = 6, int max = 64]) {
-
+    int limit = wkUids.length - 1;
+    int index = rng.getLength(1, limit);
+    return wkUids[index].asString;
   }
 
 
@@ -285,8 +292,14 @@ class RSG {
   String getUR([int min = 7, int max = kMax32BitVFLength]) =>
       _getURString(min, max);
 
-  String _getURString(int minLength, int maxLength) =>
-      throw new UnimplementedError();
+  String _getURString(int minLength, int maxLength) {
+    int length = rng.getLength(1, 5);
+    var parts = new List<String>(length);
+    for(int i = 0; i < length; i++) parts[i] = rng.nextAsciiWord(3, 8);
+    var path = parts.join('/');
+    return (rng.nextBool) ? 'http:/$path' : '$path';
+  }
+
 
   /// Generates a valid DICOM String for VR.kUC.
   String getUT([int min = 1, int max = kMax32BitVFLength]) =>
