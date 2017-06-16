@@ -284,6 +284,7 @@ class RSG {
   String getUI([int min = 6, int max = 64]) {
     int limit = wkUids.length - 1;
     int index = rng.getLength(1, limit);
+    print('getUI index: $index');
     return wkUids[index].asString;
   }
 
@@ -446,7 +447,7 @@ class RSG {
           int maxLLength = defaultMaxListLength,
           int minVLength = 1,
           int maxVLength = 16]) =>
-      _getList(getAE, minLLength, maxLLength, minVLength, maxVLength);
+      _getList(getDSString, minLLength, maxLLength, minVLength, maxVLength);
 
   /// Returns a [List<String>] of VR.kDT values;
   List<String> getDTList(
