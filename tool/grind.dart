@@ -13,29 +13,29 @@ import 'package:grinder/grinder.dart';
 Directory dartDocDir = new Directory('doc');
 Directory apiDocDir = new Directory('doc/api');
 
-Future main(args) => grind(args);
+Future main(dynamic args) => grind(args);
 
 @DefaultTask('Running Default Tasks...')
-myDefault() {
+void myDefault() {
   log("Running Defaults...");
   test();
   format();
 }
 
 @Task('Testing Dart...')
-test() {
+void test() {
   new PubApp.local('test').run([]);
 }
 
 @Task('Cleaning...')
-clean() {
+void clean() {
   log("Cleaning...");
   delete(buildDir);
   delete(apiDocDir);
 }
 
 @Task('Dry Run of Formating Source...')
-testformat() {
+void testformat() {
   log("Formatting Source...");
   log("Test Formatting bin/...");
   DartFmt.dryRun('bin', lineLength: 80);
@@ -50,7 +50,7 @@ testformat() {
 }
 
 @Task('Formating Source...')
-format() {
+void format() {
   log("Formatting Source...");
   log("Formatting bin/...");
   DartFmt.format('bin', lineLength: 80);
@@ -65,20 +65,20 @@ format() {
 }
 
 @Task('DartDoc')
-dartdoc() {
+void dartdoc() {
   log('Generating Documentation...');
   DartDoc.doc();
 }
 
 @Task('Build the project.')
-build() {
+void build() {
   log("Building...");
   Pub.get();
   Pub.build(mode: "debug");
 }
 
 @Task('Building release...')
-buildRelease() {
+void buildRelease() {
   log("Building release...");
   Pub.upgrade();
   Pub.build(mode: "release");
@@ -86,19 +86,19 @@ buildRelease() {
 
 @Task('Compiling...')
 //@Depends(init)
-compile() {
+void compile() {
   log("Compiling...");
 }
 
 @Task('Testing JavaScript...')
 @Depends(build)
-testJavaScript() {
+void testJavaScript() {
   new PubApp.local('test').run([]);
 }
 
 @Task('Deploy...')
 @Depends(clean, format, compile, buildRelease, test, testJavaScript)
-deploy() {
+void deploy() {
   log("Deploying...");
   log('Regenerating Documentationfrom scratch...');
   delete(dartDocDir);
