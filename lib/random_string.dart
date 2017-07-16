@@ -7,6 +7,9 @@ import 'dart:math';
 
 import 'package:common/common.dart';
 
+//TODO: document public members
+
+/// The [Type] of random [StringGenerator]s.
 typedef String StringGenerator([int min, int max]);
 
 //TODO: doc and remove dead code
