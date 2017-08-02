@@ -9,7 +9,7 @@ import 'package:dictionary/string.dart';
 import 'package:test_tools/src/random_string_generator.dart';
 
 /// Logger
-final Logger log = new Logger('rsg_test.dart', watermark: Severity.debug);
+final Logger log = new Logger('rsg_test.dart', Level.debug);
 
 void main() {
   RSG rsg = new RSG();

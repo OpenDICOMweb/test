@@ -22,7 +22,7 @@ typedef int _CharGenerator();
 typedef String _StringGenerator([int min, int max]);
 
 /// Logger
-final Logger log = new Logger('rsg_test.dart', watermark: Severity.debug);
+final Logger log = new Logger('rsg_test.dart', Level.debug);
 
 /*
 bool _isDcmStringChar(int char) =>

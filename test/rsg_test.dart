@@ -8,7 +8,7 @@ import 'package:common/logger.dart';
 import 'package:test/test.dart';
 import 'package:test_tools/src/random_string_generator.dart';
 
-final Logger _log = new Logger('rsg_test.dart', watermark: Severity.info);
+final Logger _log = new Logger('rsg_test.dart', Level.info);
 
 /// The number of random numbers each test is run on.
 int count = 1000;
