@@ -116,6 +116,9 @@ class RSG {
   /// Returns a valid VR.kUC [String].
   String get ucString => getUC();
 
+  /// Returns a valid VR.kUC [String].
+  String get uiString => getUI();
+
   /// Returns a valid VR.kUR [String].
   String get urString => getUR();
 
