@@ -8,7 +8,8 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:common/common.dart';
-import 'package:dictionary/dictionary.dart';
+import 'package:system/system.dart';
+import 'package:uid/uid.dart';
 
 //Enhancement: if performance needs to be improved us StringBuffer.
 //Enhancement: show that a normal distribution is generated
@@ -20,9 +21,6 @@ import 'package:dictionary/dictionary.dart';
 typedef int _CharGenerator();
 
 typedef String _StringGenerator([int min, int max]);
-
-/// Logger
-final Logger log = new Logger('rsg_test.dart', Level.debug);
 
 /*
 bool _isDcmStringChar(int char) =>

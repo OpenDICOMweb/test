@@ -4,11 +4,10 @@
 // Author: Jim Philbin <jfphilbin@gmail.edu> -
 // See the AUTHORS file for other contributors.
 
-import 'package:common/logger.dart';
+import 'package:system/system.dart';
 import 'package:test/test.dart';
 import 'package:test_tools/src/random_string_generator.dart';
 
-final Logger _log = new Logger('rsg_test.dart', Level.info);
 
 /// The number of random numbers each test is run on.
 int count = 1000;
@@ -32,9 +31,9 @@ void rsgISTest() {
     for (int i = 0; i < count; i++) {
       var s = (rsg.isString);
       if (s.length > 12) throw '"$s".length = ${s.length}';
-      if (s.length == 1) _log.debug('***  IS: "$s".length = ${s.length}');
-      if (s.length == 12) _log.debug1('*** IS: "$s".length = ${s.length}');
-      _log.debug1(' IS: ${s.length}: "$s"');
+      if (s.length == 1) log.debug('***  IS: "$s".length = ${s.length}');
+      if (s.length == 12) log.debug1('*** IS: "$s".length = ${s.length}');
+      log.debug1(' IS: ${s.length}: "$s"');
       expect(s.length <= 12, true);
       //TODO: add error handler to int.parse
       int x = int.parse(s);
@@ -52,9 +51,9 @@ void rsgDSTest() {
         var s = (rsg.getFixedDSString(14));
         var len = s.length.toString().padLeft(2, ' ');
         if (s.length > 16) throw '"$s".length = ${s.length}';
-        if (s.length < 8) _log.debug('*** FDS $len: "$s".length');
-        if (s.length > 14) _log.debug('*** FDS $len: "$s".length');
-        _log.debug1('    FDS $len: "$s"');
+        if (s.length < 8) log.debug('*** FDS $len: "$s".length');
+        if (s.length > 14) log.debug('*** FDS $len: "$s".length');
+        log.debug1('    FDS $len: "$s"');
         expect(s.length <= 16, true);
         double x = double.parse(s);
         expect(x is double, true);
@@ -66,9 +65,9 @@ void rsgDSTest() {
         var s = (rsg.getExpoDSString(13));
         var len = s.length.toString().padLeft(2, ' ');
         if (s.length > 16) throw '"$s".length = ${s.length}';
-        if (s.length == 8) _log.debug('*** EDS $len: "$s".length');
-        if (s.length == 16) _log.debug('*** EDS $len: "$s".length');
-        _log.debug1('    EDS $len: "$s"');
+        if (s.length == 8) log.debug('*** EDS $len: "$s".length');
+        if (s.length == 16) log.debug('*** EDS $len: "$s".length');
+        log.debug1('    EDS $len: "$s"');
         expect(s.length <= 16, true);
         double x = double.parse(s);
         expect(x is double, true);
@@ -80,7 +79,7 @@ void rsgDSTest() {
         var s = (rsg.getPrecisionDSString());
         var len = s.length.toString().padLeft(2, ' ');
         RangeError.checkValidRange(1, s.length, 16);
-        _log.debug1('    PDS $len: "$s"');
+        log.debug1('    PDS $len: "$s"');
         expect(s.length <= 16, true);
         double x = double.parse(s);
         expect(x is double, true);
@@ -95,9 +94,9 @@ void rsgDSTest() {
           var len = s.length.toString().padLeft(2, ' ');
           var p = j.toString().padLeft(2, ' ');
           if (s.length > 16) throw '"$s".length = ${s.length}';
-          if (s.length < 8) _log.debug('*** $p PDS $len: "$s".length');
-          if (s.length == 16) _log.debug1('*** $p PDS $len: "$s".length');
-          _log.debug1('   $p PDS $len: "$s"');
+          if (s.length < 8) log.debug('*** $p PDS $len: "$s".length');
+          if (s.length == 16) log.debug1('*** $p PDS $len: "$s".length');
+          log.debug1('   $p PDS $len: "$s"');
           expect(s.length <= 16, true);
           double x = double.parse(s);
           expect(x is double, true);
@@ -109,9 +108,9 @@ void rsgDSTest() {
       for (int i = 0; i < count; i++) {
         var s = (rsg.getDSString());
         if (s.length > 16) throw '"$s".length = ${s.length}';
-        if (s.length < 5) _log.debug('*** RDS: "$s".length = ${s.length}');
-        if (s.length == 16) _log.debug1('*** RDS: "$s".length = ${s.length}');
-        _log.debug1('    RDS: ${s.length}: "$s"');
+        if (s.length < 5) log.debug('*** RDS: "$s".length = ${s.length}');
+        if (s.length == 16) log.debug1('*** RDS: "$s".length = ${s.length}');
+        log.debug1('    RDS: ${s.length}: "$s"');
         expect(s.length <= 16, true);
         double x = double.parse(s);
         expect(x is double, true);

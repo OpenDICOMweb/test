@@ -5,7 +5,7 @@
 // See the AUTHORS file for other contributors.
 
 import 'package:common/logger.dart';
-import 'package:dictionary/string.dart';
+import 'package:string/string.dart';
 import 'package:test_tools/src/random_string_generator.dart';
 
 /// Logger
