@@ -1,36 +1,41 @@
-# Created by https://www.gitignore.io/api/webstorm,dart,windows
 
-### WebStorm ###
-# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and Webstorm
-# Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
+## Dart Language Stuff
+# ==========================
+# See https://www.dartlang.org/tools/private-files.html
 
+# Files and directories created by pub and dart2js:
+.buildlog
+.packages
+.project
+.pub/
+build/
+packages/
+pubspec.lock
+/out/
+/output/
+logger.log
+
+#Don’t commit the API documentation directory created by dartdoc:
+doc/api/
+
+# Avoid committing generated JavaScript files:
+*.dart.js
+*.info.json
+*.js             .
+*.js_
+*.js.deps
+*.js.map
+*.part.js
+*.info.json
+
+## JetBrains IDE Stuff, e.g. WebStorm
+# ==========================
+# See https://intellij-support.jetbrains.com/hc/en-us/articles/206544839 for details.
+# *** Currently all JetBrains stuff is ignored
 /.idea/
+# Don’t commit files and directories dropped by other development environments.
 *.ipr
 *.iws
-
-# User-specific stuff:
-.idea/tasks.xml
-
-# Sensitive or high-churn files:
-.idea/dataSources.ids
-.idea/dataSources.xml
-.idea/dataSources.local.xml
-.idea/sqlDataSources.xml
-.idea/dynamic.xml
-.idea/uiDesigner.xml
-
-# Gradle:
-.idea/gradle.xml
-.idea/libraries
-
-# Mongo Explorer plugin:
-.idea/mongoSettings.xml
-
-# IntelliJ
-/out/
-
-# mpeltonen/sbt-idea plugin
-.idea_modules/
 
 # JIRA plugin
 atlassian-ide-plugin.xml
@@ -41,44 +46,12 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
-### Dart ###
-# See https://www.dartlang.org/tools/private-files.html
-
-# Files and directories created by pub
-.buildlog
-.packages
-.project
-.pub/
-build/
-**/packages/
-
-# Files created by dart2js
-# (Most Dart developers will use pub build to compile Dart, use/modify these
-#  rules if you intend to use dart2js directly
-#  Convention is to use extension '.dart.js' for Dart compiled to Javascript to
-#  differentiate from explicit Javascript files)
-*.dart.js
-*.part.js
-*.js.deps
-*.js.map
-*.info.json
-
-# Directory created by dartdoc
-doc/api/
-
-# Don't commit pubspec lock file
-# (Library packages only! Remove pattern if developing an application package)
-pubspec.lock
-
-
-### Windows ###
-# Windows image file caches
-Thumbs.db
-ehthumbs.db
-
-# Folder config file
-Desktop.ini
-
+# =========================
+# Operating System Files
+# =========================
+# #Windows OS Files
+# =========================
+#
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
 
@@ -90,4 +63,31 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# =========================
+# Apple (OSX) OS Files
+# =========================
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
 
