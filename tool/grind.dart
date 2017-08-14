@@ -9,6 +9,8 @@ import 'dart:io';
 
 import 'package:grinder/grinder.dart';
 
+//TODO: document public members
+
 /// The dartdoc [Directory].
 Directory dartDocDir = new Directory('doc');
 Directory apiDocDir = new Directory('doc/api');
