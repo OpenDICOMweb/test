@@ -4,12 +4,9 @@
 // Author: Jim Philbin <jfphilbin@gmail.edu> -
 // See the AUTHORS file for other contributors.
 
-import 'package:common/logger.dart';
 import 'package:string/string.dart';
+import 'package:system/system.dart';
 import 'package:test_tools/src/random_string_generator.dart';
-
-/// Logger
-final Logger log = new Logger('rsg_test.dart', Level.debug);
 
 void main() {
   RSG rsg = new RSG();

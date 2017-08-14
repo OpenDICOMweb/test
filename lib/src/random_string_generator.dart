@@ -311,7 +311,7 @@ class RSG {
   String _getIntString([int minLength = 1, int maxLength = 12]) {
     RangeError.checkValueInInterval(minLength, 1, 16);
     RangeError.checkValueInInterval(maxLength, minLength, 16);
-    int limit = math.pow(10, 11);
+//    int limit = math.pow(10, 11);
     int v = rng.nextInt();
     var s = v.toString();
     RangeError.checkValueInInterval(s.length, 1, 12);

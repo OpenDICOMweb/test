@@ -16,11 +16,9 @@ class RandomStringList {
 
   /// The name of the RandomList] generator.
   final String name;
-
-  /// The type of the RandomList] generator.
-//  final R type;
-  /// The maximum value that can be generated.
+  /// The minimum value that can be generated.
   final int min;
+  /// The maximum value that can be generated.
   final int max;
 
   const RandomStringList(this.name, this.min, this.max);

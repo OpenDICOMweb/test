@@ -5,7 +5,8 @@
 
 import 'dart:math';
 
-import 'package:common/common.dart';
+import 'package:string/string.dart';
+import 'package:system/system.dart';
 
 typedef String StringGenerator([int min, int max]);
 
@@ -179,7 +180,7 @@ String generateDcmLOString([int min = 0, int max = 64]) =>
     generateDcmString(min, max);
 
 /// Generates a valid DICOM String for VR.kUC.
-String generateDcmUCString([int min = 0, int max = kMax32BitVFLength]) =>
+String generateDcmUCString([int min = 0, int max = kMaxLongVF]) =>
     generateDcmString(min, max);
 
 /// Generates DICOM Text characters. All visible ASCII characters
@@ -200,7 +201,7 @@ String generateDcmLTString([int min = 0, int max = 64]) =>
     generateDcmTextString(min, max);
 
 /// Generates a valid DICOM String for VR.kUC.
-String generateDcmUTString([int min = 0, int max = kMax32BitVFLength]) =>
+String generateDcmUTString([int min = 0, int max = kMaxLongVF]) =>
     generateDcmTextString(min, max);
 
 /*
