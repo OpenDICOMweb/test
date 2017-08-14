@@ -86,6 +86,8 @@ void rsgDSTest() {
       }
     });
 
+    //Fix: there is a case where rsg.getPrecissionDSSting generates an
+    //     illegal String with 17 characters
     test('increasing DS Precision Test', () {
       var limit = count ~/ 16;
       for (int i = 0; i < limit; i++) {
