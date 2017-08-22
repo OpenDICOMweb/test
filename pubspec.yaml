@@ -1,6 +1,6 @@
 name: test_tools
 description: Utilities used in testing Open DICOMweb packages.
-version: 0.6.0
+version: 0.6.1
 authors:
   - Jim Philbin <jfphilbin@gmail.com>
 
@@ -10,17 +10,23 @@ environment:
   sdk: ^1.24.2
 
 dependencies:
-#TODO: remove dependency on common
-  common:
-    path: C:/odw/sdk/common
-    version: ^0.6.0
+  base:
+    path: C:/odw/sdk/base
+    version: ^0.6.2
+  number:
+    path: C:/odw/sdk/number
+    version: ^0.6.1
   string:
     path: C:/odw/sdk/string
-    version: ^0.6.0
-  system:
-    path: C:/odw/sdk/system
-    version: ^0.6.0
+    version: ^0.6.1
+  uid:
+    path: C:/odw/sdk/uid
+    version: ^0.6.1
+
 dev_dependencies:
   benchmark_harness: ^1.0.4
   grinder: ^0.8.0
+  system:
+    path: C:/odw/sdk/system
+    version: ^0.6.1
   test: ^0.12.0

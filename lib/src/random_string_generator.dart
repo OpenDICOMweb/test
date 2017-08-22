@@ -7,7 +7,8 @@
 import 'dart:math' as math;
 import 'dart:typed_data';
 
-import 'package:common/common.dart';
+import 'package:base/base.dart';
+import 'package:number/number.dart';
 import 'package:system/system.dart';
 import 'package:uid/uid.dart';
 
@@ -69,7 +70,7 @@ class RSG {
   /// [true] if [String]s should be padded to even length.
   final bool shouldPad;
 
-  /// Creates a Random String Generator ([RSG]) using [RNG] from common.
+  /// Creates a Random String Generator ([RSG]) using [RNG] from number.
   RSG([this.seed, this.shouldPad = true]) : rng = new RNG(seed);
 
   /// Returns a valid VR.kAE [String].
@@ -278,7 +279,7 @@ class RSG {
   }
 
   /// Generates a valid DICOM String for VR.kUC.
-  String getUC([int min = 1, int max = kMax32BitVFLength]) =>
+  String getUC([int min = 1, int max = kMaxLongVF]) =>
       getDcmString(min, max);
 
   /// Generates a valid DICOM String for VR.kUC.
@@ -291,7 +292,7 @@ class RSG {
 
 
   /// Generates a valid DICOM String for VR.kUC.
-  String getUR([int min = 7, int max = kMax32BitVFLength]) =>
+  String getUR([int min = 7, int max = kMaxLongVF]) =>
       _getURString(min, max);
 
   String _getURString(int minLength, int maxLength) {
@@ -304,7 +305,7 @@ class RSG {
 
 
   /// Generates a valid DICOM String for VR.kUC.
-  String getUT([int min = 1, int max = kMax32BitVFLength]) =>
+  String getUT([int min = 1, int max = kMaxLongVF]) =>
       getDcmText(min, max);
 
   /// Generates a valid DICOM String for VR.kIS.
@@ -368,7 +369,7 @@ class RSG {
 
   double _nextDouble() => ((rng.nextBool) ? 1 : -1) * rng.nextDouble;
 
-  // Returns a decimal [String].
+  /// Returns a decimal [String].
   String getDSString([int minLength = 1, int maxLength = 16]) {
     int max = (maxLength > 16) ? 16 : maxLength;
     int length = _getLength(minLength, max);
@@ -404,10 +405,12 @@ class RSG {
     return v;
   }
 
+  /// Returns a [List] of DICOM [String]s that satisfy VRs of SH, LO, and UC.
   List<String> getDcmStringList(
           [int minLLength, int maxLLength, int minVLength, int maxVLength]) =>
       _getList(getDcmString, minLLength, maxLLength, minVLength, maxVLength);
 
+  /// The default maximum [List] length, if no length is provided.
   static const int defaultMaxListLength = 20;
 
   /// Returns a [List<String>] of VR.kAE values;

@@ -7,7 +7,7 @@
 import 'dart:math';
 import 'dart:typed_data';
 
-import 'package:common/number.dart';
+import 'package:number/number.dart';
 
 //TODO: Merge with common/random/rng.dart
 /// TODO: doc or delete

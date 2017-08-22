@@ -5,9 +5,11 @@
 
 import 'dart:math';
 
-import 'package:string/string.dart';
+import 'package:base/base.dart';
 import 'package:system/system.dart';
 
+/// The Type of a function that generates [String]s, with length
+/// between [min] and max].
 typedef String StringGenerator([int min, int max]);
 
 //TODO: doc and remove dead code
