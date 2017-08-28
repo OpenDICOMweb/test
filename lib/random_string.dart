@@ -5,7 +5,6 @@
 
 import 'dart:math';
 
-import 'package:base/base.dart';
 import 'package:system/system.dart';
 
 /// The Type of a function that generates [String]s, with length

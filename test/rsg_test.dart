@@ -4,7 +4,7 @@
 // Author: Jim Philbin <jfphilbin@gmail.edu> -
 // See the AUTHORS file for other contributors.
 
-import 'package:system/system.dart';
+import 'package:system/server.dart';
 import 'package:test/test.dart';
 import 'package:test_tools/src/random_string_generator.dart';
 
@@ -20,13 +20,9 @@ RSG rsg = new RSG(seed);
 
 void main() {
 
-  rsgISTest();
-  rsgDSTest();
+  Server.initialize(name: 'rsg_test', level: Level.debug1);
 
-}
-
-/// Test DICOM IS values.
-void rsgISTest() {
+  /// Test DICOM IS values.
   test('Random IS Test', () {
     for (int i = 0; i < count; i++) {
       var s = (rsg.isString);
@@ -40,10 +36,8 @@ void rsgISTest() {
       expect(x is int, true);
     }
   });
-}
 
-/// Test DICOM DS values.
-void rsgDSTest() {
+  /// Test DICOM DS values.
   group('Generate Random Decimal Strings', () {
 
     test('Random DS Fixed Point Test', () {
