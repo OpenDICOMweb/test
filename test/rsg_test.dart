@@ -20,7 +20,7 @@ RSG rsg = new RSG(seed);
 
 void main() {
 
-  Server.initialize(name: 'rsg_test', level: Level.debug1);
+  Server.initialize(name: 'rsg_test', level: Level.info0);
 
   /// Test DICOM IS values.
   test('Random IS Test', () {
@@ -28,8 +28,8 @@ void main() {
       var s = (rsg.isString);
       if (s.length > 12) throw '"$s".length = ${s.length}';
       if (s.length == 1) log.debug('***  IS: "$s".length = ${s.length}');
-      if (s.length == 12) log.debug1('*** IS: "$s".length = ${s.length}');
-      log.debug1(' IS: ${s.length}: "$s"');
+      if (s.length == 12) log.debug('*** IS: "$s".length = ${s.length}');
+      log.debug(' IS: ${s.length}: "$s"');
       expect(s.length <= 12, true);
       //TODO: add error handler to int.parse
       int x = int.parse(s);
@@ -47,7 +47,7 @@ void main() {
         if (s.length > 16) throw '"$s".length = ${s.length}';
         if (s.length < 8) log.debug('*** FDS $len: "$s".length');
         if (s.length > 14) log.debug('*** FDS $len: "$s".length');
-        log.debug1('    FDS $len: "$s"');
+        log.debug('    FDS $len: "$s"');
         expect(s.length <= 16, true);
         double x = double.parse(s);
         expect(x is double, true);
@@ -61,7 +61,7 @@ void main() {
         if (s.length > 16) throw '"$s".length = ${s.length}';
         if (s.length == 8) log.debug('*** EDS $len: "$s".length');
         if (s.length == 16) log.debug('*** EDS $len: "$s".length');
-        log.debug1('    EDS $len: "$s"');
+        log.debug('    EDS $len: "$s"');
         expect(s.length <= 16, true);
         double x = double.parse(s);
         expect(x is double, true);
@@ -73,7 +73,7 @@ void main() {
         var s = (rsg.getPrecisionDSString());
         var len = s.length.toString().padLeft(2, ' ');
         RangeError.checkValidRange(1, s.length, 16);
-        log.debug1('    PDS $len: "$s"');
+        log.debug('    PDS $len: "$s"');
         expect(s.length <= 16, true);
         double x = double.parse(s);
         expect(x is double, true);
@@ -91,8 +91,8 @@ void main() {
           var p = j.toString().padLeft(2, ' ');
           if (s.length > 16) throw '"$s".length = ${s.length}';
           if (s.length < 8) log.debug('*** $p PDS $len: "$s".length');
-          if (s.length == 16) log.debug1('*** $p PDS $len: "$s".length');
-          log.debug1('   $p PDS $len: "$s"');
+          if (s.length == 16) log.debug('*** $p PDS $len: "$s".length');
+          log.debug('   $p PDS $len: "$s"');
           expect(s.length <= 16, true);
           double x = double.parse(s);
           expect(x is double, true);
@@ -105,8 +105,8 @@ void main() {
         var s = (rsg.getDSString());
         if (s.length > 16) throw '"$s".length = ${s.length}';
         if (s.length < 5) log.debug('*** RDS: "$s".length = ${s.length}');
-        if (s.length == 16) log.debug1('*** RDS: "$s".length = ${s.length}');
-        log.debug1('    RDS: ${s.length}: "$s"');
+        if (s.length == 16) log.debug('*** RDS: "$s".length = ${s.length}');
+        log.debug('    RDS: ${s.length}: "$s"');
         expect(s.length <= 16, true);
         double x = double.parse(s);
         expect(x is double, true);
