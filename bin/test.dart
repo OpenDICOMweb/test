@@ -9,11 +9,11 @@ import 'package:system/system.dart';
 import 'package:test_tools/src/random_string_generator.dart';
 
 void main() {
-  RSG rsg = new RSG();
+  final rsg = new RSG();
 
-  String s = rsg.getSH(5, 10);
+  var s = rsg.getSH(5, 10);
   log.debug('dcmString: (${s.length})"$s"');
-  bool v = isSHString(s);
+  final v = isSHString(s);
   log.debug('isValid dcmString: $v');
 
   s = rsg.getLT(10);

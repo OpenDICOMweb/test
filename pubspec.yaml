@@ -1,29 +1,34 @@
 name: test_tools
 description: Utilities used in testing Open DICOMweb packages.
-version: 0.6.1
+version: 0.6.5
 authors:
   - Jim Philbin <jfphilbin@gmail.com>
 
 homepage: https://github.com/OpenDICOMweb/test_tools.git
 
 environment:
-  sdk: ^1.24.2
+  sdk: '>=1.24.2 <2.1.0'
 
 dependencies:
   number:
     path: C:/odw/sdk/number
-    version: ^0.6.1
+    version: ^0.6.5
   string:
     path: C:/odw/sdk/string
-    version: ^0.6.1
+    version: ^0.6.5
   system:
     path: C:/odw/sdk/system
-    version: ^0.6.1
+    version: ^0.6.5
   uid:
     path: C:/odw/sdk/uid
-    version: ^0.6.1
+    version: ^0.6.3
 
 dev_dependencies:
   benchmark_harness: ^1.0.4
+  coverage: ^0.9.3
+  dart_style: ^1.0.8
+  dartdoc: ^0.14.0
   grinder: ^0.8.0
-  test: ^0.12.0
+  test:  ^0.12.24
+
+

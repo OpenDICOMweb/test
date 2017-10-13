@@ -9,7 +9,7 @@
 
 //TODO: finish
 /// A class used for creating and initializing unaligned TypedData.
-/* commented out until implented
+/* commented out until implemented
 class Unaligned<E> implements ListBase, TypedData {
 
   Unaligned.int8(int length)

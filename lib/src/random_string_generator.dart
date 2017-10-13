@@ -70,7 +70,7 @@ class RSG {
   final bool shouldPad;
 
   /// Creates a Random String Generator ([RSG]) using [RNG] from number.
-  RSG([this.seed, this.shouldPad = true]) : rng = new RNG(seed);
+  RSG({this.seed, this.shouldPad = true}) : rng = new RNG(seed);
 
   /// Returns a valid VR.kAE [String].
   String get aeString => shString;
@@ -149,22 +149,22 @@ class RSG {
     // then [min] is returned.
     if (max == null || min == max) return min;
     assert(min <= max, 'min($min) > max($max)');
-    int length = rng.nextUint(min, max);
+    final length = rng.nextUint(min, max);
     assert(length >= min && length <= max);
     return length;
   }
 
   String _getString(_CharGenerator genChar, int minLength, int maxLength) {
-    int length = _getLength(minLength, maxLength);
-    var bytes = new Uint8List(length);
-    for (int i = 0; i < length; i++) bytes[i] = genChar();
+    final length = _getLength(minLength, maxLength);
+    final bytes = new Uint8List(length);
+    for (var i = 0; i < length; i++) bytes[i] = genChar();
     return new String.fromCharCodes(bytes);
   }
 
   /// Returns a [String] conforming to a DICOM String VR (SH, LO, UC).
   String getDcmString([int minLength, int maxLength]) {
     int _getChar() {
-      int c = _nextAscii();
+      final c = _nextAscii();
       return (c >= kSpace && c < kDelete && c != kBackslash) ? c : _getChar();
     }
 
@@ -174,7 +174,7 @@ class RSG {
   /// Returns a [String] conforming to a DICOM Text VR (ST, LT, UT).
   String getDcmText(int minLength, int maxLength) {
     int _getChar() {
-      int c = _nextUtf8();
+      final c = _nextUtf8();
       return (c >= kSpace && c < kDelete) ? c : _getChar();
     }
 
@@ -186,9 +186,9 @@ class RSG {
 
   /// Generates a valid DICOM String for VR.kAS.
   String getAS() {
-    const String tokens = 'DWMY';
-    var tIndex = rng.nextInt(0, 3);
-    var count = rng.nextInt(0, 999);
+    const tokens = 'DWMY';
+    final tIndex = rng.nextInt(0, 3);
+    final count = rng.nextInt(0, 999);
     return '${count.toString().padLeft(3, '0')}${tokens[tIndex]}';
   }
 
@@ -198,7 +198,7 @@ class RSG {
         isUppercaseChar(c) || isDigitChar(c) || c == kSpace || c == kUnderscore;
 
     int getChar() {
-      int c = _nextUtf8();
+      final c = _nextUtf8();
       return (isValid(c)) ? c : getChar();
     }
 
@@ -218,18 +218,16 @@ class RSG {
   String getDT([int minLength = 2, int maxLength = 26]) =>
       _getTimeString(minLength, maxLength);
 
-  String _getTimeString(int minLength, int maxLength) =>
-      throw new UnimplementedError();
+  String _getTimeString(int minLength, int maxLength) => throw new UnimplementedError();
 
   /// Generates a valid DICOM String for VR.kDT.
   String getIS([int minLength = 1, int maxLength = 12]) {
     RangeError.checkValueInInterval(minLength, 0, 12);
     RangeError.checkValueInInterval(maxLength, minLength, 12);
-    String s = rng.nextIntString(minLength, maxLength);
+    final s = rng.nextIntString(minLength, maxLength);
     RangeError.checkValidRange(1, s.length, 12);
     return s;
   }
-
 
   /// Generates a valid DICOM String for VR.kLO.
   String getLO([int min = 1, int max = 64]) => getDcmString(min, max);
@@ -242,18 +240,17 @@ class RSG {
 
   //Urgent: this needs to generate the entire range of PN strings.
   String _getPNString([int minLength = 1, int maxLength = 64]) {
-    int nParts = rng.getLength(1,  5);
-    int partMax = 13;
-    var sList = new List<String>(nParts);
-    for(int i = 0; i < nParts; i++) {
+    final nParts = rng.getLength(1, 5);
+    final partMax = 13;
+    final sList = new List<String>(nParts);
+    for (var i = 0; i < nParts; i++) {
       sList[i] = rng.nextAsciiWord(1, partMax);
     }
-    var s = sList.join('^');
+    final s = sList.join('^');
     log.debug('s.length: ${s.length}');
     RangeError.checkValidRange(1, s.length, 64);
     return s;
   }
-
 
   /// Generates a valid DICOM String for VR.kSH.
   String getSH([int min = 1, int max = 16]) {
@@ -267,73 +264,68 @@ class RSG {
 
   //Urgent TODO:
   /// Generates a valid DICOM String for VR.kTM.
-  String getTM([int minLength = 2, int maxLength = 14])  {
-    var dt = new DateTime.fromMillisecondsSinceEpoch(rng.nextUint32);
-    var dts = dt.toIso8601String();
-    var dtsDcm = dts.replaceAll(':', '');
+  String getTM([int minLength = 2, int maxLength = 14]) {
+    final dt = new DateTime.fromMillisecondsSinceEpoch(rng.nextUint32);
+    final dts = dt.toIso8601String();
+    final dtsDcm = dts.replaceAll(':', '');
     log.debug('TM: $dts');
-    var ts = dtsDcm.substring(11);
+    final ts = dtsDcm.substring(11);
     log.debug('TM: $ts');
     return ts;
   }
 
   /// Generates a valid DICOM String for VR.kUC.
-  String getUC([int min = 1, int max = kMaxLongVF]) =>
-      getDcmString(min, max);
+  String getUC([int min = 1, int max = kMaxLongVF]) => getDcmString(min, max);
 
   /// Generates a valid DICOM String for VR.kUC.
   String getUI([int min = 6, int max = 64]) {
-    int limit = wkUids.length - 1;
-    int index = rng.getLength(1, limit);
+    final limit = wkUids.length - 1;
+    final index = rng.getLength(1, limit);
     print('getUI index: $index');
     return wkUids[index].asString;
   }
 
-
   /// Generates a valid DICOM String for VR.kUC.
-  String getUR([int min = 7, int max = kMaxLongVF]) =>
-      _getURString(min, max);
+  String getUR([int min = 7, int max = kMaxLongVF]) => _getURString(min, max);
 
   String _getURString(int minLength, int maxLength) {
-    int length = rng.getLength(1, 5);
-    var parts = new List<String>(length);
-    for(int i = 0; i < length; i++) parts[i] = rng.nextAsciiWord(3, 8);
-    var path = parts.join('/');
+    final length = rng.getLength(1, 5);
+    final parts = new List<String>(length);
+    for (var i = 0; i < length; i++) parts[i] = rng.nextAsciiWord(3, 8);
+    final path = parts.join('/');
     return (rng.nextBool) ? 'http:/$path' : '$path';
   }
 
-
   /// Generates a valid DICOM String for VR.kUC.
-  String getUT([int min = 1, int max = kMaxLongVF]) =>
-      getDcmText(min, max);
+  String getUT([int min = 1, int max = kMaxLongVF]) => getDcmText(min, max);
 
   /// Generates a valid DICOM String for VR.kIS.
   String _getIntString([int minLength = 1, int maxLength = 12]) {
     RangeError.checkValueInInterval(minLength, 1, 16);
     RangeError.checkValueInInterval(maxLength, minLength, 16);
 //    int limit = math.pow(10, 11);
-    int v = rng.nextInt();
-    var s = v.toString();
+    final v = rng.nextInt();
+    final s = v.toString();
     RangeError.checkValueInInterval(s.length, 1, 12);
     return s;
   }
 
   /// Generates a valid DICOM String for VR.kDS in fixed point format.
   String getFixedDSString([int max = 16]) {
-    int length = _getLength(1, max);
+    final length = _getLength(1, max);
     assert(length >= 1 && length <= max);
-    int iLength = (length ~/ 2);
-    int fLength = length - iLength;
+    final iLength = (length ~/ 2);
+    final fLength = length - iLength;
     assert(iLength + fLength == length);
 //      print('iLength: $iLength, fLength: $fLength, max: $max');
 
-    var v = _nextDouble() * math.pow(10, iLength);
+    final v = _nextDouble() * math.pow(10, iLength);
     //  print('v shifted($iLength): $v');
     var s = v.toStringAsFixed(fLength);
     s = _maybePlusPad(s, !v.isNegative, 16);
     if (s.length > max) {
-      int excess = s.length - max;
-      int trim = (excess > fLength) ? fLength : excess;
+      final excess = s.length - max;
+      final trim = (excess > fLength) ? fLength : excess;
       s = s.substring(0, s.length - trim);
     }
     print('s(${s.length}): $s');
@@ -343,11 +335,11 @@ class RSG {
 
   /// Generates a valid DICOM String for VR.kDS in exponential format.
   String getExpoDSString([int maxLength = 10]) {
-    int max = (maxLength > 16) ? 16 : maxLength;
+    var max = (maxLength > 16) ? 16 : maxLength;
     max = (max > 11) ? 11 : max;
-    int fLength = _getLength(1, max);
+    final fLength = _getLength(1, max);
     assert(fLength >= 1 && fLength <= 11);
-    var v = _nextDouble();
+    final v = _nextDouble();
     var s = v.toStringAsExponential(fLength);
 
     //  print('s(${s.length}): $s');
@@ -358,50 +350,42 @@ class RSG {
   /// Generates a valid DICOM String for VR.kDS in fixed point format.
   /// Generates a valid DICOM String for VR.kDS in exponential format.
   String getPrecisionDSString([int maxLength = 11]) {
-    int max = (maxLength > 12) ? 12 : maxLength;
-    int pLength = _getLength(1, max);
-    var v = _nextDouble();
-    var s = v.toStringAsPrecision(pLength);
-    s = _maybePlusPad(s, !v.isNegative, 16);
-    return s;
+    final max = (maxLength > 12) ? 12 : maxLength;
+    final pLength = _getLength(1, max);
+    final v = _nextDouble();
+    final s = v.toStringAsPrecision(pLength);
+    return _maybePlusPad(s, !v.isNegative, 16);
   }
 
   double _nextDouble() => ((rng.nextBool) ? 1 : -1) * rng.nextDouble;
 
   /// Returns a decimal [String].
   String getDSString([int minLength = 1, int maxLength = 16]) {
-    int max = (maxLength > 16) ? 16 : maxLength;
-    int length = _getLength(minLength, max);
-    var type = rng.nextUint7 >> 5;
+    final max = (maxLength > 16) ? 16 : maxLength;
+    final length = _getLength(minLength, max);
+    final type = rng.nextUint7 >> 5;
     String s;
-    int iLength = _getLength(2, 14);
-    int fLength = _getLength(1, 14 - iLength);
+    final iLength = _getLength(2, 14);
+    final fLength = _getLength(1, 14 - iLength);
 
-    //  print('type: $type');
     if (type == 0) {
       s = getFixedDSString(length);
-      //  print('type0 s(${s.length}: $s');
     } else if (type == 1) {
       s = getExpoDSString(fLength);
-      //  print('type1 s(${s.length}: $s');
     } else if (type == 2) {
       s = getPrecisionDSString(length);
-      //  print('type2 s(${s.length}: $s');
     } else {
-      // (type == 3)
       s = _getIntString(1, 16);
-      //  print('type3 s(${s.length}: $s');
     }
-    //  print('s(${s.length}): $s');
     return s;
   }
 
-  List<String> _getList(_StringGenerator generate, int minLLength,
-      int maxLLength, minVLength, maxVLength) {
-    int length = _getLength(minLLength, maxLLength);
-    var v = new List<String>(length);
-    for (int i = 0; i < length; i++) v[i] = generate(minVLength, maxVLength);
-    return v;
+  List<String> _getList(_StringGenerator generate, int minLLength, int maxLLength,
+      int minVLength, int maxVLength) {
+    final length = _getLength(minLLength, maxLLength);
+    final sList = <String>[];
+    for (var i = 0; i < length; i++) sList[i] = generate(minVLength, maxVLength);
+    return sList;
   }
 
   /// Returns a [List] of DICOM [String]s that satisfy VRs of SH, LO, and UC.
@@ -414,19 +398,14 @@ class RSG {
 
   /// Returns a [List<String>] of VR.kAE values;
   List<String> getAEList(
-      [int minLLength = 1,
-      int maxLLength = defaultMaxListLength,
-      int minVLength = 1,
-      int maxVLength = 16]) {
-    //   if (maxVLength > 16) return null;
-    //   assert(minVLength > 0 && minVLength <= 16);
-    //   assert(maxVLength >= minVLength && maxVLength <= 16);
-    return _getList(getAE, minLLength, maxLLength, minVLength, maxVLength);
-  }
+          [int minLLength = 1,
+          int maxLLength = defaultMaxListLength,
+          int minVLength = 1,
+          int maxVLength = 16]) =>
+      _getList(getAE, minLLength, maxLLength, minVLength, maxVLength);
 
   /// Returns a [List<String>] of VR.kAS values;
-  List<String> getASList([int minVLength = 1, int maxVLength = 16]) =>
-      [getAS()];
+  List<String> getASList([int minVLength = 1, int maxVLength = 16]) => [getAS()];
 
   /// Returns a [List<String>] of VR.kCS values;
   List<String> getCSList(
@@ -527,10 +506,10 @@ class RSG {
 
   /// Returns a [List<String>] of VR.kUI values;
   List<String> getUIList(
-      [int minLLength = 1,
-        int maxLLength = defaultMaxListLength,
-        int minVLength = 1,
-        int maxVLength = 64]) =>
+          [int minLLength = 1,
+          int maxLLength = defaultMaxListLength,
+          int minVLength = 1,
+          int maxVLength = 64]) =>
       _getList(getUI, minLLength, maxLLength, minVLength, maxVLength);
 
   /// Returns a [List<String>] of VR.kUR values;

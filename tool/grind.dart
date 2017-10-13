@@ -13,11 +13,11 @@ import 'package:grinder/grinder.dart';
 Directory dartDocDir = new Directory('doc');
 Directory apiDocDir = new Directory('doc/api');
 
-Future main(dynamic args) => grind(args);
+Future main(List args) => grind(args);
 
 @DefaultTask('Running Default Tasks...')
 void myDefault() {
-  log("Running Defaults...");
+  log('Running Defaults...');
   test();
   format();
 }
@@ -29,38 +29,38 @@ void test() {
 
 @Task('Cleaning...')
 void clean() {
-  log("Cleaning...");
+  log('Cleaning...');
   delete(buildDir);
   delete(apiDocDir);
 }
 
 @Task('Dry Run of Formating Source...')
 void testformat() {
-  log("Formatting Source...");
-  log("Test Formatting bin/...");
+  log('Formatting Source...');
+  log('Test Formatting bin/...');
   DartFmt.dryRun('bin', lineLength: 80);
-  log("Test Formatting lib/...");
+  log('Test Formatting lib/...');
   DartFmt.dryRun('lib', lineLength: 80);
-  // log("Test Formatting example/...");
+  // log('Test Formatting example/...');
   // DartFmt.dryRun('example', lineLength: 80);
-  log("Test Formatting test/...");
+  log('Test Formatting test/...');
   DartFmt.dryRun('test', lineLength: 80);
-  log("Test Formatting tool/...");
+  log('Test Formatting tool/...');
   DartFmt.dryRun('tool', lineLength: 80);
 }
 
 @Task('Formating Source...')
 void format() {
-  log("Formatting Source...");
-  log("Formatting bin/...");
+  log('Formatting Source...');
+  log('Formatting bin/...');
   DartFmt.format('bin', lineLength: 80);
-  log("Formatting lib/...");
+  log('Formatting lib/...');
   DartFmt.format('lib', lineLength: 80);
-  // log("Formatting example/...");
+  // log('Formatting example/...');
   // DartFmt.format('example', lineLength: 80);
-  log("Formatting test/...");
+  log('Formatting test/...');
   DartFmt.format('test', lineLength: 80);
-  log("Formatting tool/...");
+  log('Formatting tool/...');
   DartFmt.format('tool', lineLength: 80);
 }
 
@@ -72,22 +72,22 @@ void dartdoc() {
 
 @Task('Build the project.')
 void build() {
-  log("Building...");
+  log('Building...');
   Pub.get();
-  Pub.build(mode: "debug");
+  Pub.build(mode: 'debug');
 }
 
 @Task('Building release...')
 void buildRelease() {
-  log("Building release...");
+  log('Building release...');
   Pub.upgrade();
-  Pub.build(mode: "release");
+  Pub.build(mode: 'release');
 }
 
 @Task('Compiling...')
 //@Depends(init)
 void compile() {
-  log("Compiling...");
+  log('Compiling...');
 }
 
 @Task('Testing JavaScript...')
@@ -99,7 +99,7 @@ void testJavaScript() {
 @Task('Deploy...')
 @Depends(clean, format, compile, buildRelease, test, testJavaScript)
 void deploy() {
-  log("Deploying...");
+  log('Deploying...');
   log('Regenerating Documentationfrom scratch...');
   delete(dartDocDir);
   DartDoc.doc();
