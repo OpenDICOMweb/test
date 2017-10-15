@@ -151,16 +151,3 @@ int _getRandomSigned(int nBits) {
   return v;
 }
 
-List<int> _fillUnsignedIntList(List<int> list, int nBits) {
-  for (var i = 0; i < list.length; i++) {
-    list[i] = _getRandomUnsigned(nBits);
-  }
-  return list;
-}
-
-List<int> _fillSignedIntList(List<int> list, int nBits) {
-	for (var i = 0; i < list.length; i++) {
-		list[i] = _getRandomSigned(nBits);
-	}
-	return list;
-}

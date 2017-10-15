@@ -382,9 +382,12 @@ class RSG {
 
   List<String> _getList(_StringGenerator generate, int minLLength, int maxLLength,
       int minVLength, int maxVLength) {
+	  print('** min: $minLLength max: $maxLLength');
     final length = _getLength(minLLength, maxLLength);
-    final sList = <String>[];
+    print('** length: $length');
+    final sList = new List<String>(length);
     for (var i = 0; i < length; i++) sList[i] = generate(minVLength, maxVLength);
+    print('** _getList: $sList');
     return sList;
   }
 
