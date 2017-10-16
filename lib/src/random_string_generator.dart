@@ -281,7 +281,6 @@ class RSG {
   String getUI([int min = 6, int max = 64]) {
     final limit = wkUids.length - 1;
     final index = rng.getLength(1, limit);
-    print('getUI index: $index');
     return wkUids[index].asString;
   }
 
@@ -317,10 +316,9 @@ class RSG {
     final iLength = (length ~/ 2);
     final fLength = length - iLength;
     assert(iLength + fLength == length);
-//      print('iLength: $iLength, fLength: $fLength, max: $max');
 
     final v = _nextDouble() * math.pow(10, iLength);
-    //  print('v shifted($iLength): $v');
+
     var s = v.toStringAsFixed(fLength);
     s = _maybePlusPad(s, !v.isNegative, 16);
     if (s.length > max) {
@@ -328,9 +326,7 @@ class RSG {
       final trim = (excess > fLength) ? fLength : excess;
       s = s.substring(0, s.length - trim);
     }
-    print('s(${s.length}): $s');
     return s;
-    //   return (s.length > 16) ? s.substring(0, 16 - fLength) : s;
   }
 
   /// Generates a valid DICOM String for VR.kDS in exponential format.
@@ -341,8 +337,6 @@ class RSG {
     assert(fLength >= 1 && fLength <= 11);
     final v = _nextDouble();
     var s = v.toStringAsExponential(fLength);
-
-    //  print('s(${s.length}): $s');
     if (s.length < 14) s = _maybePlusPad(s, !v.isNegative, 16);
     return s;
   }
@@ -382,12 +376,9 @@ class RSG {
 
   List<String> _getList(_StringGenerator generate, int minLLength, int maxLLength,
       int minVLength, int maxVLength) {
-	  print('** min: $minLLength max: $maxLLength');
     final length = _getLength(minLLength, maxLLength);
-    print('** length: $length');
     final sList = new List<String>(length);
     for (var i = 0; i < length; i++) sList[i] = generate(minVLength, maxVLength);
-    print('** _getList: $sList');
     return sList;
   }
 
@@ -458,10 +449,11 @@ class RSG {
           int maxVLength = 16]) =>
       _getList(getLO, minLLength, maxLLength, minVLength, maxVLength);
 
-  /// Returns a [List<String>] of VR.kLT values;
+  /// Returns a [List<String>] of length 1 containing an VR.kLT values.
+  /// _Note_: The [minLLength] and [maxLLength] are ignored.
   List<String> getLTList(
           [int minLLength = 1,
-          int maxLLength = 1,
+          int maxLLength = defaultMaxListLength,
           int minVLength = 1,
           int maxVLength = 16]) =>
       _getList(getLT, minLLength, maxLLength, minVLength, maxVLength);
@@ -482,12 +474,13 @@ class RSG {
           int maxVLength = 16]) =>
       _getList(getSH, minLLength, maxLLength, minVLength, maxVLength);
 
-  /// Returns a [List<String>] of VR.kST values;
+  /// Returns a [List<String>] of length 1 containing an VR.kST values.
+  /// _Note_: The [minLLength] and [maxLLength] are ignored.
   List<String> getSTList(
           [int minLLength = 1,
           int maxLLength = defaultMaxListLength,
           int minVLength = 1,
-          int maxVLength = 16]) =>
+          int maxVLength = 64]) =>
       _getList(getST, minLLength, maxLLength, minVLength, maxVLength);
 
   /// Returns a [List<String>] of VR.kTM values;

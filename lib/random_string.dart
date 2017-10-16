@@ -161,13 +161,13 @@ String generateDcmString(int minLength, int maxLength) {
 }
 
 /// Generates a valid DICOM String for VR.kSH.
-String generateDcmSHString([int min = 0, int max = 16]) => generateDcmString(min, max);
+String gemerateSHString([int min = 0, int max = 16]) => generateDcmString(min, max);
 
 /// Generates a valid DICOM String for VR.kLO.
-String generateDcmLOString([int min = 0, int max = 64]) => generateDcmString(min, max);
+String gemerateLOString([int min = 0, int max = 64]) => generateDcmString(min, max);
 
 /// Generates a valid DICOM String for VR.kUC.
-String generateDcmUCString([int min = 0, int max = kMaxLongVF]) =>
+String gemerateUCString([int min = 0, int max = kMaxLongVF]) =>
     generateDcmString(min, max);
 
 /// Generates DICOM Text characters. All visible ASCII characters
@@ -180,15 +180,15 @@ String generateDcmTextString(int minLength, int maxLength) {
 }
 
 /// Generates a valid DICOM String for VR.kSH.
-String generateDcmSTString([int min = 0, int max = 16]) =>
+String generateSTString([int min = 0, int max = 16]) =>
     generateDcmTextString(min, max);
 
 /// Generates a valid DICOM String for VR.kLO.
-String generateDcmLTString([int min = 0, int max = 64]) =>
+String generateLTString([int min = 0, int max = 64]) =>
     generateDcmTextString(min, max);
 
 /// Generates a valid DICOM String for VR.kUC.
-String generateDcmUTString([int min = 0, int max = kMaxLongVF]) =>
+String generateUTString([int min = 0, int max = kMaxLongVF]) =>
     generateDcmTextString(min, max);
 
 /*
@@ -212,7 +212,7 @@ String generateTextChar(int length) {
 
 /// Generates DICOM Code String(CS) characters.
 /// Visible ASCII characters, except Backslash.
-String generateDcmCSString(int length) {
+String gemerateCSString(int length) {
   final rand = new Random();
   var iterations = 0;
   final codeUnits = new List.generate(length, (index) {

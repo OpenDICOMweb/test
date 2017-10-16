@@ -21,7 +21,7 @@ dependencies:
     version: ^0.6.5
   uid:
     path: C:/odw/sdk/uid
-    version: ^0.6.3
+    version: ^0.6.5
 
 dev_dependencies:
   benchmark_harness: ^1.0.4
