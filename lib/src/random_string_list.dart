@@ -84,6 +84,7 @@ class RandomStringList {
     } else if (name == 'Float64') {
       return randomFloat64List(length);
     } else {
+      // ignore: only_throw_errors
       throw 'Invalid';
     }
     for (var i = 0; i < length; i++) {

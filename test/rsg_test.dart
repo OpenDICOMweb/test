@@ -26,6 +26,7 @@ void main() {
   test('Random IS Test', () {
     for (var i = 0; i < count; i++) {
       final s = (rsg.isString);
+      // ignore: only_throw_errors
       if (s.length > 12) throw '"$s".length = ${s.length}';
       if (s.length == 1) log.debug('***  IS: "$s".length = ${s.length}');
       if (s.length == 12) log.debug('*** IS: "$s".length = ${s.length}');
@@ -44,6 +45,7 @@ void main() {
       for (var i = 0; i < count; i++) {
 	      final s = (rsg.getFixedDSString(14));
 	      final len = s.length.toString().padLeft(2, ' ');
+        // ignore: only_throw_errors
         if (s.length > 16) throw '"$s".length = ${s.length}';
         if (s.length < 8) log.debug('*** FDS $len: "$s".length');
         if (s.length > 14) log.debug('*** FDS $len: "$s".length');
@@ -58,6 +60,7 @@ void main() {
       for (var i = 0; i < count; i++) {
 	      final s = (rsg.getExpoDSString(13));
 	      final len = s.length.toString().padLeft(2, ' ');
+        // ignore: only_throw_errors
         if (s.length > 16) throw '"$s".length = ${s.length}';
         if (s.length == 8) log.debug('*** EDS $len: "$s".length');
         if (s.length == 16) log.debug('*** EDS $len: "$s".length');
@@ -89,6 +92,7 @@ void main() {
 	        final s = (rsg.getPrecisionDSString(j));
 	        final len = s.length.toString().padLeft(2, ' ');
 	        final p = j.toString().padLeft(2, ' ');
+          // ignore: only_throw_errors
           if (s.length > 16) throw '"$s".length = ${s.length}';
           if (s.length < 8) log.debug('*** $p PDS $len: "$s".length');
           if (s.length == 16) log.debug('*** $p PDS $len: "$s".length');
@@ -103,6 +107,7 @@ void main() {
     test('Random DS String Test', () {
       for (var i = 0; i < count; i++) {
 	      final s = (rsg.getDSString());
+        // ignore: only_throw_errors
         if (s.length > 16) throw '"$s".length = ${s.length}';
         if (s.length < 5) log.debug('*** RDS: "$s".length = ${s.length}');
         if (s.length == 16) log.debug('*** RDS: "$s".length = ${s.length}');

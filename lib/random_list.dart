@@ -100,6 +100,7 @@ class RandomList<T> {
       list = new Float32List(length);
       return _fillFloatList(list);
     } else {
+      // ignore: only_throw_errors
       throw 'Invalid';
     }
     for (var i = 0; i < length; i++) {
@@ -126,9 +127,11 @@ class RandomList<T> {
 final Random _rng = new Random(1);
 const _validNBits = const <int>[2, 4, 8, 16, 32, 64];
 
+// Flush if not used by V0.9.0
 /// Returns a random unsigned integer with a maximum length of [nBits],
 /// which must be a power of 2 between 1 and 6.
 int _getRandomUnsigned(int nBits) {
+  // ignore: only_throw_errors
   if (!_validNBits.contains(nBits)) throw 'Invalid nBits: $nBits';
   final max = pow(2, nBits) - 1;
   final n = _rng.nextInt(max);
@@ -136,9 +139,11 @@ int _getRandomUnsigned(int nBits) {
   return n;
 }
 
+// Flush if not used by V0.9.0
 /// Returns a random signed integer with a maximum length of [nBits],
 /// which must be a power of 2 between 1 and 6.
 int _getRandomSigned(int nBits) {
+  // ignore: only_throw_errors
   if (!_validNBits.contains(nBits)) throw 'Invalid nBits: $nBits';
   final limit = pow(2, nBits - 1);
   final min = -limit;
@@ -150,4 +155,5 @@ int _getRandomSigned(int nBits) {
   assert(v >= min && v <= max);
   return v;
 }
+
 

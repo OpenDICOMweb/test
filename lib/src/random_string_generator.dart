@@ -66,7 +66,7 @@ class RSG {
   /// The Random Number Generator.
   final RNG rng;
   //TODO implement.
-  /// [true] if [String]s should be padded to even length.
+  /// _true_ if [String]s should be padded to even length.
   final bool shouldPad;
 
   /// Creates a Random String Generator ([RSG]) using [RNG] from number.
@@ -76,7 +76,7 @@ class RSG {
   String get aeString => shString;
 
   /// Returns a valid VR.kAS [String].
-  String get asString => getAS();
+  String get asString => getValidAS();
 
   /// Returns a valid VR.kCS [String].
   String get csString => getCS();
@@ -165,7 +165,7 @@ class RSG {
   String getDcmString([int minLength, int maxLength]) {
     int _getChar() {
       final c = _nextAscii();
-      return (c >= kSpace && c < kDelete && c != kBackslash) ? c : _getChar();
+      return ((c >= kSpace && c < kDelete) && c != kBackslash) ? c : _getChar();
     }
 
     return _getString(_getChar, minLength, maxLength);
@@ -185,11 +185,22 @@ class RSG {
   String getAE([int min = 0, int max = 16]) => getSH(min, max);
 
   /// Generates a valid DICOM String for VR.kAS.
-  String getAS() {
+  String getValidAS() {
     const tokens = 'DWMY';
     final tIndex = rng.nextInt(0, 3);
     final count = rng.nextInt(0, 999);
     return '${count.toString().padLeft(3, '0')}${tokens[tIndex]}';
+  }
+
+  /// Generates a valid DICOM String for VR.kAS.
+  String getInvalidAS([int minDays = 1000, int maxDays = 10000]) {
+    String letter;
+    do {
+      final charCode = rng.nextInt(32, 126);
+      letter = new String.fromCharCode(charCode);
+    } while ('DWMY'.contains(letter));
+    final count = rng.nextInt(minDays, maxDays);
+    return '${count.toString()}$letter';
   }
 
   /// Generates a valid DICOM String for VR.kCS.
@@ -281,7 +292,9 @@ class RSG {
   String getUI([int min = 6, int max = 64]) {
     final limit = wkUids.length - 1;
     final index = rng.getLength(1, limit);
-    return wkUids[index].asString;
+    final v = wkUids[index].asString;
+    log.info('wkUid: "$v"');
+    return v;
   }
 
   /// Generates a valid DICOM String for VR.kUC.
@@ -399,7 +412,11 @@ class RSG {
       _getList(getAE, minLLength, maxLLength, minVLength, maxVLength);
 
   /// Returns a [List<String>] of VR.kAS values;
-  List<String> getASList([int minVLength = 1, int maxVLength = 16]) => [getAS()];
+  List<String> getASList(
+          [int minLLength = 1, int maxLLength = 1, int minDays = 0, int maxDays = 999]) =>
+      (minLLength == 1 && maxLLength == 1 && minDays == 0 && maxDays == 999)
+          ? [getValidAS()]
+          : _getList(getInvalidAS, minLLength, maxLLength, minDays, maxDays);
 
   /// Returns a [List<String>] of VR.kCS values;
   List<String> getCSList(
