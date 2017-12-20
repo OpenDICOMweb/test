@@ -8,7 +8,7 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:number/number.dart';
-import 'package:system/system.dart';
+import 'package:system/core.dart';
 import 'package:uid/uid.dart';
 
 //Enhancement: if performance needs to be improved us StringBuffer.
@@ -124,10 +124,10 @@ class RSG {
   String get utString => getUT();
 
   /// Returns an ASCII Code Point.
-  int _nextAscii() => rng.nextUint7;
+//  int _nextAscii() => rng.nextAscii;
 
   /// Returns an UTF-8 Code Unit.
-  int _nextUtf8() => rng.nextUint8;
+//  int _nextUtf8() => rng.nextUtf8;
 
 //  int _digitChar() => _charFilter(isDigitChar, _nextAscii);
 
@@ -144,10 +144,13 @@ class RSG {
     return out;
   }
 
+  // If no max is given, or if min and max have the same value,
+  // then [min] is returned.
   int _getLength(int min, [int max]) {
-    // If no max is given, or if min and max have the same value,
-    // then [min] is returned.
-    if (max == null || min == max) return min;
+    if (max == null || min == max || max < min) return min;
+    RangeError.checkValueInInterval(min, 0, 0xFFFF, 'min');
+    RangeError.checkValueInInterval(max, min, 0xFFFF, 'max');
+
     assert(min <= max, 'min($min) > max($max)');
     final length = rng.nextUint(min, max);
     assert(length >= min && length <= max);
@@ -164,7 +167,7 @@ class RSG {
   /// Returns a [String] conforming to a DICOM String VR (SH, LO, UC).
   String getDcmString([int minLength, int maxLength]) {
     int _getChar() {
-      final c = _nextAscii();
+      final c = rng.nextAscii;
       return ((c >= kSpace && c < kDelete) && c != kBackslash) ? c : _getChar();
     }
 
@@ -172,13 +175,12 @@ class RSG {
   }
 
   /// Returns a [String] conforming to a DICOM Text VR (ST, LT, UT).
-  String getDcmText(int minLength, int maxLength) {
-    int _getChar() {
-      final c = _nextUtf8();
-      return (c >= kSpace && c < kDelete) ? c : _getChar();
-    }
+  String getDcmText(int minLength, int maxLength) =>
+      _getString(_getDcmTextChar, minLength, maxLength);
 
-    return _getString(_getChar, minLength, maxLength);
+  int _getDcmTextChar() {
+    final c = rng.nextUtf8;
+    return (c >= kSpace && c < kDelete) ? c : _getDcmTextChar();
   }
 
   /// Generates a valid DICOM String for VR.kAE.
@@ -196,29 +198,28 @@ class RSG {
   String getInvalidAS([int minDays = 1000, int maxDays = 10000]) {
     String letter;
     do {
-      final charCode = rng.nextUint(32, 126);
+      final charCode = rng.nextAsciiVChar;
       letter = new String.fromCharCode(charCode);
     } while ('DWMY'.contains(letter));
-    final count = rng.nextInt(minDays, maxDays);
+    final count = rng.nextUint(minDays, maxDays);
     return '${count.toString()}$letter';
   }
 
   /// Generates a valid DICOM String for VR.kCS.
-  String getCS([int minLength = 1, int maxLength = 16]) {
-    bool isValid(int c) =>
-        isUppercaseChar(c) || isDigitChar(c) || c == kSpace || c == kUnderscore;
+  String getCS([int minLength = 1, int maxLength = 16]) =>
+      _getString(_getCSChar, minLength, 16);
 
-    int getChar() {
-      final c = _nextUtf8();
-      return (isValid(c)) ? c : getChar();
-    }
-
-    return _getString(getChar, minLength, 16);
+  int _getCSChar() {
+    final c = rng.nextAscii;
+    return (_isValidCSChar(c)) ? c : _getCSChar();
   }
+
+  bool _isValidCSChar(int c) =>
+      isUppercaseChar(c) || isDigitChar(c) || c == kSpace || c == kUnderscore;
 
   /// Generates a valid DICOM String for VR.kDA.
   String getDA([int minLength = 2, int maxLength = 14]) {
-    final dt = new DateTime.fromMillisecondsSinceEpoch(rng.nextUint32);
+    final dt = new DateTime.fromMillisecondsSinceEpoch(rng.nextUint64);
     final dts = dt.toIso8601String();
     final da = dts.substring(0, 10).replaceAll('-', '');
     log.debug('DA: $da');
@@ -233,14 +234,14 @@ class RSG {
 
   /// Generates a valid DICOM String for VR.kDT.
   String getDT([int minLength = 2, int maxLength = 26]) {
-    final dt = new DateTime.fromMillisecondsSinceEpoch(rng.nextUint32);
+    final dt = new DateTime.fromMillisecondsSinceEpoch(rng.nextUint64);
     final dts = dt.toString();
     final dta = dts.replaceAll('-', '').replaceAll(' ', '').replaceAll(':', '');
     log.debug('DT: $dta');
     return dta;
   }
 
-    String _getTimeString(int minLength, int maxLength) => throw new UnimplementedError();
+  String _getTimeString(int minLength, int maxLength) => throw new UnimplementedError();
 
   /// Generates a valid DICOM String for VR.kDT.
   String getIS([int minLength = 1, int maxLength = 12]) {
@@ -287,7 +288,7 @@ class RSG {
   //Urgent TODO:
   /// Generates a valid DICOM String for VR.kTM.
   String getTM([int minLength = 2, int maxLength = 14]) {
-    final dt = new DateTime.fromMillisecondsSinceEpoch(rng.nextUint32);
+    final dt = new DateTime.fromMillisecondsSinceEpoch(rng.nextUint64);
     final dts = dt.toIso8601String();
     final dtsDcm = dts.replaceAll(':', '');
     log.debug('TM: $dts');
@@ -355,11 +356,14 @@ class RSG {
 
   /// Generates a valid DICOM String for VR.kDS in exponential format.
   String getExpoDSString([int maxLength = 10]) {
+    print('maxLength: $maxLength');
     var max = (maxLength > 16) ? 16 : maxLength;
-    max = (max > 11) ? 11 : max;
+    max = (max > 10) ? 10 : max;
     final fLength = _getLength(1, max);
-    assert(fLength >= 1 && fLength <= 11);
+    print('max: $max fLength: $fLength');
+    assert(fLength >= 1 && fLength <= 10);
     final v = _nextDouble();
+    print('v: $v');
     var s = v.toStringAsExponential(fLength);
     if (s.length < 14) s = _maybePlusPad(s, !v.isNegative, 16);
     return s;
@@ -368,7 +372,7 @@ class RSG {
   /// Generates a valid DICOM String for VR.kDS in fixed point format.
   /// Generates a valid DICOM String for VR.kDS in exponential format.
   String getPrecisionDSString([int maxLength = 11]) {
-    final max = (maxLength > 12) ? 12 : maxLength;
+    final max = (maxLength > 11) ? 11 : maxLength;
     final pLength = _getLength(1, max);
     final v = _nextDouble();
     final s = v.toStringAsPrecision(pLength);
@@ -379,12 +383,14 @@ class RSG {
 
   /// Returns a decimal [String].
   String getDSString([int minLength = 1, int maxLength = 16]) {
+    system.level = Level.debug2;
     final max = (maxLength > 16) ? 16 : maxLength;
     final length = _getLength(minLength, max);
-    final type = rng.nextUint7 >> 5;
+    final type = rng.nextUint(0, 2);
+    log.debug2('type: $type');
     String s;
-    final iLength = _getLength(2, 14);
-    final fLength = _getLength(1, 14 - iLength);
+    final iLength = _getLength(2, 13);
+    final fLength = _getLength(1, 13 - iLength);
 
     if (type == 0) {
       s = getFixedDSString(length);

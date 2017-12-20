@@ -58,7 +58,7 @@ void main() {
 
     test('Random DS Exponential Test', () {
       for (var i = 0; i < count; i++) {
-	      final s = (rsg.getExpoDSString(13));
+	      final s = (rsg.getExpoDSString(11));
 	      final len = s.length.toString().padLeft(2, ' ');
         // ignore: only_throw_errors
         if (s.length > 16) throw '"$s".length = ${s.length}';
@@ -105,15 +105,18 @@ void main() {
     });
 
     test('Random DS String Test', () {
+      system.level = Level.debug2;
       for (var i = 0; i < count; i++) {
 	      final s = (rsg.getDSString());
+        log.debug2('    RDS: ${s.length}: "$s"');
         // ignore: only_throw_errors
-        if (s.length > 16) throw '"$s".length = ${s.length}';
-        if (s.length < 5) log.debug('*** RDS: "$s".length = ${s.length}');
-        if (s.length == 16) log.debug('*** RDS: "$s".length = ${s.length}');
-        log.debug('    RDS: ${s.length}: "$s"');
-        expect(s.length <= 16, true);
+        if (s.length > 16 || s.isEmpty) throw '"$s".length = ${s.length}';
+        if (s.isNotEmpty  && s.length <= 16)
+          log.debug('*** RDS: "$s".length = ${s.length}');
+        expect(s.isNotEmpty && s.length <= 16, true);
+        log.debug2('      S: $s');
 	      final x = double.parse(s);
+	      log.debug2('      X: $x');
         expect(x is double, true);
       }
     });
