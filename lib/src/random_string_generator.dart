@@ -185,18 +185,18 @@ class RSG {
   String getAE([int min = 0, int max = 16]) => getSH(min, max);
 
   /// Generates a valid DICOM String for VR.kAS.
-  String getValidAS() {
+  String getValidAS([int minDays = 0, int maxDays = 999]) {
     const tokens = 'DWMY';
-    final tIndex = rng.nextInt(0, 3);
-    final count = rng.nextInt(0, 999);
-    return '${count.toString().padLeft(3, '0')}${tokens[tIndex]}';
+    final tokenIndex = rng.nextUint(0, 3);
+    final count = rng.nextUint(minDays, maxDays);
+    return '${count.toString().padLeft(3, '0')}${tokens[tokenIndex]}';
   }
 
   /// Generates a valid DICOM String for VR.kAS.
   String getInvalidAS([int minDays = 1000, int maxDays = 10000]) {
     String letter;
     do {
-      final charCode = rng.nextInt(32, 126);
+      final charCode = rng.nextUint(32, 126);
       letter = new String.fromCharCode(charCode);
     } while ('DWMY'.contains(letter));
     final count = rng.nextInt(minDays, maxDays);
@@ -217,7 +217,13 @@ class RSG {
   }
 
   /// Generates a valid DICOM String for VR.kDA.
-  String getDA([int minLength = 8, int maxLength = 8]) => _getDateString();
+  String getDA([int minLength = 2, int maxLength = 14]) {
+    final dt = new DateTime.fromMillisecondsSinceEpoch(rng.nextUint32);
+    final dts = dt.toIso8601String();
+    final da = dts.substring(0, 10).replaceAll('-', '');
+    log.debug('DA: $da');
+    return da;
+  }
 
   String _getDateString() => throw new UnimplementedError();
 
@@ -226,10 +232,15 @@ class RSG {
       getDSString(minLength, maxLength);
 
   /// Generates a valid DICOM String for VR.kDT.
-  String getDT([int minLength = 2, int maxLength = 26]) =>
-      _getTimeString(minLength, maxLength);
+  String getDT([int minLength = 2, int maxLength = 26]) {
+    final dt = new DateTime.fromMillisecondsSinceEpoch(rng.nextUint32);
+    final dts = dt.toString();
+    final dta = dts.replaceAll('-', '').replaceAll(' ', '').replaceAll(':', '');
+    log.debug('DT: $dta');
+    return dta;
+  }
 
-  String _getTimeString(int minLength, int maxLength) => throw new UnimplementedError();
+    String _getTimeString(int minLength, int maxLength) => throw new UnimplementedError();
 
   /// Generates a valid DICOM String for VR.kDT.
   String getIS([int minLength = 1, int maxLength = 12]) {
@@ -414,8 +425,8 @@ class RSG {
   /// Returns a [List<String>] of VR.kAS values;
   List<String> getASList(
           [int minLLength = 1, int maxLLength = 1, int minDays = 0, int maxDays = 999]) =>
-      (minLLength == 1 && maxLLength == 1 && minDays == 0 && maxDays == 999)
-          ? [getValidAS()]
+      (minDays >= 0 && maxDays <= 999)
+          ? _getList(getValidAS, minLLength, maxLLength, minDays, maxDays)
           : _getList(getInvalidAS, minLLength, maxLLength, minDays, maxDays);
 
   /// Returns a [List<String>] of VR.kCS values;
