@@ -83,12 +83,12 @@ void main() {
       }
     });
 
-    //Fix: there is a case where rsg.getPrecissionDSSting generates an
+    //Fix: there is a case where rsg.getPrecisionDSSting generates an
     //     illegal String with 17 characters
     test('increasing DS Precision Test', () {
 	    final limit = count ~/ 16;
       for (var i = 0; i < limit; i++) {
-        for (var j = 1; j < 16; j++) {
+        for (var j = 1; j < 10; j++) {
 	        final s = (rsg.getPrecisionDSString(j));
 	        final len = s.length.toString().padLeft(2, ' ');
 	        final p = j.toString().padLeft(2, ' ');

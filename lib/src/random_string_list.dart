@@ -10,7 +10,6 @@ import 'dart:typed_data';
 import 'package:number/number.dart';
 
 //TODO: Merge with common/random/rng.dart
-/// TODO: doc or delete
 class RandomStringList {
   static final Random _rng = new Random(1);
 

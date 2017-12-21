@@ -11,6 +11,8 @@ import 'package:number/number.dart';
 import 'package:system/core.dart';
 import 'package:uid/uid.dart';
 
+// ignore_for_file only_throw_errors
+
 //Enhancement: if performance needs to be improved us StringBuffer.
 //Enhancement: show that a normal distribution is generated
 
@@ -22,42 +24,6 @@ typedef int _CharGenerator();
 
 typedef String _StringGenerator([int min, int max]);
 
-/*
-bool _isDcmStringChar(int char) =>
-    (char >= kSpace && char < kDelete && char != kBackslash);
-*/
-
-/*
-bool _isDcmTextChar(int char) => (char >= kSpace && char < kDelete);
-*/
-
-/*
-bool _isDcmCodeStringChar(int c) =>
-    (isUppercaseChar(c) || isDigitChar(c) || c == kSpace || c == kUnderscore);
-*/
-
-/*
-int _charFilter(_CharPredicate pred, _CharGenerator genChar) {
-  int getChar() {
-    int c = genChar();
-    return (pred(c)) ? c : getChar();
-  }
-
-  return getChar();
-}
-*/
-
-/*
-int _getTextChar(_CharPredicate pred, _CharGenerator genChar) {
-  int getChar() {
-    int c = genChar();
-    return ((c >= kSpace && c < kDelete)) ? c : getChar();
-  }
-
-  return getChar();
-}
-*/
-
 /// Random String Generator for DICOM Strings.
 class RSG {
   /// An [int] that can be used to generate the same values repeatedly.
@@ -65,6 +31,7 @@ class RSG {
 
   /// The Random Number Generator.
   final RNG rng;
+
   //TODO implement.
   /// _true_ if [String]s should be padded to even length.
   final bool shouldPad;
@@ -123,16 +90,6 @@ class RSG {
   /// Returns a valid VR.kUT [String].
   String get utString => getUT();
 
-  /// Returns an ASCII Code Point.
-//  int _nextAscii() => rng.nextAscii;
-
-  /// Returns an UTF-8 Code Unit.
-//  int _nextUtf8() => rng.nextUtf8;
-
-//  int _digitChar() => _charFilter(isDigitChar, _nextAscii);
-
-//  int _getSign() => (rng.nextBool) ? 1 : -1;
-
   String _maybePlusPad(String s, bool isPositive, int maxLength) {
     if (s.length == maxLength) return s;
     var out = s;
@@ -165,13 +122,12 @@ class RSG {
   }
 
   /// Returns a [String] conforming to a DICOM String VR (SH, LO, UC).
-  String getDcmString([int minLength, int maxLength]) {
-    int _getChar() {
-      final c = rng.nextAscii;
-      return ((c >= kSpace && c < kDelete) && c != kBackslash) ? c : _getChar();
-    }
+  String getDcmString([int minLength, int maxLength]) =>
+      _getString(_getDcmStringChar, minLength, maxLength);
 
-    return _getString(_getChar, minLength, maxLength);
+  int _getDcmStringChar() {
+    final c = rng.nextAscii;
+    return ((c >= kSpace && c < kDelete) && c != kBackslash) ? c : _getDcmStringChar();
   }
 
   /// Returns a [String] conforming to a DICOM Text VR (ST, LT, UT).
@@ -218,15 +174,16 @@ class RSG {
       isUppercaseChar(c) || isDigitChar(c) || c == kSpace || c == kUnderscore;
 
   /// Generates a valid DICOM String for VR.kDA.
-  String getDA([int minLength = 2, int maxLength = 14]) {
-    final dt = new DateTime.fromMillisecondsSinceEpoch(rng.nextUint64);
-    final dts = dt.toIso8601String();
-    final da = dts.substring(0, 10).replaceAll('-', '');
-    log.debug('DA: $da');
-    return da;
+  String getDA([int minLength = 8, int maxLength = 8]) {
+    final us = toDateMicroseconds(rng.nextMicrosecond);
+    log.debug('DA : $us');
+    // ignore: only_throw_errors
+    if (!isNotValidDateMicroseconds(us)) throw 'Invalid Date microseconds: $us';
+    final date = microsecondToDateString(us);
+    return date;
   }
 
-  String _getDateString() => throw new UnimplementedError();
+  String getDateString() => microsecondToDateString(rng.nextMicrosecond);
 
   /// Generates a valid DICOM String for VR.kDS.
   String getDS([int minLength = 1, int maxLength = 16]) =>
@@ -234,14 +191,31 @@ class RSG {
 
   /// Generates a valid DICOM String for VR.kDT.
   String getDT([int minLength = 2, int maxLength = 26]) {
-    final dt = new DateTime.fromMillisecondsSinceEpoch(rng.nextUint64);
-    final dts = dt.toString();
-    final dta = dts.replaceAll('-', '').replaceAll(' ', '').replaceAll(':', '');
-    log.debug('DT: $dta');
-    return dta;
+    final us = toValidEpochMicrosecond(rng.nextMicrosecond);
+    log.debug('DT: $us');
+    // ignore: only_throw_errors
+    if (isNotValidEpochMicroseconds(us)) throw 'Invalid Time microseconds: $us';
+    final time = microsecondToTimeString(us);
+    final length = _getDateTimeLength(minLength, time.length);
+    log.debug('TM: "$time" length: $length');
+    final ts = time.substring(0, length);
+    log.debug('TM: "$ts"');
+    return ts;
   }
 
-  String _getTimeString(int minLength, int maxLength) => throw new UnimplementedError();
+  static const _validDateTimeLengths = const <int>[
+    4, 6, 8, 10, 12, 14, 16, 17, 18, 19, 20, 21, 26 // No reformat
+  ];
+
+  int _getDateTimeLength(int minVLength, int maxVlength) {
+    final offset = rng.nextInt(0, _validDateTimeLengths.length - 1);
+    return _validDateTimeLengths[offset];
+  }
+
+  String getTimeString() {
+    final us = rng.nextMicrosecond % kMicrosecondsPerDay;
+    return microsecondToTimeString(us);
+  }
 
   /// Generates a valid DICOM String for VR.kDT.
   String getIS([int minLength = 1, int maxLength = 12]) {
@@ -285,16 +259,25 @@ class RSG {
   /// Generates a valid DICOM String for VR.kSH.
   String getST([int min = 1, int max = 1024]) => getDcmText(min, max);
 
-  //Urgent TODO:
   /// Generates a valid DICOM String for VR.kTM.
-  String getTM([int minLength = 2, int maxLength = 14]) {
-    final dt = new DateTime.fromMillisecondsSinceEpoch(rng.nextUint64);
-    final dts = dt.toIso8601String();
-    final dtsDcm = dts.replaceAll(':', '');
-    log.debug('TM: $dts');
-    final ts = dtsDcm.substring(11);
-    log.debug('TM: $ts');
+  String getTM([int minLength = 2, int maxLength = 13]) {
+    final us = toTimeMicroseconds(rng.nextMicrosecond);
+    log.debug('TM: $us');
+    // ignore: only_throw_errors
+    if (isNotValidTimeMicroseconds(us)) throw 'Invalid Time microseconds: $us';
+    final time = microsecondToTimeString(us);
+    final length = _getTimeLength(minLength, time.length);
+    log.debug('TM: "$time" length: $length');
+    final ts = time.substring(0, length);
+    log.debug('TM: "$ts"');
     return ts;
+  }
+
+  static const _validTimeLengths = const <int>[2, 4, 6, 8, 9, 10, 11, 12, 13];
+
+  int _getTimeLength(int minVLength, int maxVlength) {
+    final offset = rng.nextInt(0, _validTimeLengths.length - 1);
+    return _validTimeLengths[offset];
   }
 
   /// Generates a valid DICOM String for VR.kUC.
@@ -371,8 +354,8 @@ class RSG {
 
   /// Generates a valid DICOM String for VR.kDS in fixed point format.
   /// Generates a valid DICOM String for VR.kDS in exponential format.
-  String getPrecisionDSString([int maxLength = 11]) {
-    final max = (maxLength > 11) ? 11 : maxLength;
+  String getPrecisionDSString([int maxLength = 10]) {
+    final max = (maxLength > 10) ? 10 : maxLength;
     final pLength = _getLength(1, max);
     final v = _nextDouble();
     final s = v.toStringAsPrecision(pLength);
@@ -521,8 +504,8 @@ class RSG {
   List<String> getTMList(
           [int minLLength = 1,
           int maxLLength = defaultMaxListLength,
-          int minVLength = 1,
-          int maxVLength = 16]) =>
+          int minVLength = 2,
+          int maxVLength = 13]) =>
       _getList(getTM, minLLength, maxLLength, minVLength, maxVLength);
 
   /// Returns a [List<String>] of VR.kUC values;
@@ -547,7 +530,6 @@ class RSG {
       _getList(getUR, 1, 1, minVLength, maxVLength);
 
   /// Returns a [List<String>] of VR.kUT values;
-  //TODO: test with larger max
   List<String> getUTList([int minVLength = 1, int maxVLength = 10240]) =>
       _getList(getUT, 1, 1, minVLength, maxVLength);
 }
