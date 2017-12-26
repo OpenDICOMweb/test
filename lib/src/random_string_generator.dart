@@ -175,17 +175,18 @@ class RSG {
 
   /// Generates a valid DICOM String for VR.kDA.
   String getDA([int minLength = 8, int maxLength = 8]) {
-    final us = toDateMicroseconds(rng.nextMicrosecond);
+    final us = toValidEpochMicrosecond(rng.nextMicrosecond);
     log.debug('DA : $us');
+    assert(us>=kMinEpochMicrosecond && us<=kMaxEpochMicrosecond);
     // ignore: only_throw_errors
-    if (!isNotValidDateMicroseconds(us)) throw 'Invalid Date microseconds: $us';
+    if (isNotValidDateMicroseconds(us)) throw 'Invalid Date microseconds: $us';
     final date = microsecondToDateString(us);
     return date;
   }
 
   /// Generates an _invalid_ DICOM String for VR.kDA.
   String getInvalidDA([int minLength = 0, int maxLength = 16]) {
-    //Urgent Sharath: implement
+    //TODO Sharath: implement
   }
 
   String getDateString() => microsecondToDateString(rng.nextMicrosecond);
@@ -210,7 +211,7 @@ class RSG {
 
   /// Generates an _invalid_ DICOM String for VR.kDA.
   String getInvalidDT([int minLength = 0, int maxLength = 64]) {
-    //Urgent Sharath: implement
+    //TODO Sharath: implement
   }
 
   static const _validDateTimeLengths = const <int>[
@@ -245,7 +246,7 @@ class RSG {
   /// Generates a valid DICOM String for VR.kSH.
   String getPN([int min = 1, int max = 64]) => _getPNString(min, max);
 
-  //Urgent: this needs to generate the entire range of PN strings.
+  //TODO: this needs to generate the entire range of PN strings.
   String _getPNString([int minLength = 1, int maxLength = 64]) {
     final nParts = rng.getLength(1, 5);
     final partMax = 13;
@@ -273,8 +274,6 @@ class RSG {
   String getTM([int minLength = 2, int maxLength = 13]) {
     final us = toTimeMicroseconds(rng.nextMicrosecond);
     log.debug('TM: $us');
-    // ignore: only_throw_errors
-    if (isNotValidTimeMicroseconds(us)) throw 'Invalid Time microseconds: $us';
     final time = microsecondToTimeString(us);
     final length = _getTimeLength(minLength, time.length);
     log.debug('TM: "$time" length: $length');
@@ -285,7 +284,7 @@ class RSG {
 
   /// Generates an _invalid_ DICOM String for VR.kTM.
   String getInvalidTM([int minLength = 0, int maxLength = 64]) {
-    //Urgent Sharath: implement
+    //TODO Sharath: implement
   }
 
 
