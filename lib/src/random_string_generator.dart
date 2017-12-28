@@ -196,17 +196,18 @@ class RSG {
       getDSString(minLength, maxLength);
 
   /// Generates a valid DICOM String for VR.kDT.
-  String getDT([int minLength = 2, int maxLength = 26]) {
+  String getDT([int minIndex = 0, int maxIndex = 12]) {
     final us = toValidEpochMicrosecond(rng.nextMicrosecond);
     log.debug('DT: $us');
     // ignore: only_throw_errors
     if (isNotValidEpochMicroseconds(us)) throw 'Invalid Time microseconds: $us';
-    final time = microsecondToTimeString(us);
-    final length = _getDateTimeLength(minLength, time.length);
-    log.debug('TM: "$time" length: $length');
-    final ts = time.substring(0, length);
-    log.debug('TM: "$ts"');
-    return ts;
+    final dt = microsecondToDateTimeString(us);
+    final length = _getDateTimeLengthIndex(minIndex, maxIndex);
+    //final length = _validDateTimeLengths[index];
+    log.debug('DT: "$dt" length: $length');
+    final dts = dt.substring(0, length);
+    log.debug('DTS: "$dts"');
+    return dts;
   }
 
   /// Generates an _invalid_ DICOM String for VR.kDA.
@@ -218,8 +219,10 @@ class RSG {
     4, 6, 8, 10, 12, 14, 16, 17, 18, 19, 20, 21, 26 // No reformat
   ];
 
-  int _getDateTimeLength(int minVLength, int maxVlength) {
-    final offset = rng.nextInt(0, _validDateTimeLengths.length - 1);
+  int _getDateTimeLengthIndex(int minIndex, int maxIndex) {
+    RangeError.checkValueInInterval(minIndex, 0, 12);
+    RangeError.checkValueInInterval(maxIndex, minIndex, 12);
+    final offset = rng.nextInt(minIndex, maxIndex);
     return _validDateTimeLengths[offset];
   }
 
@@ -469,9 +472,9 @@ class RSG {
   List<String> getDTList(
           [int minLLength = 1,
           int maxLLength = defaultMaxListLength,
-          int minVLength = 1,
-          int maxVLength = 16]) =>
-      _getList(getDT, minLLength, maxLLength, minVLength, maxVLength);
+          int minIndex = 0,
+          int maxIndex = 12]) =>
+      _getList(getDT, minLLength, maxLLength, minIndex, maxIndex);
 
   /// Returns a [List<String>] of _invalid_ VR.kDT values;
   List<String> getInvalidDTList(
