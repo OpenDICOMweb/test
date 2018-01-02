@@ -357,14 +357,14 @@ class RSG {
 
   /// Generates a valid DICOM String for VR.kDS in exponential format.
   String getExpoDSString([int maxLength = 10]) {
-    print('maxLength: $maxLength');
+    log.debug('maxLength: $maxLength');
     var max = (maxLength > 16) ? 16 : maxLength;
     max = (max > 10) ? 10 : max;
     final fLength = _getLength(1, max);
-    print('max: $max fLength: $fLength');
+    log.debug('max: $max fLength: $fLength');
     assert(fLength >= 1 && fLength <= 10);
     final v = _nextDouble();
-    print('v: $v');
+    log.debug('v: $v');
     var s = v.toStringAsExponential(fLength);
     if (s.length < 14) s = _maybePlusPad(s, !v.isNegative, 16);
     return s;
