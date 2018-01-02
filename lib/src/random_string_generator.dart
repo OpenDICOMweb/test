@@ -247,7 +247,8 @@ class RSG {
   String getLT([int min = 1, int max = 10240]) => getDcmText(min, max);
 
   /// Generates a valid DICOM String for VR.kSH.
-  String getPN([int min = 1, int max = 64]) => _getPNString(min, max);
+  // Note: max is 63 to allow for adding '^' characters.
+  String getPN([int min = 1, int max = 63]) => _getPNString(min, max);
 
   //TODO: this needs to generate the entire range of PN strings.
   String _getPNString([int minLength = 1, int maxLength = 64]) {
