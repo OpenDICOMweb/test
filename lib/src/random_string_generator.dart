@@ -143,10 +143,12 @@ class RSG {
   String getAE([int min = 0, int max = 16]) => getSH(min, max);
 
   /// Generates a valid DICOM String for VR.kAS.
+  /// Note: A count == 0 can only be in Days
   String getValidAS([int minDays = 0, int maxDays = 999]) {
     const tokens = 'DWMY';
-    final tokenIndex = rng.nextUint(0, 3);
+    var tokenIndex = rng.nextUint(0, 3);
     final count = rng.nextUint(minDays, maxDays);
+    if (count == 0) tokenIndex = 0;
     return '${count.toString().padLeft(3, '0')}${tokens[tokenIndex]}';
   }
 
