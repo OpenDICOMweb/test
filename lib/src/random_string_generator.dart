@@ -8,7 +8,6 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:system/core.dart';
-import 'package:uid/uid.dart';
 
 // ignore_for_file only_throw_errors
 
