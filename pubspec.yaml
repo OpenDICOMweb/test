@@ -13,8 +13,8 @@ dependencies:
   system:
     path: C:/odw/sdk/system
     version: ^0.6.5
-  uid:
-    path: C:/odw/sdk/uid
+  number:
+    path: C:/odw/sdk/number
     version: ^0.6.5
 
 dev_dependencies:
