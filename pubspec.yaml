@@ -13,9 +13,6 @@ dependencies:
   system:
     path: C:/odw/sdk/system
     version: ^0.6.5
-  number:
-    path: C:/odw/sdk/number
-    version: ^0.6.5
 
 dev_dependencies:
   benchmark_harness: ^1.0.4

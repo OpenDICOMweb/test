@@ -7,7 +7,7 @@
 import 'dart:math';
 import 'dart:typed_data';
 
-import 'package:number/number.dart';
+import 'package:system/core.dart';
 
 //TODO: Merge with common/random/rng.dart
 class RandomStringList {
@@ -30,22 +30,22 @@ class RandomStringList {
   static const RandomStringList dcmText = const RandomStringList('dcmText', 1, 100);
 
   static const RandomStringList dcmCodeString =
-      const RandomStringList('dcmCodeString', 1, Int16.maxValue);
+      const RandomStringList('dcmCodeString', 1, Int16Base.kMaxValue);
 
   static const RandomStringList dcmDate =
-      const RandomStringList('dcmDate', 1, Uint16.maxValue);
+      const RandomStringList('dcmDate', 1, Uint16Base.kMaxValue);
 
   static const RandomStringList dcmTime =
-      const RandomStringList('dcmTime', 1, Int32.maxValue);
+      const RandomStringList('dcmTime', 1, Int32Base.kMaxValue);
 
   static const RandomStringList dcmDateTime =
-      const RandomStringList('dcmDateTime', 1, Uint32.maxValue);
+      const RandomStringList('dcmDateTime', 1, Uint32Base.kMaxValue);
 
   static const RandomStringList dcmDecimal =
-      const RandomStringList('dcmDecimal', 1, Int64.maxValue);
+      const RandomStringList('dcmDecimal', 1, Int64Base.kMaxValue);
 
   static const RandomStringList dcmInteger =
-      const RandomStringList('dcmInteger', 1, Uint64.maxValue);
+      const RandomStringList('dcmInteger', 1, Uint64Base.kMaxValue);
 
   static const RandomStringList dcmPersonName =
       const RandomStringList('dcmPersonName', 1, null);

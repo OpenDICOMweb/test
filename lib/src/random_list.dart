@@ -7,7 +7,7 @@
 import 'dart:math';
 import 'dart:typed_data';
 
-import 'package:number/number.dart';
+import 'package:system/core.dart';
 
 //TODO: Merge with common/random/rng.dart
 /// TODO: doc or delete
@@ -29,35 +29,35 @@ class RandomList<T> {
   //TODO: add Type variable T
   /// A generator for [Int8List]s.
   static const RandomList int8 =
-      const RandomList<int>._('Int8', Int8List, Int8.minValue, Int8.maxValue);
+      const RandomList<int>._('Int8', Int8List, Int8Base.kMinValue, Int8Base.kMaxValue);
 
   /// A generator for [Uint8List]s.
   static const RandomList uint8 =
-      const RandomList<int>._('Uint8', Uint8List, 0, Uint8.maxValue);
+      const RandomList<int>._('Uint8', Uint8List, 0, Uint8Base.kMaxValue);
 
   /// A generator for [Int16List]s.
   static const RandomList int16 =
-      const RandomList<int>._('Int16', Int16List, Int16.minValue, Int16.maxValue);
+      const RandomList<int>._('Int16', Int16List, Int16Base.kMinValue, Int16Base.kMaxValue);
 
   /// A generator for [Uint16List]s.
   static const RandomList uint16 =
-      const RandomList<int>._('Uint16', Uint16List, 0, Uint16.maxValue);
+      const RandomList<int>._('Uint16', Uint16List, 0, Uint16Base.kMaxValue);
 
   /// A generator for [Int32List]s.
   static const RandomList int32 =
-      const RandomList<int>._('Int32', Int32List, Int32.minValue, Int32.maxValue);
+      const RandomList<int>._('Int32', Int32List, Int32Base.kMinValue, Int32Base.kMaxValue);
 
   /// A generator for [Uint32List]s.
   static const RandomList uint32 =
-      const RandomList<int>._('Uint32', Uint32List, 0, Uint32.maxValue);
+      const RandomList<int>._('Uint32', Uint32List, 0, Uint32Base.kMaxValue);
 
   /// A generator for [Int64List]s.
   static const RandomList int64 =
-      const RandomList<int>._('Int64', Int64List, Int64.minValue, Int64.maxValue);
+      const RandomList<int>._('Int64', Int64List, Int64Base.kMinValue, Int64Base.kMaxValue);
 
   /// A generator for [Uint64List]s.
   static const RandomList uint64 =
-      const RandomList<int>._('Uint64', Uint64List, 0, Uint64.maxValue);
+      const RandomList<int>._('Uint64', Uint64List, 0, Uint64Base.kMaxValue);
 
   /// A generator for [Float32List]s.
   static const RandomList float32 =

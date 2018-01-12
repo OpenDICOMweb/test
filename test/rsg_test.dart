@@ -6,7 +6,7 @@
 
 import 'package:system/server.dart';
 import 'package:test/test.dart';
-import 'package:test_tools/src/random_string_generator.dart';
+import 'package:test_tools/tools.dart';
 
 
 /// The number of random numbers each test is run on.

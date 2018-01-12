@@ -4,16 +4,15 @@
 // Author: Jim Philbin <jfphilbin@gmail.edu> -
 // See the AUTHORS file for other contributors.
 
-import 'package:string/string.dart';
-import 'package:system/system.dart';
-import 'package:test_tools/src/random_string_generator.dart';
+import 'package:system/core.dart';
+import 'package:test_tools/tools.dart';
 
 void main() {
   final rsg = new RSG();
 
   var s = rsg.getSH(5, 10);
   log.debug('dcmString: (${s.length})"$s"');
-  final v = isSHString(s);
+  final v = SH.isValidValue(s);
   log.debug('isValid dcmString: $v');
 
   s = rsg.getLT(10);
