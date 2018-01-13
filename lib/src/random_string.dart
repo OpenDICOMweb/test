@@ -5,7 +5,7 @@
 
 import 'dart:math';
 
-import 'package:system/core.dart';
+import 'package:core/core.dart';
 
 /// The Type of a function that generates [String]s, with length
 /// between [min] and max].

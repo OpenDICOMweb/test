@@ -7,7 +7,7 @@
 import 'dart:math';
 import 'dart:typed_data';
 
-import 'package:system/core.dart';
+import 'package:core/core.dart';
 
 //TODO: Merge with common/random/rng.dart
 class RandomStringList {
