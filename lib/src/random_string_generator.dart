@@ -177,7 +177,7 @@ class RSG {
   String getDA([int minLength = 8, int maxLength = 8]) {
     final us = toValidEpochMicrosecond(rng.nextMicrosecond);
     log.debug('DA : $us');
-    assert(us>=kMinEpochMicrosecond && us<=kMaxEpochMicrosecond);
+    assert(us >= kMinEpochMicrosecond && us <= kMaxEpochMicrosecond);
     // ignore: only_throw_errors
     if (isNotValidDateMicroseconds(us)) throw 'Invalid Date microseconds: $us';
     final date = microsecondToDateString(us);
@@ -290,7 +290,6 @@ class RSG {
   String getInvalidTM([int minLength = 0, int maxLength = 64]) {
     //TODO Sharath: implement
   }
-
 
   static const _validTimeLengths = const <int>[2, 4, 6, 8, 9, 10, 11, 12, 13];
 
@@ -455,10 +454,10 @@ class RSG {
 
   /// Returns a [List<String>] of _invalid_ VR.kDA values;
   List<String> getInvalidDAList(
-      [int minLLength = 0,
-        int maxLLength = 16,
-        int minVLength = 0,
-        int maxVLength = 16]) =>
+          [int minLLength = 0,
+          int maxLLength = 16,
+          int minVLength = 0,
+          int maxVLength = 16]) =>
       _getList(getInvalidDA, minLLength, maxLLength, minVLength, maxVLength);
 
   /// Returns a [List<String>] of VR.kDS values;
@@ -479,10 +478,10 @@ class RSG {
 
   /// Returns a [List<String>] of _invalid_ VR.kDT values;
   List<String> getInvalidDTList(
-      [int minLLength = 0,
-        int maxLLength = 32,
-        int minVLength = 0,
-        int maxVLength = 16]) =>
+          [int minLLength = 0,
+          int maxLLength = 32,
+          int minVLength = 0,
+          int maxVLength = 16]) =>
       _getList(getInvalidDT, minLLength, maxLLength, minVLength, maxVLength);
 
   /// Returns a [List<String>] of VR.kIS values;
@@ -545,10 +544,10 @@ class RSG {
 
   /// Returns a [List<String>] of _invalid_ VR.kTM values;
   List<String> getInvalidTMList(
-      [int minLLength = 0,
-        int maxLLength = 16,
-        int minVLength = 0,
-        int maxVLength = 16]) =>
+          [int minLLength = 0,
+          int maxLLength = 16,
+          int minVLength = 0,
+          int maxVLength = 16]) =>
       _getList(getInvalidTM, minLLength, maxLLength, minVLength, maxVLength);
 
   /// Returns a [List<String>] of VR.kUC values;
@@ -569,10 +568,18 @@ class RSG {
       _getList(getUI, minLLength, maxLLength, minVLength, maxVLength);
 
   /// Returns a [List<String>] of VR.kUR values;
-  List<String> getURList([int minVLength = 1, int maxVLength = 16]) =>
-      _getList(getUR, 1, 1, minVLength, maxVLength);
+  List<String> getURList(
+          [int minLLength = 1,
+          int maxLLength = defaultMaxListLength,
+          int minVLength = 1,
+          int maxVLength = 64]) =>
+      _getList(getUR, minLLength, minLLength, minVLength, maxVLength);
 
   /// Returns a [List<String>] of VR.kUT values;
-  List<String> getUTList([int minVLength = 1, int maxVLength = 10240]) =>
-      _getList(getUT, 1, 1, minVLength, maxVLength);
+  List<String> getUTList(
+          [int minLLength = 1,
+          int maxLLength = defaultMaxListLength,
+          int minVLength = 1,
+          int maxVLength = 10240]) =>
+      _getList(getUT, minLLength, maxLLength, minVLength, maxVLength);
 }
