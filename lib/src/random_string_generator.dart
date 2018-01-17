@@ -125,7 +125,9 @@ class RSG {
 
   int _getDcmStringChar() {
     final c = rng.nextAscii;
-    return ((c >= kSpace && c < kDelete) && c != kBackslash) ? c : _getDcmStringChar();
+    return ((c >= kSpace && c < kDelete) && c != kBackslash)
+        ? c
+        : _getDcmStringChar();
   }
 
   /// Returns a [String] conforming to a DICOM Text VR (ST, LT, UT).
@@ -258,8 +260,11 @@ class RSG {
     for (var i = 0; i < nParts; i++) {
       sList[i] = rng.nextAsciiWord(1, partMax);
     }
-    final s = sList.join('^');
+    var s = sList.join('^');
     log.debug('s.length: ${s.length}');
+    if (s.length > 64) {
+      s = s.substring(1, 64);
+    }
     RangeError.checkValidRange(1, s.length, 64);
     return s;
   }
@@ -405,11 +410,12 @@ class RSG {
     return s;
   }
 
-  List<String> _getList(_StringGenerator generate, int minLLength, int maxLLength,
-      int minVLength, int maxVLength) {
+  List<String> _getList(_StringGenerator generate, int minLLength,
+      int maxLLength, int minVLength, int maxVLength) {
     final length = _getLength(minLLength, maxLLength);
     final sList = new List<String>(length);
-    for (var i = 0; i < length; i++) sList[i] = generate(minVLength, maxVLength);
+    for (var i = 0; i < length; i++)
+      sList[i] = generate(minVLength, maxVLength);
     return sList;
   }
 
@@ -431,7 +437,10 @@ class RSG {
 
   /// Returns a [List<String>] of VR.kAS values;
   List<String> getASList(
-          [int minLLength = 1, int maxLLength = 1, int minDays = 0, int maxDays = 999]) =>
+          [int minLLength = 1,
+          int maxLLength = 1,
+          int minDays = 0,
+          int maxDays = 999]) =>
       (minDays >= 0 && maxDays <= 999)
           ? _getList(getValidAS, minLLength, maxLLength, minDays, maxDays)
           : _getList(getInvalidAS, minLLength, maxLLength, minDays, maxDays);
