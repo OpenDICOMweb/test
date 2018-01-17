@@ -20,7 +20,7 @@ RSG rsg = new RSG(seed: seed);
 
 void main() {
 
-  Server.initialize(name: 'rsg_test', level: Level.info0);
+  Server.initialize(name: 'rsg_test', level: Level.info);
 
   /// Test DICOM IS values.
   test('Random IS Test', () {
@@ -105,7 +105,7 @@ void main() {
     });
 
     test('Random DS String Test', () {
-      system.level = Level.debug2;
+//      system.level = Level.debug2;
       for (var i = 0; i < count; i++) {
 	      final s = (rsg.getDSString());
         log.debug2('    RDS: ${s.length}: "$s"');

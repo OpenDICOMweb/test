@@ -389,7 +389,7 @@ class RSG {
 
   /// Returns a decimal [String].
   String getDSString([int minLength = 1, int maxLength = 16]) {
-    system.level = Level.debug2;
+//    system.level = Level.debug2;
     final max = (maxLength > 16) ? 16 : maxLength;
     final length = _getLength(minLength, max);
     final type = rng.nextUint(0, 2);
