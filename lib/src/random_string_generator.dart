@@ -311,7 +311,7 @@ class RSG {
     final limit = wkUids.length - 1;
     final index = rng.getLength(1, limit);
     final v = wkUids[index].asString;
-    log.info('wkUid: "$v"');
+    log.debug('wkUid: "$v"');
     return v;
   }
 
