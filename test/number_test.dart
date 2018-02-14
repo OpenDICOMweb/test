@@ -6,7 +6,7 @@
 
 import 'package:core/server.dart';
 import 'package:test/test.dart';
-import 'package:test_tools/tools.dart';
+import 'package:test_tools/src/random_string_generator.dart';
 
 
 /// The number of random numbers each test is run on.
@@ -20,7 +20,7 @@ RSG rsg = new RSG(seed: seed);
 
 void main() {
 
-  Server.initialize(name: 'rsg_test', level: Level.debug);
+  Server.initialize(name: 'rsg_test', level: Level.info0);
 
   /// Test DICOM IS values.
   test('Random IS Test', () {
@@ -83,12 +83,12 @@ void main() {
       }
     });
 
-    //Fix: there is a case where rsg.getPrecisionDSSting generates an
+    //Fix: there is a case where rsg.getPrecissionDSSting generates an
     //     illegal String with 17 characters
     test('increasing DS Precision Test', () {
 	    final limit = count ~/ 16;
       for (var i = 0; i < limit; i++) {
-        for (var j = 1; j < 10; j++) {
+        for (var j = 1; j < 16; j++) {
 	        final s = (rsg.getPrecisionDSString(j));
 	        final len = s.length.toString().padLeft(2, ' ');
 	        final p = j.toString().padLeft(2, ' ');
@@ -122,39 +122,6 @@ void main() {
     });
 
   });
-
-  group('DA',(){
-    test('getDAList',(){
-      for (var i = 0; i < 10; i++) {
-        final daList0 = rsg.getDAList();
-        print('daList0: $daList0');
-      }
-    });
-
-    test('getDTList',(){
-      for (var i = 0; i < 10; i++) {
-        final dtList0 = rsg.getDTList();
-        print('dtList0: $dtList0');
-      }
-    });
-
-    test('getTMList',(){
-      for (var i = 0; i < 10; i++) {
-        final tmList0 = rsg.getTMList();
-        for(var t in tmList0){
-          print('time: $t');
-          final h = int.parse(t.substring(0,2));
-          print('hour: $h');
-          expect(h < 24, true);
-
-          /*final m = int.parse(t.substring(2,4));
-          print('minute: $m');
-          expect(m < 60, true);*/
-        }
-      }
-    });
-  });
-
 }
 
 
