@@ -5,8 +5,8 @@ void main() {
     '// Copyright (c) 2018, Open DICOMweb Project. All rights reserved.-----',
     '// Use of this source code is governed by the open source license-----',
     '// that can be found in the LICENSE file.-----',
-    '// Original author: Jim Philbin <jfphilbin@gmail.edu> -----',
-    '// See the   AUTHORS file for other contributors.-----'
+    '// Original author: Sharath chandra chinta',
+    '// See the AUTHORS file for other contributors.-----'
   ];
 
   //final ef = new EditFile();
@@ -14,6 +14,5 @@ void main() {
 
   EditFile.addCopyrightToFile(
       copyright,
-      'C:/odw/sdk/element/lib/src/tag/integer.dart',
-      'C:/odw/sdk/element/lib/src/tag/TestInteger.dart');
+      'C:/test/core/lib/src/element/tag/integer.dart');
 }

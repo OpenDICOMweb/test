@@ -78,8 +78,10 @@ class EditFile {
   static List<String> readFile(File file, String readFrom) {
     final outData = <String>[];
     var start = false;
+    var count = 5;
 
     for (var content in file.readAsLinesSync()) {
+      if(content.startsWith(readFrom))
       if (start = content.startsWith(readFrom) ? true : start)
         outData.add(content);
     }
