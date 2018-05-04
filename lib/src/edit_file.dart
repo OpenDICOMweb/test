@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:path/path.dart';
 
 class EditFile {
-
   String readFromFile;
 
   String writeToFile;
@@ -11,11 +10,10 @@ class EditFile {
 
   String dirPath;
 
-  EditFile(String readFromFile,[String writeToFile]):
-    readFromFile = readFromFile,
-    sink = new File(writeToFile ??= readFromFile).openWrite();
+  EditFile(this.readFromFile, [String writeToFile])
+      : sink = new File(writeToFile ??= readFromFile).openWrite();
 
-  EditFile.fromDirectory(String dirPath): dirPath = dirPath;
+  EditFile.fromDirectory(this.dirPath);
   //
   static void addCopyrightToDir(List<String> copyright, String dirPath) {
     final dir = new Directory(dirPath);
@@ -31,7 +29,8 @@ class EditFile {
       '// Use of this source code is governed by the open source license-----',
       '// that can be found in the LICENSE file.-----',
       '// Original author: Jim Philbin <jfphilbin@gmail.edu> -----',
-      '// See the   AUTHORS file for other contributors.-----'
+      '// See the   AUTHORS file for other contributors.-----',
+      '//'
     ];
 
     final file = new File('C:/odw/sdk/element/lib/src/tag/integer.dart');
@@ -48,14 +47,8 @@ class EditFile {
       }
 
       final sink = outFile.openWrite();
-      for (var s in copyright) {
-        sink.writeln(s);
-      }
-      sink.writeln();
-      for (var s in outData) {
-        sink.writeln(s);
-      }
-
+      copyright.forEach(sink.writeln);
+      outData.forEach(sink.writeln);
       sink.close();
     }
   }
@@ -78,27 +71,26 @@ class EditFile {
   static List<String> readFile(File file, String readFrom) {
     final outData = <String>[];
     var start = false;
-    var count = 5;
 
     for (var content in file.readAsLinesSync()) {
-      if(content.startsWith(readFrom))
-      if (start = content.startsWith(readFrom) ? true : start)
-        outData.add(content);
+      if (content.startsWith(readFrom)) if (start =
+          content.startsWith(readFrom) ? true : start) outData.add(content);
     }
 
     return outData;
   }
 
   //
-  static void writeFile(File outFile, List<String> copyright, List<String> outData) {
+  static void writeFile(
+      File outFile, List<String> copyright, List<String> outData) {
     final sink = outFile.openWrite();
     if (copyright != null && copyright.isNotEmpty)
-      copyright.forEach((s) => sink.writeln(s));
+      copyright.forEach(sink.writeln);
 
     addEmptyLine(sink);
 
     if (outData != null && outData.isNotEmpty)
-      outData.forEach((s) => sink.writeln(s));
+      outData.forEach(sink.writeln);
 
     closeSink(sink);
   }

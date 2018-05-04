@@ -30,22 +30,22 @@ class RandomStringList {
   static const RandomStringList dcmText = const RandomStringList('dcmText', 1, 100);
 
   static const RandomStringList dcmCodeString =
-      const RandomStringList('dcmCodeString', 1, Int16Base.kMaxValue);
+      const RandomStringList('dcmCodeString', 1, Int16.kMaxValue);
 
   static const RandomStringList dcmDate =
-      const RandomStringList('dcmDate', 1, Uint16Base.kMaxValue);
+      const RandomStringList('dcmDate', 1, Uint16.kMaxValue);
 
   static const RandomStringList dcmTime =
-      const RandomStringList('dcmTime', 1, Int32Base.kMaxValue);
+      const RandomStringList('dcmTime', 1, Int32.kMaxValue);
 
   static const RandomStringList dcmDateTime =
-      const RandomStringList('dcmDateTime', 1, Uint32Base.kMaxValue);
+      const RandomStringList('dcmDateTime', 1, Uint32.kMaxValue);
 
   static const RandomStringList dcmDecimal =
-      const RandomStringList('dcmDecimal', 1, Int64Base.kMaxValue);
+      const RandomStringList('dcmDecimal', 1, Int64.kMaxValue);
 
   static const RandomStringList dcmInteger =
-      const RandomStringList('dcmInteger', 1, Uint64Base.kMaxValue);
+      const RandomStringList('dcmInteger', 1, Uint64.kMaxValue);
 
   static const RandomStringList dcmPersonName =
       const RandomStringList('dcmPersonName', 1, null);

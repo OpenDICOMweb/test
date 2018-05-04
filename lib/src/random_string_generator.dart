@@ -407,7 +407,7 @@ class RSG {
     } else {
       s = _getIntString(1, 16);
     }
-    return s;
+    return s.trim();
   }
 
   List<String> _getList(_StringGenerator generate, int minLLength,
