@@ -105,7 +105,7 @@ void main() {
     });
 
     test('Random DS String Test', () {
-      system.level = Level.debug2;
+      global.level = Level.debug2;
       for (var i = 0; i < count; i++) {
 	      final s = (rsg.getDSString());
         log.debug2('    RDS: ${s.length}: "$s"');
