@@ -11,7 +11,7 @@ environment:
 
 dependencies:
   core:
-    path: C:/acr/odw/sdk/core
+    path: C:/odw/sdk/core
     version: ^0.7.2
 
 dev_dependencies:
