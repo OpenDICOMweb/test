@@ -19,7 +19,7 @@ void main() {
 
     EditFile.addCopyrightToFile(
         copyright,
-        'C:/odw/sdk/element/lib/src/tag/integer.dart',
-        'C:/odw/sdk/element/lib/src/tag/TestInteger.dart');
+        'C:/odw/sdk/core/element/lib/src/tag/integer.dart',
+        'C:/odw/sdk/core/element/lib/src/tag/TestInteger.dart');
   });
 }

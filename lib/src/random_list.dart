@@ -130,7 +130,7 @@ const _validNBits = const <int>[2, 4, 8, 16, 32, 64];
 // Flush if not used by V0.9.0
 /// Returns a random unsigned integer with a maximum length of [nBits],
 /// which must be a power of 2 between 1 and 6.
-int _getRandomUnsigned(int nBits) {
+int getRandomUnsigned(int nBits) {
   // ignore: only_throw_errors
   if (!_validNBits.contains(nBits)) throw 'Invalid nBits: $nBits';
   final max = pow(2, nBits) - 1;
@@ -142,7 +142,7 @@ int _getRandomUnsigned(int nBits) {
 // Flush if not used by V0.9.0
 /// Returns a random signed integer with a maximum length of [nBits],
 /// which must be a power of 2 between 1 and 6.
-int _getRandomSigned(int nBits) {
+int getRandomSigned(int nBits) {
   // ignore: only_throw_errors
   if (!_validNBits.contains(nBits)) throw 'Invalid nBits: $nBits';
   final limit = pow(2, nBits - 1);

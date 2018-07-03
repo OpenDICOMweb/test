@@ -15,11 +15,11 @@ dependencies:
     version: ^0.7.2
 
 dev_dependencies:
-  benchmark_harness: ^1.0.4
-  coverage: ^0.9.3
+  benchmark_harness: any
+  coverage: any
   dart_style: ^1.0.8
-  dartdoc: ^0.14.0
+  dartdoc: ^0.20.0
   grinder: ^0.8.0
-  test:  ^0.12.24
+  test:  any
 
 
