@@ -187,9 +187,10 @@ class RSG {
   }
 
   /// Generates an _invalid_ DICOM String for VR.kDA.
-  String getInvalidDA([int minLength = 0, int maxLength = 16]) {
+  String getInvalidDA([int minLength = 0, int maxLength = 16]) =>
     //TODO Sharath: implement
-  }
+     null;
+
 
   String getDateString() => microsecondToDateString(rng.nextMicrosecond);
 
@@ -213,9 +214,9 @@ class RSG {
   }
 
   /// Generates an _invalid_ DICOM String for VR.kDA.
-  String getInvalidDT([int minLength = 0, int maxLength = 64]) {
+  String getInvalidDT([int minLength = 0, int maxLength = 64]) =>
     //TODO Sharath: implement
-  }
+    null;
 
   static const _validDateTimeLengths = const <int>[
     4, 6, 8, 10, 12, 14, 16, 17, 18, 19, 20, 21, 26 // No reformat
@@ -292,9 +293,9 @@ class RSG {
   }
 
   /// Generates an _invalid_ DICOM String for VR.kTM.
-  String getInvalidTM([int minLength = 0, int maxLength = 64]) {
+  String getInvalidTM([int minLength = 0, int maxLength = 64]) =>
     //TODO Sharath: implement
-  }
+  null;
 
   static const _validTimeLengths = const <int>[2, 4, 6, 8, 9, 10, 11, 12, 13];
 
