@@ -7,7 +7,7 @@ authors:
 homepage: https://github.com/OpenDICOMweb/test_tools.git
 
 environment:
-  sdk: '>=1.24.2 <2.1.0'
+  sdk: '>=1.24.2 <=2.0.0'
 
 dependencies:
   core:
@@ -17,8 +17,6 @@ dependencies:
 dev_dependencies:
   benchmark_harness: any
   coverage: any
-  dart_style: ^1.0.8
-  dartdoc: ^0.20.0
   grinder: ^0.8.0
   test:  any
 
