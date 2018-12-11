@@ -358,6 +358,7 @@ class RSG {
       final trim = (excess > fLength) ? fLength : excess;
       s = s.substring(0, s.length - trim);
     }
+    assert(s.length <= 16);
     return s;
   }
 
@@ -373,6 +374,7 @@ class RSG {
     log.debug('v: $v');
     var s = v.toStringAsExponential(fLength);
     if (s.length < 14) s = _maybePlusPad(s, !v.isNegative, 16);
+    assert(s.length <= 16);
     return s;
   }
 
@@ -382,8 +384,10 @@ class RSG {
     final max = (maxLength > 10) ? 10 : maxLength;
     final pLength = _getLength(1, max);
     final v = _nextDouble();
-    final s = v.toStringAsPrecision(pLength);
-    return _maybePlusPad(s, !v.isNegative, 16);
+    var s = v.toStringAsPrecision(pLength);
+    s =  _maybePlusPad(s, !v.isNegative, 16);
+    assert(s.length <= 16);
+    return s;
   }
 
   double _nextDouble() => ((rng.nextBool) ? 1 : -1) * rng.nextDouble;
