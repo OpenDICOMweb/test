@@ -4,10 +4,10 @@ version: 0.7.5
 authors:
   - Jim Philbin <jfphilbin@gmail.com>
 
-homepage: https://github.com/OpenDICOMweb/test_tools.git
+homepage: https://github.com/OpenDICOMweb/test_tools
 
 environment:
-  sdk: ^2.0.0
+  sdk: '>=2.0.0 <3.0.0'
 
 dependencies:
   core:
