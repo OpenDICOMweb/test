@@ -8,7 +8,7 @@ import 'package:core/core.dart';
 import 'package:test_tools/tools.dart';
 
 void main() {
-  final rsg = new RSG();
+  final rsg = RSG();
 
   var s = rsg.getSH(5, 10);
   log.debug('dcmString: (${s.length})"$s"');

@@ -5,6 +5,9 @@
 //  that can be found in the odw/LICENSE file.
 //  Primary Author: Jim Philbin <jfphilbin@gmail.edu>
 //  See the AUTHORS file for other contributors.
+//
+
+// ignore_for_file: public_member_api_docs
 
 const String path0 = 'C:/odw_test_data/mweb/10 Patient IDs'
     '/2a5bef0f-e4d2-4680-bd24-f42d902d6741.dcm';

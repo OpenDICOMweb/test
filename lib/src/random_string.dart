@@ -9,7 +9,7 @@ import 'package:core/core.dart';
 
 /// The Type of a function that generates [String]s, with length
 /// between [min] and max].
-typedef String StringGenerator([int min, int max]);
+typedef StringGenerator = String Function([int min, int max]);
 
 //TODO: doc and remove dead code
 /// Returns a random [String].
@@ -19,15 +19,16 @@ String randomString(int length,
     bool noNumber = false,
     bool noSpecialCharacter = false,
     bool isDecimal = false}) {
-  final rand = new Random();
+  final rand = Random();
   var dotOne = false, keKEOne = false;
   int prevCode, plusMinusCount = 0, iterations = 0;
-  final codeUnits = new List.generate(length, (index) {
+  final codeUnits = List.generate(length, (index) {
     var alpha = rand.nextInt(122);
     while (!((!noCharacter && alpha >= ka && alpha <= kz && !noLowerCase) ||
             (!noCharacter && alpha >= kA && alpha <= kZ) ||
             (!noNumber && alpha >= k0 && alpha <= k9) ||
-            (!noSpecialCharacter && (alpha == kSpace || alpha == kUnderscore))) ||
+            (!noSpecialCharacter &&
+                (alpha == kSpace || alpha == kUnderscore))) ||
         isDecimal) {
       iterations++;
       if (iterations > 500) break;
@@ -38,18 +39,19 @@ String randomString(int length,
                   alpha == ke ||
                   alpha == kPlusSign ||
                   alpha == kMinusSign))) {
-        //if ((alpha == kPlusSign || alpha == kMinusSign) && (prevCode == null || prevCode == null)){
-        //
-        // }
         if ((index == length - 1) &&
-            (alpha == kE || alpha == ke || alpha == kPlusSign || alpha == kMinusSign)) {
+            (alpha == kE ||
+                alpha == ke ||
+                alpha == kPlusSign ||
+                alpha == kMinusSign)) {
           alpha = rand.nextInt(122);
           continue;
         }
 
         if ((prevCode == null && alpha == kE || alpha == ke) ||
             (prevCode == ke ||
-                prevCode == kE && (alpha >= k0 && alpha <= k9 || alpha == kDot))) {
+                prevCode == kE &&
+                    (alpha >= k0 && alpha <= k9 || alpha == kDot))) {
           alpha = rand.nextInt(122);
           continue;
         }
@@ -71,8 +73,13 @@ String randomString(int length,
           continue;
         }
 
-        if ((alpha == kMinusSign || alpha == kPlusSign || alpha == ke || alpha == kE) &&
-            (prevCode == kMinusSign || prevCode == kPlusSign || prevCode == kDot)) {
+        if ((alpha == kMinusSign ||
+                alpha == kPlusSign ||
+                alpha == ke ||
+                alpha == kE) &&
+            (prevCode == kMinusSign ||
+                prevCode == kPlusSign ||
+                prevCode == kDot)) {
           alpha = rand.nextInt(122);
           continue;
         }
@@ -86,7 +93,8 @@ String randomString(int length,
 
         if ((dotOne && alpha == kDot) ||
             (keKEOne && (alpha == ke || alpha == kE)) ||
-            (plusMinusCount > 2 && (alpha == kPlusSign || alpha == kMinusSign))) {
+            (plusMinusCount > 2 &&
+                (alpha == kPlusSign || alpha == kMinusSign))) {
           alpha = rand.nextInt(122);
           continue;
         }
@@ -113,32 +121,38 @@ String randomString(int length,
     return alpha;
   });
 
-  return new String.fromCharCodes(codeUnits);
+  return String.fromCharCodes(codeUnits);
 }
 
-Random rand = new Random();
+Random _rng = Random();
 
+/// Returns a random length between [min] and [max] inclusive.
 int getLength(int min, int max) {
-  final n = rand.nextInt(max);
+  final n = _rng.nextInt(max);
   if (n < min || n > max) return getLength(min, max);
   return n;
 }
 
+/// Generate a random Non-Text character code.
 int nextChar() {
-  var c = rand.nextInt(127);
-  while (!isDcmTextChar(c)) c = rand.nextInt(kDelete - 1);
+  var c = _rng.nextInt(127);
+  while (!isDcmTextChar(c)) c = _rng.nextInt(kDelete - 1);
   return c;
 }
 
-bool isDcmChar(int char) => (char >= kSpace && char < kDelete && char != kBackslash);
+/// Returns true if [c] is a valid DICOM String character code.
+bool isDcmChar(int c) => c >= kSpace && c < kDelete && c != kBackslash;
 
-bool isDcmTextChar(int char) => (char >= kSpace && char < kDelete);
+/// Returns true if [c] is a valid DICOM Text character code.
+bool isDcmTextChar(int c) => c >= kSpace && c < kDelete;
 
+/// Returns true if [c] is a valid DICOM Code String character code.
 bool isDcmCodeStringChar(int c) =>
-    (isUppercaseChar(c) || isDigitChar(c) || c == kSpace || c == kUnderscore);
+    isUppercaseChar(c) || isDigitChar(c) || c == kSpace || c == kUnderscore;
 
-typedef int CharFilter(int char);
+typedef CharFilter = int Function(int char);
 
+/// Generates a random character generator that satisfies [predicate].
 CharFilter charPredicate(CharPredicate predicate) => (index) {
       var char = nextChar();
       while (!predicate(char)) char = nextChar();
@@ -156,15 +170,17 @@ CharFilter getTextChar = charPredicate(isDcmTextChar);
 /// Visible ASCII characters, except Backslash.
 String generateDcmString(int minLength, int maxLength) {
   final length = getLength(minLength, maxLength);
-  final codeUnits = new List.generate(length, getDcmChar);
-  return new String.fromCharCodes(codeUnits);
+  final codeUnits = List.generate(length, getDcmChar);
+  return String.fromCharCodes(codeUnits);
 }
 
 /// Generates a valid DICOM String for VR.kSH.
-String gemerateSHString([int min = 0, int max = 16]) => generateDcmString(min, max);
+String gemerateSHString([int min = 0, int max = 16]) =>
+    generateDcmString(min, max);
 
 /// Generates a valid DICOM String for VR.kLO.
-String gemerateLOString([int min = 0, int max = 64]) => generateDcmString(min, max);
+String gemerateLOString([int min = 0, int max = 64]) =>
+    generateDcmString(min, max);
 
 /// Generates a valid DICOM String for VR.kUC.
 String gemerateUCString([int min = 0, int max = kMaxLongVF]) =>
@@ -175,8 +191,8 @@ String gemerateUCString([int min = 0, int max = kMaxLongVF]) =>
 // TODO extend to handle valid ISO1022 escape sequences.
 String generateDcmTextString(int minLength, int maxLength) {
   final length = getLength(minLength, maxLength);
-  final codeUnits = new List.generate(length, getTextChar);
-  return new String.fromCharCodes(codeUnits);
+  final codeUnits = List.generate(length, getTextChar);
+  return String.fromCharCodes(codeUnits);
 }
 
 /// Generates a valid DICOM String for VR.kSH.
@@ -195,9 +211,9 @@ String generateUTString([int min = 0, int max = kMaxLongVF]) =>
 /// Generates DICOM Text characters. All visible ASCII characters
 /// are legal including Backslash.
 String generateTextChar(int length) {
-  var rand = new Random();
+  var rand =  Random();
 //  int iterations = 0;
-  var codeUnits = new List.generate(length, (index) {
+  var codeUnits =  List.generate(length, (index) {
     var alpha = rand.nextInt(127);
     while ((alpha < kSpace || alpha == kDelete)) {
       /*iterations++;
@@ -206,16 +222,16 @@ String generateTextChar(int length) {
     }
     return alpha;
   });
-  return new String.fromCharCodes(codeUnits);
+  return  String.fromCharCodes(codeUnits);
 }
 */
 
 /// Generates DICOM Code String(CS) characters.
 /// Visible ASCII characters, except Backslash.
 String gemerateCSString(int length) {
-  final rand = new Random();
+  final rand = Random();
   var iterations = 0;
-  final codeUnits = new List.generate(length, (index) {
+  final codeUnits = List.generate(length, (index) {
     var alpha = rand.nextInt(127);
     while (!(isUppercaseChar(alpha) ||
         isDigitChar(alpha) ||
@@ -227,19 +243,20 @@ String gemerateCSString(int length) {
     }
     return alpha;
   });
-  return new String.fromCharCodes(codeUnits);
+  return String.fromCharCodes(codeUnits);
 }
 
 /// Generates a random Person name with specified number of groups [nGroups],
 /// components [nComponents] and component length [maxComponentLength]
-String generateDcmPersonName(int nGroups, int nComponents, int maxComponentLength) {
+String generateDcmPersonName(
+    int nGroups, int nComponents, int maxComponentLength) {
   final listGroup = <String>[];
   for (var i = 0; i < nGroups; i++) {
     final listComponent = <String>[];
     for (var j = 0; j < nComponents; j++) {
-      final rand = new Random();
+      final rand = Random();
 //      int iterations = 0;
-      final codeUnits = new List.generate(maxComponentLength, (index) {
+      final codeUnits = List.generate(maxComponentLength, (index) {
         var alpha = rand.nextInt(127);
         while (!(alpha >= kSpace &&
             alpha < kDelete &&
@@ -250,7 +267,7 @@ String generateDcmPersonName(int nGroups, int nComponents, int maxComponentLengt
         }
         return alpha;
       });
-      listComponent.add(new String.fromCharCodes(codeUnits));
+      listComponent.add(String.fromCharCodes(codeUnits));
     }
     listGroup.add(listComponent.join('^'));
   }

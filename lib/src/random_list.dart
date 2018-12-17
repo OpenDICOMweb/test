@@ -29,43 +29,43 @@ class RandomList<T> {
   //TODO: add Type variable T
   /// A generator for [Int8List]s.
   static const RandomList int8 =
-      const RandomList<int>._('Int8', Int8List, Int8.kMinValue, Int8.kMaxValue);
+      RandomList<int>._('Int8', Int8List, Int8.kMinValue, Int8.kMaxValue);
 
   /// A generator for [Uint8List]s.
   static const RandomList uint8 =
-      const RandomList<int>._('Uint8', Uint8List, 0, Uint8.kMaxValue);
+      RandomList<int>._('Uint8', Uint8List, 0, Uint8.kMaxValue);
 
   /// A generator for [Int16List]s.
-  static const RandomList int16 = const RandomList<int>._(
-      'Int16', Int16List, Int16.kMinValue, Int16.kMaxValue);
+  static const RandomList int16 =
+      RandomList<int>._('Int16', Int16List, Int16.kMinValue, Int16.kMaxValue);
 
   /// A generator for [Uint16List]s.
   static const RandomList uint16 =
-      const RandomList<int>._('Uint16', Uint16List, 0, Uint16.kMaxValue);
+      RandomList<int>._('Uint16', Uint16List, 0, Uint16.kMaxValue);
 
   /// A generator for [Int32List]s.
-  static const RandomList int32 = const RandomList<int>._(
-      'Int32', Int32List, Int32.kMinValue, Int32.kMaxValue);
+  static const RandomList int32 =
+      RandomList<int>._('Int32', Int32List, Int32.kMinValue, Int32.kMaxValue);
 
   /// A generator for [Uint32List]s.
   static const RandomList uint32 =
-      const RandomList<int>._('Uint32', Uint32List, 0, Uint32.kMaxValue);
+      RandomList<int>._('Uint32', Uint32List, 0, Uint32.kMaxValue);
 
   /// A generator for [Int64List]s.
-  static const RandomList int64 = const RandomList<int>._(
-      'Int64', Int64List, Int64.kMinValue, Int64.kMaxValue);
+  static const RandomList int64 =
+      RandomList<int>._('Int64', Int64List, Int64.kMinValue, Int64.kMaxValue);
 
   /// A generator for [Uint64List]s.
   static const RandomList uint64 =
-      const RandomList<int>._('Uint64', Uint64List, 0, Uint64.kMaxValue);
+      RandomList<int>._('Uint64', Uint64List, 0, Uint64.kMaxValue);
 
   /// A generator for [Float32List]s.
   static const RandomList float32 =
-      const RandomList<double>._('Float32', Float32List, null, null);
+      RandomList<double>._('Float32', Float32List, null, null);
 
   /// A generator for [Float64List]s.
   static const RandomList float64 =
-      const RandomList<double>._('Float64', Float64List, null, null);
+      RandomList<double>._('Float64', Float64List, null, null);
 
   /// Returns a [List<num>] containing [length] values;
   List<num> call(int length) => _makeList<num>(length);
@@ -75,29 +75,29 @@ class RandomList<T> {
     //log.debug('name: $name, type: $type, max: $max');
     //log.debug('length: $length');
     if (name == 'Int8') {
-      list = new Int8List(length);
+      list = Int8List(length);
       // log.debug('Int8List: $list');
     } else if (name == 'Uint8') {
-      list = new Uint8List(length);
+      list = Uint8List(length);
     } else if (name == 'Int16') {
-      list = new Int16List(length);
+      list = Int16List(length);
     } else if (name == 'Uint16') {
-      list = new Uint16List(length);
+      list = Uint16List(length);
     } else if (name == 'Int32') {
-      list = new Int32List(length);
+      list = Int32List(length);
     } else if (name == 'Uint32') {
-      list = new Uint32List(length);
+      list = Uint32List(length);
     } else if (name == 'Int64') {
-      list = new Int64List(length);
+      list = Int64List(length);
       return _fill64List(list);
     } else if (name == 'Uint64') {
-      list = new Uint64List(length);
+      list = Uint64List(length);
       return _fill64List(list);
     } else if (name == 'Float32') {
-      list = new Float32List(length);
+      list = Float32List(length);
       return _fillFloatList(list);
     } else if (name == 'Float64') {
-      list = new Float32List(length);
+      list = Float32List(length);
       return _fillFloatList(list);
     } else {
       // ignore: only_throw_errors
@@ -124,8 +124,8 @@ class RandomList<T> {
   }
 }
 
-final Random _rng = new Random(1);
-const _validNBits = const <int>[2, 4, 8, 16, 32, 64];
+final Random _rng = Random(1);
+const _validNBits = <int>[2, 4, 8, 16, 32, 64];
 
 // Flush if not used by V0.9.0
 /// Returns a random unsigned integer with a maximum length of [nBits],

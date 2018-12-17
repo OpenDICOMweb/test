@@ -14,14 +14,6 @@ import 'package:core/core.dart';
 //Enhancement: if performance needs to be improved us StringBuffer.
 //Enhancement: show that a normal distribution is generated
 
-// Returns [true] if [char] satisfies predicate.
-//typedef bool _CharPredicate(int char);
-
-/// Returns a random integer
-typedef int _CharGenerator();
-
-typedef String _StringGenerator([int min, int max]);
-
 /// Random String Generator for DICOM Strings.
 class RSG {
   /// An [int] that can be used to generate the same values repeatedly.
@@ -35,7 +27,7 @@ class RSG {
   final bool shouldPad;
 
   /// Creates a Random String Generator ([RSG]) using [RNG] from number.
-  RSG({this.seed, this.shouldPad = true}) : rng = new RNG(seed);
+  RSG({this.seed, this.shouldPad = true}) : rng =  RNG(seed);
 
   /// Returns a valid VR.kAE [String].
   String get aeString => shString;
@@ -112,11 +104,11 @@ class RSG {
     return length;
   }
 
-  String _getString(_CharGenerator genChar, int minLength, int maxLength) {
+  String _getString(int genChar(), int minLength, int maxLength) {
     final length = _getLength(minLength, maxLength);
-    final bytes = new Uint8List(length);
+    final bytes =  Uint8List(length);
     for (var i = 0; i < length; i++) bytes[i] = genChar();
-    return new String.fromCharCodes(bytes);
+    return  String.fromCharCodes(bytes);
   }
 
   /// Returns a [String] conforming to a DICOM String VR (SH, LO, UC).
@@ -157,7 +149,7 @@ class RSG {
     String letter;
     do {
       final charCode = rng.nextAsciiVChar;
-      letter = new String.fromCharCode(charCode);
+      letter =  String.fromCharCode(charCode);
     } while ('DWMY'.contains(letter));
     final count = rng.nextUint(minDays, maxDays);
     return '${count.toString()}$letter';
@@ -192,6 +184,7 @@ class RSG {
      null;
 
 
+  /// Returns a valid DICOM Date String.
   String getDateString() => microsecondToDateString(rng.nextMicrosecond);
 
   /// Generates a valid DICOM String for VR.kDS.
@@ -218,7 +211,7 @@ class RSG {
     //TODO Sharath: implement
     null;
 
-  static const _validDateTimeLengths = const <int>[
+  static const _validDateTimeLengths = <int>[
     4, 6, 8, 10, 12, 14, 16, 17, 18, 19, 20, 21, 26 // No reformat
   ];
 
@@ -229,6 +222,7 @@ class RSG {
     return _validDateTimeLengths[offset];
   }
 
+  /// Returns a valid DICOM Time String.
   String getTimeString() {
     final us = rng.nextMicrosecond % kMicrosecondsPerDay;
     return microsecondToTimeString(us);
@@ -256,8 +250,8 @@ class RSG {
   //TODO: this needs to generate the entire range of PN strings.
   String _getPNString([int minLength = 1, int maxLength = 64]) {
     final nParts = rng.getLength(1, 5);
-    final partMax = 13;
-    final sList = new List<String>(nParts);
+    const partMax = 13;
+    final sList =  List<String>(nParts);
     for (var i = 0; i < nParts; i++) {
       sList[i] = rng.nextAsciiWord(1, partMax);
     }
@@ -297,7 +291,7 @@ class RSG {
     //TODO Sharath: implement
   null;
 
-  static const _validTimeLengths = const <int>[2, 4, 6, 8, 9, 10, 11, 12, 13];
+  static const _validTimeLengths = <int>[2, 4, 6, 8, 9, 10, 11, 12, 13];
 
   int _getTimeLength(int minVLength, int maxVlength) {
     final offset = rng.nextInt(0, _validTimeLengths.length - 1);
@@ -321,7 +315,7 @@ class RSG {
 
   String _getURString(int minLength, int maxLength) {
     final length = rng.getLength(1, 5);
-    final parts = new List<String>(length);
+    final parts =  List<String>(length);
     for (var i = 0; i < length; i++) parts[i] = rng.nextAsciiWord(3, 8);
     final path = parts.join('/');
     return (rng.nextBool) ? 'http:/$path' : '$path';
@@ -345,7 +339,7 @@ class RSG {
   String getFixedDSString([int max = 16]) {
     final length = _getLength(1, max);
     assert(length >= 1 && length <= max);
-    final iLength = (length ~/ 2);
+    final iLength = length ~/ 2;
     final fLength = length - iLength;
     assert(iLength + fLength == length);
 
@@ -415,10 +409,10 @@ class RSG {
     return s.trim();
   }
 
-  List<String> _getList(_StringGenerator generate, int minLLength,
+  List<String> _getList(String generate([int min, int max]), int minLLength,
       int maxLLength, int minVLength, int maxVLength) {
     final length = _getLength(minLLength, maxLLength);
-    final sList = new List<String>(length);
+    final sList =  List<String>(length);
     for (var i = 0; i < length; i++)
       sList[i] = generate(minVLength, maxVLength);
     return sList;

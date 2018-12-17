@@ -8,7 +8,6 @@ import 'package:core/server.dart' hide group;
 import 'package:test/test.dart';
 import 'package:test_tools/tools.dart';
 
-
 /// The number of random numbers each test is run on.
 int count = 1000;
 
@@ -16,16 +15,15 @@ int count = 1000;
 int seed = 1;
 
 /// A Random String Generator
-RSG rsg = new RSG(seed: seed);
+RSG rsg = RSG(seed: seed);
 
 void main() {
-
   Server.initialize(name: 'rsg_test', level: Level.debug);
 
   /// Test DICOM IS values.
   test('Random IS Test', () {
     for (var i = 0; i < count; i++) {
-      final s = (rsg.isString);
+      final s = rsg.isString;
       // ignore: only_throw_errors
       if (s.length > 12) throw '"$s".length = ${s.length}';
       if (s.length == 1) log.debug('***  IS: "$s".length = ${s.length}');
@@ -40,45 +38,44 @@ void main() {
 
   /// Test DICOM DS values.
   group('Generate Random Decimal Strings', () {
-
     test('Random DS Fixed Point Test', () {
       for (var i = 0; i < count; i++) {
-	      final s = (rsg.getFixedDSString(14));
-	      final len = s.length.toString().padLeft(2, ' ');
+        final s = rsg.getFixedDSString(14);
+        final len = s.length.toString().padLeft(2, ' ');
         // ignore: only_throw_errors
         if (s.length > 16) throw '"$s".length = ${s.length}';
         if (s.length < 8) log.debug('*** FDS $len: "$s".length');
         if (s.length > 14) log.debug('*** FDS $len: "$s".length');
         log.debug('    FDS $len: "$s"');
         expect(s.length <= 16, true);
-	      final x = double.parse(s);
+        final x = double.parse(s);
         expect(x is double, true);
       }
     });
 
     test('Random DS Exponential Test', () {
       for (var i = 0; i < count; i++) {
-	      final s = (rsg.getExpoDSString(11));
-	      final len = s.length.toString().padLeft(2, ' ');
+        final s = rsg.getExpoDSString(11);
+        final len = s.length.toString().padLeft(2, ' ');
         // ignore: only_throw_errors
         if (s.length > 16) throw '"$s".length = ${s.length}';
         if (s.length == 8) log.debug('*** EDS $len: "$s".length');
         if (s.length == 16) log.debug('*** EDS $len: "$s".length');
         log.debug('    EDS $len: "$s"');
         expect(s.length <= 16, true);
-	      final x = double.parse(s);
+        final x = double.parse(s);
         expect(x is double, true);
       }
     });
 
     test('Random DS Precision Test', () {
       for (var i = 0; i < count; i++) {
-	      final s = (rsg.getPrecisionDSString());
-	      final len = s.length.toString().padLeft(2, ' ');
+        final s = rsg.getPrecisionDSString();
+        final len = s.length.toString().padLeft(2, ' ');
         RangeError.checkValidRange(1, s.length, 16);
         log.debug('    PDS $len: "$s"');
         expect(s.length <= 16, true);
-	      final x = double.parse(s);
+        final x = double.parse(s);
         expect(x is double, true);
       }
     });
@@ -86,19 +83,19 @@ void main() {
     //Fix: there is a case where rsg.getPrecisionDSSting generates an
     //     illegal String with 17 characters
     test('increasing DS Precision Test', () {
-	    final limit = count ~/ 16;
+      final limit = count ~/ 16;
       for (var i = 0; i < limit; i++) {
         for (var j = 1; j < 10; j++) {
-	        final s = (rsg.getPrecisionDSString(j));
-	        final len = s.length.toString().padLeft(2, ' ');
-	        final p = j.toString().padLeft(2, ' ');
+          final s = rsg.getPrecisionDSString(j);
+          final len = s.length.toString().padLeft(2, ' ');
+          final p = j.toString().padLeft(2, ' ');
           // ignore: only_throw_errors
           if (s.length > 16) throw '"$s".length = ${s.length}';
           if (s.length < 8) log.debug('*** $p PDS $len: "$s".length');
           if (s.length == 16) log.debug('*** $p PDS $len: "$s".length');
           log.debug('   $p PDS $len: "$s"');
           expect(s.length <= 16, true);
-	        final x = double.parse(s);
+          final x = double.parse(s);
           expect(x is double, true);
         }
       }
@@ -107,43 +104,42 @@ void main() {
     test('Random DS String Test', () {
       global.level = Level.debug2;
       for (var i = 0; i < count; i++) {
-	      final s = (rsg.getDSString());
+        final s = rsg.getDSString();
         log.debug2('    RDS: ${s.length}: "$s"');
         // ignore: only_throw_errors
         if (s.length > 16 || s.isEmpty) throw '"$s".length = ${s.length}';
-        if (s.isNotEmpty  && s.length <= 16)
+        if (s.isNotEmpty && s.length <= 16)
           log.debug('*** RDS: "$s".length = ${s.length}');
         expect(s.isNotEmpty && s.length <= 16, true);
         log.debug2('      S: $s');
-	      final x = double.parse(s);
-	      log.debug2('      X: $x');
+        final x = double.parse(s);
+        log.debug2('      X: $x');
         expect(x is double, true);
       }
     });
-
   });
 
-  group('DA',(){
-    test('getDAList',(){
+  group('DA', () {
+    test('getDAList', () {
       for (var i = 0; i < 10; i++) {
         final daList0 = rsg.getDAList();
         print('daList0: $daList0');
       }
     });
 
-    test('getDTList',(){
+    test('getDTList', () {
       for (var i = 0; i < 10; i++) {
         final dtList0 = rsg.getDTList();
         print('dtList0: $dtList0');
       }
     });
 
-    test('getTMList',(){
+    test('getTMList', () {
       for (var i = 0; i < 10; i++) {
         final tmList0 = rsg.getTMList();
-        for(var t in tmList0){
+        for (var t in tmList0) {
           print('time: $t');
-          final h = int.parse(t.substring(0,2));
+          final h = int.parse(t.substring(0, 2));
           print('hour: $h');
           expect(h < 24, true);
 
@@ -154,7 +150,4 @@ void main() {
       }
     });
   });
-
 }
-
-

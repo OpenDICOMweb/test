@@ -15,7 +15,7 @@ int count = 1000;
 int seed = 1;
 
 /// A Random String Generator
-RSG rsg = new RSG(seed: seed);
+RSG rsg = RSG(seed: seed);
 
 void main() {
   Server.initialize(name: 'rsg_test', level: Level.info0);
@@ -23,7 +23,7 @@ void main() {
   /// Test DICOM IS values.
   test('Random IS Test', () {
     for (var i = 0; i < count; i++) {
-      final s = (rsg.isString);
+      final s = rsg.isString;
       // ignore: only_throw_errors
       if (s.length > 12) throw '"$s".length = ${s.length}';
       if (s.length == 1) log.debug('***  IS: "$s".length = ${s.length}');

@@ -10,8 +10,8 @@ import 'dart:io';
 import 'package:grinder/grinder.dart';
 
 /// The dartdoc [Directory].
-Directory dartDocDir = new Directory('doc');
-Directory apiDocDir = new Directory('doc/api');
+Directory dartDocDir =  Directory('doc');
+Directory apiDocDir =  Directory('doc/api');
 
 Future main(List args) => grind(args);
 
@@ -24,7 +24,7 @@ void myDefault() {
 
 @Task('Testing Dart...')
 void test() {
-  new PubApp.local('test').run([]);
+   PubApp.local('test').run([]);
 }
 
 @Task('Cleaning...')
@@ -93,7 +93,7 @@ void compile() {
 @Task('Testing JavaScript...')
 @Depends(build)
 void testJavaScript() {
-  new PubApp.local('test').run([]);
+   PubApp.local('test').run([]);
 }
 
 @Task('Deploy...')

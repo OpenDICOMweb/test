@@ -2,11 +2,12 @@
 // Use of this source code is governed by the open source license
 // that can be found in the LICENSE file.
 // See the AUTHORS file for contributors.
-
+//
 import 'dart:io';
 import 'package:path/path.dart';
 
-const String newCopyrightString = '''
+// Urgent Sharath: fix this file or delete it.
+const String CopyrightString = '''
 // Copyright (c) 2016, 2017, and 2018 Open DICOMweb Project. 
 // All rights reserved.
 // Use of this source code is governed by the open source license
@@ -18,8 +19,8 @@ const String newCopyrightString = '''
 //String outFile;
 
 bool updateFile(String inPath, [String outPath]) {
-   outPath ??= inPath;
-  final inFile = new File('C:/odw/sdk/element/lib/src/tag/integer.dart');
+  outPath ??= inPath;
+  final inFile = File('C:/odw/sdk/element/lib/src/tag/integer.dart');
 
   if (inPath.endsWith('.dart')) {
     final inputLines = inFile.readAsLinesSync();
@@ -29,8 +30,8 @@ bool updateFile(String inPath, [String outPath]) {
     if (inputLines[line] != '\n' || inputLines[line] != '\r\l') return false;
     final rest = inputLines.sublist(line).join('\n');
 
-    new File('C:/odw/sdk/element/lib/src/tag/TestInteger.dart')
-      ..writeAsStringSync(newCopyrightString + rest);
+    File('C:/odw/sdk/element/lib/src/tag/TestInteger.dart')
+        .writeAsStringSync(CopyrightString + rest);
     return true;
   }
   return false;
@@ -45,19 +46,18 @@ class EditFile {
   String inRootDir;
   String outRootDir;
 
-  EditFile(this.inFile, [String outFile]);
+  EditFile(this.inFile, [this.outFile]);
 
   EditFile.fromDirectory(this.inRootDir, this.outRootDir);
 
   //
   static void addCopyrightToDir(String copyright, String dirPath) {
-    final dir = new Directory(dirPath);
+    final dir = Directory(dirPath);
     final eList = dir.listSync(recursive: true);
 
     for (var file in eList)
       if (file is File) addCopyrightToFile(copyright, file.path);
   }
-
 
   static const String kCopyright = '''
 // Copyright (c) 2016, 2017, and 2018 Open DICOMweb Project. ',
@@ -70,9 +70,9 @@ class EditFile {
   ''';
 
   bool addCopyrightToFile3() {
-    final inFile = new File('C:/odw/sdk/element/lib/src/tag/integer.dart');
+    final inFile = File('C:/odw/sdk/element/lib/src/tag/integer.dart');
     final filename = basename(inFile.path);
-    var rest;
+    String rest;
 
     if (filename.endsWith('.dart')) {
       final inputLines = inFile.readAsLinesSync();
@@ -83,9 +83,9 @@ class EditFile {
         break;
       }
 
-      final output = newCopyrightString + rest;
-      new File('C:/odw/sdk/element/lib/src/tag/TestInteger.dart')
-        ..writeAsStringSync(output);
+      final output = CopyrightString + rest;
+      File('C:/odw/sdk/element/lib/src/tag/TestInteger.dart')
+          .writeAsStringSync(output);
       return true;
     }
     return false;
@@ -94,8 +94,8 @@ class EditFile {
   //
   static void addCopyrightToFile(String readFromFile,
       [String outFilePath, String readFrom = 'import']) {
-    final file = new File(readFromFile);
-    final outFile = new File(outFilePath ??= readFromFile);
+    final file = File(readFromFile);
+    final outFile = File(outFilePath ??= readFromFile);
     var outData = <String>[];
 
     if (basename(file.path).endsWith('.dart')) {
@@ -111,31 +111,30 @@ class EditFile {
     var start = false;
 
     for (var content in file.readAsLinesSync()) {
-      if (content.startsWith(readFrom)) if (start =
-          content.startsWith(readFrom) ? true : start) outData.add(content);
+      if (content.startsWith(readFrom)) {
+        if (start = content.startsWith(readFrom) ? true : start)
+          outData.add(content);
+      }
     }
 
     return outData;
   }
 
-  //
-  static void writeFile(
-      File outFile, String copyright, List<String> outData) {
+  /// Write the file.
+  static void writeFile(File outFile, String copyright, List<String> outData) {
     final sink = outFile.openWrite();
-    if (copyright != null && copyright.isNotEmpty)
-      sink.writeln(kCopyright);
+    if (copyright != null && copyright.isNotEmpty) sink.writeln(kCopyright);
 
     addEmptyLine(sink);
 
-    if (outData != null && outData.isNotEmpty)
-      outData.forEach(sink.writeln);
+    if (outData != null && outData.isNotEmpty) outData.forEach(sink.writeln);
 
     closeSink(sink);
   }
 
-  //
+  /// Write an empty line to [sink].
   static void addEmptyLine(IOSink sink) => sink.writeln();
 
-  //
+  /// Close [sink].
   static void closeSink(IOSink sink) => sink.close();
 }

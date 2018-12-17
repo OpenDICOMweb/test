@@ -1,28 +1,39 @@
 import 'dart:io';
 import 'package:path/path.dart';
 
+// Urgent Sharath: fix and document or remove this file.
+
+/// A File to be edited.
 class EditFile {
+  /// Input file.
   String readFromFile;
 
+  /// Output File
   String writeToFile;
 
+  /// IOSink
   IOSink sink;
 
+  /// The path to the [readFromFile] directory.
   String dirPath;
 
+  /// Constructor
   EditFile(this.readFromFile, [String writeToFile])
-      : sink = new File(writeToFile ??= readFromFile).openWrite();
+      : sink = File(writeToFile ??= readFromFile).openWrite();
 
+  /// Constructor
   EditFile.fromDirectory(this.dirPath);
-  //
+
+  /// Add [copyright] to the beginning of each file.
   static void addCopyrightToDir(List<String> copyright, String dirPath) {
-    final dir = new Directory(dirPath);
+    final dir = Directory(dirPath);
     final eList = dir.listSync(recursive: true);
 
     for (var file in eList)
       if (file is File) addCopyrightToFile(copyright, file.path);
   }
 
+  /// Add [copyright] to the beginning of file.
   void addCopyrightToFile2() {
     final copyright = <String>[
       '// Copyright (c) 2016, Open DICOMweb Project. All rights reserved.-----',
@@ -33,9 +44,9 @@ class EditFile {
       '//'
     ];
 
-    final file = new File('C:/odw/sdk/element/lib/src/tag/integer.dart');
+    final file = File('C:/odw/sdk/element/lib/src/tag/integer.dart');
     final filename = basename(file.path);
-    final outFile = new File('C:/odw/sdk/element/lib/src/tag/TestInteger.dart');
+    final outFile = File('C:/odw/sdk/element/lib/src/tag/TestInteger.dart');
     final outData = <String>[];
     var start = false;
     if (filename.endsWith('.dart')) {
@@ -53,11 +64,11 @@ class EditFile {
     }
   }
 
-  //
+  /// Add [copyright] to file.
   static void addCopyrightToFile(List<String> copyright, String readFromFile,
       [String outFilePath, String readFrom = 'import']) {
-    final file = new File(readFromFile);
-    final outFile = new File(outFilePath ??= readFromFile);
+    final file = File(readFromFile);
+    final outFile = File(outFilePath ??= readFromFile);
     var outData = <String>[];
 
     if (basename(file.path).endsWith('.dart')) {
@@ -67,7 +78,7 @@ class EditFile {
     }
   }
 
-  //
+  /// Read a file.
   static List<String> readFile(File file, String readFrom) {
     final outData = <String>[];
     var start = false;
@@ -89,15 +100,14 @@ class EditFile {
 
     addEmptyLine(sink);
 
-    if (outData != null && outData.isNotEmpty)
-      outData.forEach(sink.writeln);
+    if (outData != null && outData.isNotEmpty) outData.forEach(sink.writeln);
 
     closeSink(sink);
   }
 
-  //
+  /// Add an empty line.
   static void addEmptyLine(IOSink sink) => sink.writeln();
 
-  //
+  /// Close [sink].
   static void closeSink(IOSink sink) => sink.close();
 }
