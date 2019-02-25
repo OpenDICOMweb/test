@@ -29,11 +29,11 @@ class EditFile {
     final dir = Directory(dirPath);
     final eList = dir.listSync(recursive: true);
 
-    for (var file in eList)
+    for (final file in eList)
       if (file is File) addCopyrightToFile(copyright, file.path);
   }
 
-  /// Add [copyright] to the beginning of file.
+  /// Add _copyright_ to the beginning of file.
   void addCopyrightToFile2() {
     final copyright = <String>[
       '// Copyright (c) 2016, Open DICOMweb Project. All rights reserved.-----',
@@ -51,7 +51,7 @@ class EditFile {
     var start = false;
     if (filename.endsWith('.dart')) {
       final cont = file.readAsLinesSync();
-      for (var c in cont) {
+      for (final c in cont) {
         if (start = c.startsWith('import') ? true : start) {
           outData.add(c);
         }
@@ -83,7 +83,7 @@ class EditFile {
     final outData = <String>[];
     var start = false;
 
-    for (var content in file.readAsLinesSync()) {
+    for (final content in file.readAsLinesSync()) {
       if (content.startsWith(readFrom)) if (start =
           content.startsWith(readFrom) ? true : start) outData.add(content);
     }

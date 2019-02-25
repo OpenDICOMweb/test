@@ -137,7 +137,7 @@ void main() {
     test('getTMList', () {
       for (var i = 0; i < 10; i++) {
         final tmList0 = rsg.getTMList();
-        for (var t in tmList0) {
+        for (final t in tmList0) {
           print('time: $t');
           final h = int.parse(t.substring(0, 2));
           print('hour: $h');

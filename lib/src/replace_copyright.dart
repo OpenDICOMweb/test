@@ -25,7 +25,7 @@ bool updateFile(String inPath, [String outPath]) {
   if (inPath.endsWith('.dart')) {
     final inputLines = inFile.readAsLinesSync();
     var line = 0;
-    while ((!inputLines[line].startsWith('//'))) line++;
+    while (!inputLines[line].startsWith('//')) line++;
 
     if (inputLines[line] != '\n' || inputLines[line] != '\r\l') return false;
     final rest = inputLines.sublist(line).join('\n');
@@ -55,7 +55,7 @@ class EditFile {
     final dir = Directory(dirPath);
     final eList = dir.listSync(recursive: true);
 
-    for (var file in eList)
+    for (final file in eList)
       if (file is File) addCopyrightToFile(copyright, file.path);
   }
 
@@ -110,7 +110,7 @@ class EditFile {
     final outData = <String>[];
     var start = false;
 
-    for (var content in file.readAsLinesSync()) {
+    for (final content in file.readAsLinesSync()) {
       if (content.startsWith(readFrom)) {
         if (start = content.startsWith(readFrom) ? true : start)
           outData.add(content);
