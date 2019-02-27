@@ -48,13 +48,10 @@ class EditFile {
     final filename = basename(file.path);
     final outFile = File('C:/odw/sdk/element/lib/src/tag/TestInteger.dart');
     final outData = <String>[];
-    var start = false;
     if (filename.endsWith('.dart')) {
       final cont = file.readAsLinesSync();
       for (final c in cont) {
-        if (start = c.startsWith('import') ? true : start) {
-          outData.add(c);
-        }
+        if (c.startsWith('import')) outData.add(c);
       }
 
       final sink = outFile.openWrite();
@@ -81,13 +78,9 @@ class EditFile {
   /// Read a file.
   static List<String> readFile(File file, String readFrom) {
     final outData = <String>[];
-    var start = false;
-
     for (final content in file.readAsLinesSync()) {
-      if (content.startsWith(readFrom)) if (start =
-          content.startsWith(readFrom) ? true : start) outData.add(content);
+      if (content.startsWith(readFrom)) outData.add(content);
     }
-
     return outData;
   }
 
