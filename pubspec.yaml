@@ -10,9 +10,9 @@ environment:
   sdk: '>=2.0.0 <3.0.0'
 
 dependencies:
-  core:
-    path: C:/odw/sdk/core
-    version: ^0.7.6
+  charcode: any
+  rng:
+    path: C:\odw\sdk\rng
 
 dev_dependencies:
   benchmark_harness: any

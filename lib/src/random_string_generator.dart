@@ -3,11 +3,13 @@
 // that can be found in the LICENSE file.
 // Author: Jim Philbin <jfphilbin@gmail.edu> -
 // See the AUTHORS file for other contributors.
-
+//
 import 'dart:math' as math;
 import 'dart:typed_data';
 
-import 'package:core/core.dart';
+import 'package:charcode/ascii.dart';
+import 'package:test_tools/src/string_utils.dart';
+import 'package:rng/rng.dart';
 
 // ignore_for_file only_throw_errors
 
@@ -84,9 +86,9 @@ class RSG {
     if (s.length == maxLength) return s;
     var out = s;
     if (isPositive && rng.nextBool) out = '+$out';
-    // Maybe add training kSpace
+    // Maybe add training$Space
     if (out.length < maxLength && rng.nextBool) out = '$out ';
-    // Maybe add leading kSpace
+    // Maybe add leading$Space
     if (out.length < maxLength && rng.nextBool) out = ' $out';
     return out;
   }
@@ -94,6 +96,7 @@ class RSG {
   // If no max is given, or if min and max have the same value,
   // then [min] is returned.
   int _getLength(int min, [int max]) {
+    max ??= 0xFFFF;
     if (max == null || min == max || max < min) return min;
     RangeError.checkValueInInterval(min, 0, 0xFFFF, 'min');
     RangeError.checkValueInInterval(max, min, 0xFFFF, 'max');
@@ -117,7 +120,7 @@ class RSG {
 
   int _getDcmStringChar() {
     final c = rng.nextAscii;
-    return ((c >= kSpace && c < kDelete) && c != kBackslash)
+    return ((c >=$space && c <$del) && c !=$backslash)
         ? c
         : _getDcmStringChar();
   }
@@ -128,7 +131,7 @@ class RSG {
 
   int _getDcmTextChar() {
     final c = rng.nextUtf8;
-    return (c >= kSpace && c < kDelete) ? c : _getDcmTextChar();
+    return (c >=$space && c <$del) ? c : _getDcmTextChar();
   }
 
   /// Generates a valid DICOM String for VR.kAE.
@@ -165,15 +168,15 @@ class RSG {
   }
 
   bool _isValidCSChar(int c) =>
-      isUppercaseChar(c) || isDigitChar(c) || c == kSpace || c == kUnderscore;
+      isUppercaseChar(c) || isDigitChar(c) || c ==$space || c ==$underscore;
 
   /// Generates a valid DICOM String for VR.kDA.
   String getDA([int minLength = 8, int maxLength = 8]) {
     final us = toValidEpochMicrosecond(rng.nextMicrosecond);
-    log.debug('DA : $us');
-    assert(us >= kMinEpochMicrosecond && us <= kMaxEpochMicrosecond);
+    print('DA : $us');
+ //   assert(us >= kMinEpochMicrosecond && us <= kMaxEpochMicrosecond);
     // ignore: only_throw_errors
-    if (isNotValidDateMicroseconds(us)) throw 'Invalid Date microseconds: $us';
+ //   if (isNotValidDateMicroseconds(us)) throw 'Invalid Date microseconds: $us';
     final date = microsecondToDateString(us);
     return date;
   }
@@ -194,15 +197,16 @@ class RSG {
   /// Generates a valid DICOM String for VR.kDT.
   String getDT([int minIndex = 0, int maxIndex = 12]) {
     final us = toValidEpochMicrosecond(rng.nextMicrosecond);
-    log.debug('DT: $us');
+    print('DT: $us');
     // ignore: only_throw_errors
-    if (isNotValidEpochMicroseconds(us)) throw 'Invalid Time microseconds: $us';
+//    if (isNotValidEpochMicroseconds(us)) throw 'Invalid Time microseconds: $us';
     final dt = microsecondToDateTimeString(us);
+    print('dt $dt');
     final length = _getDateTimeLengthIndex(minIndex, maxIndex);
     //final length = _validDateTimeLengths[index];
-    log.debug('DT: "$dt" length: $length');
+    print('DT: "$dt" length: $length');
     final dts = dt.substring(0, length);
-    log.debug('DTS: "$dts"');
+    print('DTS: "$dts"');
     return dts;
   }
 
@@ -211,13 +215,15 @@ class RSG {
     //TODO Sharath: implement
     null;
 
-  static const _validDateTimeLengths = <int>[
+  static const _validDateTimeLengths = const <int>[
     4, 6, 8, 10, 12, 14, 16, 17, 18, 19, 20, 21, 26 // No reformat
   ];
 
+  static  final kMaxDTLength = _validDateTimeLengths.length;
+
   int _getDateTimeLengthIndex(int minIndex, int maxIndex) {
-    RangeError.checkValueInInterval(minIndex, 0, 12);
-    RangeError.checkValueInInterval(maxIndex, minIndex, 12);
+    RangeError.checkValueInInterval(minIndex, 0, kMaxDTLength);
+    RangeError.checkValueInInterval(maxIndex, minIndex, kMaxDTLength);
     final offset = rng.nextInt(minIndex, maxIndex);
     return _validDateTimeLengths[offset];
   }
@@ -256,7 +262,7 @@ class RSG {
       sList[i] = rng.nextAsciiWord(1, partMax);
     }
     var s = sList.join('^');
-    log.debug('s.length: ${s.length}');
+    print('s.length: ${s.length}');
     if (s.length > 64) {
       s = s.substring(1, 64);
     }
@@ -277,12 +283,13 @@ class RSG {
   /// Generates a valid DICOM String for VR.kTM.
   String getTM([int minLength = 2, int maxLength = 13]) {
     final us = toTimeMicroseconds(rng.nextMicrosecond);
-    log.debug('TM: $us');
+    print('TM us: $us');
     final time = microsecondToTimeString(us);
+    print('TM time: "$time"');
     final length = _getTimeLength(minLength, time.length);
-    log.debug('TM: "$time" length: $length');
+    print('TM string: "$time" length: $length');
     final ts = time.substring(0, length);
-    log.debug('TM: "$ts"');
+    print('TM: "$ts"');
     return ts;
   }
 
@@ -306,7 +313,7 @@ class RSG {
     final limit = wkUids.length - 1;
     final index = rng.getLength(1, limit);
     final v = wkUids[index].asString;
-    log.debug('wkUid: "$v"');
+    print('wkUid: "$v"');
     return v;
   }
 
@@ -358,14 +365,14 @@ class RSG {
 
   /// Generates a valid DICOM String for VR.kDS in exponential format.
   String getExpoDSString([int maxLength = 10]) {
-    log.debug('maxLength: $maxLength');
+    print('maxLength: $maxLength');
     var max = (maxLength > 16) ? 16 : maxLength;
     max = (max > 10) ? 10 : max;
     final fLength = _getLength(1, max);
-    log.debug('max: $max fLength: $fLength');
+    print('max: $max fLength: $fLength');
     assert(fLength >= 1 && fLength <= 10);
     final v = _nextDouble();
-    log.debug('v: $v');
+    print('v: $v');
     var s = v.toStringAsExponential(fLength);
     if (s.length < 14) s = _maybePlusPad(s, !v.isNegative, 16);
     assert(s.length <= 16);
@@ -392,7 +399,7 @@ class RSG {
     final max = (maxLength > 16) ? 16 : maxLength;
     final length = _getLength(minLength, max);
     final type = rng.nextUint(0, 2);
-    log.debug2('type: $type');
+    print('type: $type');
     String s;
     final iLength = _getLength(2, 13);
     final fLength = _getLength(1, 13 - iLength);
@@ -590,4 +597,34 @@ class RSG {
           int minVLength = 1,
           int maxVLength = 10240]) =>
       _getList(getUT, minLLength, maxLLength, minVLength, maxVLength);
+
+  // Urgent add these
+  bool isNotValidEpochMicroseconds(int us) => true;
+  bool isNotValidDateMicroseconds(int us) => true;
+  String microsecondToDateString(int us) => '12345678';
+  String microsecondToTimeString(int us) => '123456';
+  String microsecondToDateTimeString(int us) => '12345678654321';
+
+
 }
+
+// Urgent fix DA, TM, and DT generators
+
+// Urgent add these
+const kMinEpochMicrosecond = -0xFFFFFFFF;
+const kMaxEpochMicrosecond = 0xFFFFFFFF - 1;
+const kMicrosecondsPerDay = 24 * 60 * 1000000;
+
+int toValidEpochMicrosecond(int us) {
+  if (us > kMaxEpochMicrosecond) return kMaxEpochMicrosecond;
+  if (us < kMinEpochMicrosecond) return kMinEpochMicrosecond;
+  return us;
+}
+
+int toTimeMicroseconds(int us) {
+  if (us > kMaxEpochMicrosecond) return kMicrosecondsPerDay;
+  if (us < kMinEpochMicrosecond) return 0;
+  return us;
+}
+
+const wkUids = [];

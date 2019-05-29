@@ -3,8 +3,7 @@
 // that can be found in the LICENSE file.
 // Author: Jim Philbin <jfphilbin@gmail.edu> -
 // See the AUTHORS file for other contributors.
-
-import 'package:core/server.dart' hide group;
+//
 import 'package:test/test.dart';
 import 'package:test_tools/tools.dart';
 
@@ -18,17 +17,15 @@ int seed = 1;
 RSG rsg = RSG(seed: seed);
 
 void main() {
-  Server.initialize(name: 'rsg_test', level: Level.debug);
-
   /// Test DICOM IS values.
   test('Random IS Test', () {
     for (var i = 0; i < count; i++) {
       final s = rsg.isString;
       // ignore: only_throw_errors
       if (s.length > 12) throw '"$s".length = ${s.length}';
-      if (s.length == 1) log.debug('***  IS: "$s".length = ${s.length}');
-      if (s.length == 12) log.debug('*** IS: "$s".length = ${s.length}');
-      log.debug(' IS: ${s.length}: "$s"');
+      if (s.length == 1) print('***  IS: "$s".length = ${s.length}');
+      if (s.length == 12) print('*** IS: "$s".length = ${s.length}');
+      print(' IS: ${s.length}: "$s"');
       expect(s.length <= 12, true);
       //TODO: add error handler to int.parse
       final x = int.parse(s);
@@ -44,9 +41,9 @@ void main() {
         final len = s.length.toString().padLeft(2, ' ');
         // ignore: only_throw_errors
         if (s.length > 16) throw '"$s".length = ${s.length}';
-        if (s.length < 8) log.debug('*** FDS $len: "$s".length');
-        if (s.length > 14) log.debug('*** FDS $len: "$s".length');
-        log.debug('    FDS $len: "$s"');
+        if (s.length < 8) print('*** FDS $len: "$s".length');
+        if (s.length > 14) print('*** FDS $len: "$s".length');
+        print('    FDS $len: "$s"');
         expect(s.length <= 16, true);
         final x = double.parse(s);
         expect(x is double, true);
@@ -59,9 +56,9 @@ void main() {
         final len = s.length.toString().padLeft(2, ' ');
         // ignore: only_throw_errors
         if (s.length > 16) throw '"$s".length = ${s.length}';
-        if (s.length == 8) log.debug('*** EDS $len: "$s".length');
-        if (s.length == 16) log.debug('*** EDS $len: "$s".length');
-        log.debug('    EDS $len: "$s"');
+        if (s.length == 8) print('*** EDS $len: "$s".length');
+        if (s.length == 16) print('*** EDS $len: "$s".length');
+        print('    EDS $len: "$s"');
         expect(s.length <= 16, true);
         final x = double.parse(s);
         expect(x is double, true);
@@ -73,7 +70,7 @@ void main() {
         final s = rsg.getPrecisionDSString();
         final len = s.length.toString().padLeft(2, ' ');
         RangeError.checkValidRange(1, s.length, 16);
-        log.debug('    PDS $len: "$s"');
+        print('    PDS $len: "$s"');
         expect(s.length <= 16, true);
         final x = double.parse(s);
         expect(x is double, true);
@@ -91,9 +88,9 @@ void main() {
           final p = j.toString().padLeft(2, ' ');
           // ignore: only_throw_errors
           if (s.length > 16) throw '"$s".length = ${s.length}';
-          if (s.length < 8) log.debug('*** $p PDS $len: "$s".length');
-          if (s.length == 16) log.debug('*** $p PDS $len: "$s".length');
-          log.debug('   $p PDS $len: "$s"');
+          if (s.length < 8) print('*** $p PDS $len: "$s".length');
+          if (s.length == 16) print('*** $p PDS $len: "$s".length');
+          print('   $p PDS $len: "$s"');
           expect(s.length <= 16, true);
           final x = double.parse(s);
           expect(x is double, true);
@@ -102,18 +99,18 @@ void main() {
     });
 
     test('Random DS String Test', () {
-      global.level = Level.debug2;
+
       for (var i = 0; i < count; i++) {
         final s = rsg.getDSString();
-        log.debug2('    RDS: ${s.length}: "$s"');
+        print('    RDS: ${s.length}: "$s"');
         // ignore: only_throw_errors
         if (s.length > 16 || s.isEmpty) throw '"$s".length = ${s.length}';
         if (s.isNotEmpty && s.length <= 16)
-          log.debug('*** RDS: "$s".length = ${s.length}');
+          print('*** RDS: "$s".length = ${s.length}');
         expect(s.isNotEmpty && s.length <= 16, true);
-        log.debug2('      S: $s');
+        print('      S: $s');
         final x = double.parse(s);
-        log.debug2('      X: $x');
+        print('      X: $x');
         expect(x is double, true);
       }
     });

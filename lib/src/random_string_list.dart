@@ -3,11 +3,11 @@
 // that can be found in the LICENSE file.
 // Author: Jim Philbin <jfphilbin@gmail.edu>
 // See the AUTHORS file for other contributors.
-
+//
 import 'dart:math';
 import 'dart:typed_data';
 
-import 'package:core/core.dart';
+import 'package:test_tools/src/constants.dart';
 
 /// A class used to create random DICOM List<String>.
 class RandomStringList {
@@ -34,27 +34,27 @@ class RandomStringList {
 
   /// A valid DICOM Code String [String].
   static const RandomStringList dcmCodeString =
-      RandomStringList('dcmCodeString', 1, Int16.kMaxValue);
+      RandomStringList('dcmCodeString', 1, kInt16MaxValue);
 
   /// A valid DICOM String [List<String>].
   static const RandomStringList dcmDate =
-      RandomStringList('dcmDate', 1, Uint16.kMaxValue);
+      RandomStringList('dcmDate', 1, kUint16MaxValue);
 
   /// A valid DICOM Time [List<String>].
   static const RandomStringList dcmTime =
-      RandomStringList('dcmTime', 1, Int32.kMaxValue);
+      RandomStringList('dcmTime', 1, kInt32MaxValue);
 
   /// A valid DICOM DateTime [List<String>].
   static const RandomStringList dcmDateTime =
-      RandomStringList('dcmDateTime', 1, Uint32.kMaxValue);
+      RandomStringList('dcmDateTime', 1, kUint32MaxValue);
 
   /// A valid DICOM Decimal [List<String>].
   static const RandomStringList dcmDecimal =
-      RandomStringList('dcmDecimal', 1, Int64.kMaxValue);
+      RandomStringList('dcmDecimal', 1, kInt64MaxValue);
 
   /// A valid DICOM Integer [List<String>].
   static const RandomStringList dcmInteger =
-      RandomStringList('dcmInteger', 1, Uint64.kMaxValue);
+      RandomStringList('dcmInteger', 1, kUint64MaxValue);
 
   /// A valid DICOM Person Name [List<String>].
   static const RandomStringList dcmPersonName =

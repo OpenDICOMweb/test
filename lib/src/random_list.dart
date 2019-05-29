@@ -7,7 +7,7 @@
 import 'dart:math';
 import 'dart:typed_data';
 
-import 'package:core/core.dart';
+import 'package:test_tools/src/constants.dart';
 
 //TODO: Merge with common/random/rng.dart
 /// TODO: doc or delete
@@ -29,35 +29,35 @@ class RandomList<T> {
   //TODO: add Type variable T
   /// A generator for [Int8List]s.
   static const RandomList int8 =
-      RandomList<int>._('Int8', Int8List, Int8.kMinValue, Int8.kMaxValue);
+      RandomList<int>._('Int8', Int8List, kInt8MinValue, kInt8MaxValue);
 
   /// A generator for [Uint8List]s.
   static const RandomList uint8 =
-      RandomList<int>._('Uint8', Uint8List, 0, Uint8.kMaxValue);
+      RandomList<int>._('Uint8', Uint8List, 0, kUint8MaxValue);
 
   /// A generator for [Int16List]s.
   static const RandomList int16 =
-      RandomList<int>._('Int16', Int16List, Int16.kMinValue, Int16.kMaxValue);
+      RandomList<int>._('Int16', Int16List, kInt16MinValue, kInt16MaxValue);
 
   /// A generator for [Uint16List]s.
   static const RandomList uint16 =
-      RandomList<int>._('Uint16', Uint16List, 0, Uint16.kMaxValue);
+      RandomList<int>._('Uint16', Uint16List, 0, kUint16MaxValue);
 
   /// A generator for [Int32List]s.
   static const RandomList int32 =
-      RandomList<int>._('Int32', Int32List, Int32.kMinValue, Int32.kMaxValue);
+      RandomList<int>._('Int32', Int32List, kInt32MinValue, kInt32MaxValue);
 
   /// A generator for [Uint32List]s.
   static const RandomList uint32 =
-      RandomList<int>._('Uint32', Uint32List, 0, Uint32.kMaxValue);
+      RandomList<int>._('Uint32', Uint32List, 0, kUint32MaxValue);
 
   /// A generator for [Int64List]s.
   static const RandomList int64 =
-      RandomList<int>._('Int64', Int64List, Int64.kMinValue, Int64.kMaxValue);
+      RandomList<int>._('Int64', Int64List, kInt64MinValue, kInt64MaxValue);
 
   /// A generator for [Uint64List]s.
   static const RandomList uint64 =
-      RandomList<int>._('Uint64', Uint64List, 0, Uint64.kMaxValue);
+      RandomList<int>._('Uint64', Uint64List, 0, kUint64MaxValue);
 
   /// A generator for [Float32List]s.
   static const RandomList float32 =

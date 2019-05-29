@@ -11,113 +11,7 @@ import 'package:charcode/ascii.dart';
 /// between [min] and max].
 typedef StringGenerator = String Function([int min, int max]);
 
-//TODO: doc and remove dead code
-/// Returns a random [String].
-String randomString(int length,
-    {bool noLowerCase = true,
-    bool noCharacter = false,
-    bool noNumber = false,
-    bool noSpecialCharacter = false,
-    bool isDecimal = false}) {
-  final rand = Random();
-  var dotOne = false, keKEOne = false;
-  int prevCode, plusMinusCount = 0, iterations = 0;
-  final codeUnits = List.generate(length, (index) {
-    var alpha = rand.nextInt(122);
-    while (!((!noCharacter && alpha >= $a && alpha <= $z && !noLowerCase) ||
-            (!noCharacter && alpha >= $A && alpha <= $Z) ||
-            (!noNumber && alpha >= $0 && alpha <= $9) ||
-            (!noSpecialCharacter &&
-                (alpha == $space || alpha == $underscore))) ||
-        isDecimal) {
-      iterations++;
-      if (iterations > 500) break;
-      if (isDecimal &&
-          ((alpha >= $0 && alpha <= $9) ||
-              (alpha == $dot ||
-                  alpha == $E ||
-                  alpha == $e ||
-                  alpha == $plus ||
-                  alpha == $minus))) {
-        if ((index == length - 1) &&
-            (alpha == $E || alpha == $e || alpha == $plus || alpha == $minus)) {
-          alpha = rand.nextInt(122);
-          continue;
-        }
-
-        if ((prevCode == null && alpha == $E || alpha == $e) ||
-            (prevCode == $e ||
-                prevCode == $E &&
-                    (alpha >= $0 && alpha <= $9 || alpha == $dot))) {
-          alpha = rand.nextInt(122);
-          continue;
-        }
-
-        if ((prevCode == $E || prevCode == $e || prevCode == null) &&
-            (alpha == $plus || alpha == $minus) &&
-            plusMinusCount < 3) {
-          plusMinusCount++;
-          prevCode = alpha;
-          break;
-        }
-
-        if ((alpha == $plus || alpha == $minus) &&
-            (prevCode == $dot ||
-                (prevCode >= $0 && prevCode <= $9) ||
-                prevCode == $minus ||
-                prevCode == $plus)) {
-          alpha = rand.nextInt(122);
-          continue;
-        }
-
-        if ((alpha == $minus || alpha == $plus || alpha == $e || alpha == $E) &&
-            (prevCode == $minus || prevCode == $plus || prevCode == $dot)) {
-          alpha = rand.nextInt(122);
-          continue;
-        }
-
-        if ((prevCode == $plus || prevCode == $minus) &&
-            alpha >= $0 &&
-            alpha <= $9) {
-          prevCode = alpha;
-          break;
-        }
-
-        if ((dotOne && alpha == $dot) ||
-            (keKEOne && (alpha == $e || alpha == $E)) ||
-            (plusMinusCount > 2 && (alpha == $plus || alpha == $minus))) {
-          alpha = rand.nextInt(122);
-          continue;
-        }
-
-        if (!dotOne && alpha == $dot) {
-          dotOne = true;
-          prevCode = alpha;
-        }
-
-        if (!keKEOne && (alpha == $e || alpha == $E)) {
-          keKEOne = true;
-          prevCode = alpha;
-        }
-
-        if (alpha >= $0 && alpha <= $9) {
-          prevCode = alpha;
-          break;
-        }
-
-        break;
-      } else
-        alpha = rand.nextInt(122);
-    }
-    return alpha;
-  });
-
-  return String.fromCharCodes(codeUnits);
-}
-
-/*
 Random _rng = Random();
-
 
 /// Returns a random length between [min] and [max] inclusive.
 int getLength(int min, int max) {
@@ -211,8 +105,6 @@ String generateLTString([int min = 0, int max = 64]) =>
 String generateUTString([int min = 0, int max = kMaxLongVF]) =>
     generateDcmTextString(min, max);
 
-*/
-
 /*
 /// Generates DICOM Text characters. All visible ASCII characters
 /// are legal including Backslash.
@@ -224,7 +116,6 @@ String generateTextChar(int length) {
     while ((alpha < kSpace || alpha == $del)) {
       /*iterations++;
       if (iterations > 500) break;*/
-
       alpha = rand.nextInt(126);
     }
     return alpha;
@@ -232,9 +123,6 @@ String generateTextChar(int length) {
   return  String.fromCharCodes(codeUnits);
 }
 */
-/*
-
-
 
 /// Generates DICOM Code String(CS) characters.
 /// Visible ASCII characters, except Backslash.
@@ -283,4 +171,3 @@ String generateDcmPersonName(
   }
   return listGroup.join('=');
 }
-*/

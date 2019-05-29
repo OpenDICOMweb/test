@@ -4,13 +4,10 @@
 // Author: Jim Philbin <jfphilbin@gmail.edu>
 // See the AUTHORS file for other contributors.
 //
-import 'package:core/server.dart';
 import 'package:test/test.dart';
 import 'package:test_tools/src/edit_file.dart';
 
 void main() {
-  Server.initialize(name: 'edit_file_test', level: Level.debug);
-
   test('edit copyright Test', () {
     final copyright = <String>[
       '// Copyright (c) 2016, Open DICOMweb Project. All rights reserved.-----',
