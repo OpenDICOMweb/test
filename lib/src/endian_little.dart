@@ -19,56 +19,56 @@ bool isAligned128(int offset) => isAligned(offset, 16);
 // Conversion to Endian.little
 
 Uint8List getInt16LE(Int16List list) {
-  final bd = list.buffer.asByteData();
+  final bd = Int16List.fromList(list).buffer.asByteData();
   for (var i = 0; i < list.length; i++)
     bd.setInt16(i * 2, list[i], Endian.little);
   return bd.buffer.asUint8List();
 }
 
 Uint8List getInt32LE(Int32List list) {
-  final bd = list.buffer.asByteData();
+  final bd = Int32List.fromList(list).buffer.asByteData();
   for (var i = 0; i < list.length; i++)
     bd.setInt32(i * 4, list[i], Endian.little);
   return bd.buffer.asUint8List();
 }
 
 Uint8List getInt64LE(Int64List list) {
-  final bd = list.buffer.asByteData();
+  final bd = Int64List.fromList(list).buffer.asByteData();
   for (var i = 0; i < list.length; i++)
     bd.setInt64(i * 8, list[i], Endian.little);
   return bd.buffer.asUint8List();
 }
 
 Uint8List getUint16LE(Uint16List list) {
-  final bd = list.buffer.asByteData();
+  final bd = Uint16List.fromList(list).buffer.asByteData();
   for (var i = 0; i < list.length; i++)
     bd.setUint16(i * 2, list[i], Endian.little);
   return bd.buffer.asUint8List();
 }
 
 Uint8List getUint32LE(Uint32List list) {
-  final bd = list.buffer.asByteData();
+  final bd = Uint32List.fromList(list).buffer.asByteData();
   for (var i = 0; i < list.length; i++)
     bd.setUint32(i * 4, list[i], Endian.little);
   return bd.buffer.asUint8List();
 }
 
 Uint8List getUint64LE(Uint64List list) {
-  final bd = list.buffer.asByteData();
+  final bd = Uint64List.fromList(list).buffer.asByteData();
   for (var i = 0; i < list.length; i++)
     bd.setUint64(i * 8, list[i], Endian.little);
   return bd.buffer.asUint8List();
 }
 
 Uint8List getFloat32LE(Float32List list) {
-  final bd = list.buffer.asByteData();
+  final bd = Float32List.fromList(list).buffer.asByteData();
   for (var i = 0; i < list.length; i++)
     bd.setFloat32(i * 4, list[i], Endian.little);
   return bd.buffer.asUint8List();
 }
 
 Uint8List getFloat64LE(Float64List list) {
-  final bd = list.buffer.asByteData();
+  final bd = Float64List.fromList(list).buffer.asByteData();
   for (var i = 0; i < list.length; i++)
     bd.setFloat64(i * 8, list[i], Endian.little);
   return bd.buffer.asUint8List();
