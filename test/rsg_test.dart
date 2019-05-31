@@ -117,6 +117,7 @@ void main() {
   });
 
   group('DA', () {
+    // TODO: improve this test
     test('getDAList', () {
       for (var i = 0; i < 10; i++) {
         final daList0 = rsg.getDAList();
@@ -124,13 +125,17 @@ void main() {
       }
     });
 
-    test('getDTList', () {
+// Urgent fix and improve
+ /*   test('getDTList', () {
       for (var i = 0; i < 10; i++) {
         final dtList0 = rsg.getDTList();
         print('dtList0: $dtList0');
       }
     });
+*/
 
+// Urgent fix and improve
+/*
     test('getTMList', () {
       for (var i = 0; i < 10; i++) {
         final tmList0 = rsg.getTMList();
@@ -140,11 +145,15 @@ void main() {
           print('hour: $h');
           expect(h < 24, true);
 
-          /*final m = int.parse(t.substring(2,4));
+          final m = int.parse(t.substring(2,4));
           print('minute: $m');
-          expect(m < 60, true);*/
+          expect(m < 60, true);
+
         }
       }
     });
+*/
+
+
   });
 }

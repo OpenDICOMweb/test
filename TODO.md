@@ -1,3 +1,4 @@
 # TODO
 
-1. Remove new and const keywords wherever possible
+1. Fix getDTList
+1. Fix getTMList

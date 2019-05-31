@@ -22,14 +22,14 @@ class RSG {
   final int seed;
 
   /// The Random Number Generator.
-  final RNG rng;
+  final DicomRNG rng;
 
   //TODO implement.
   /// _true_ if [String]s should be padded to even length.
   final bool shouldPad;
 
   /// Creates a Random String Generator ([RSG]) using [RNG] from number.
-  RSG({this.seed, this.shouldPad = true}) : rng =  RNG(seed);
+  RSG({this.seed, this.shouldPad = true}) : rng = DicomRNG(seed);
 
   /// Returns a valid VR.kAE [String].
   String get aeString => shString;
@@ -82,6 +82,9 @@ class RSG {
   /// Returns a valid VR.kUT [String].
   String get utString => getUT();
 
+  /// Returns a random Int32 representing some microsecond.
+  int get nextMicrosecond => rng.nextInt32;
+
   String _maybePlusPad(String s, bool isPositive, int maxLength) {
     if (s.length == maxLength) return s;
     var out = s;
@@ -109,9 +112,9 @@ class RSG {
 
   String _getString(int genChar(), int minLength, int maxLength) {
     final length = _getLength(minLength, maxLength);
-    final bytes =  Uint8List(length);
+    final bytes = Uint8List(length);
     for (var i = 0; i < length; i++) bytes[i] = genChar();
-    return  String.fromCharCodes(bytes);
+    return String.fromCharCodes(bytes);
   }
 
   /// Returns a [String] conforming to a DICOM String VR (SH, LO, UC).
@@ -119,8 +122,8 @@ class RSG {
       _getString(_getDcmStringChar, minLength, maxLength);
 
   int _getDcmStringChar() {
-    final c = rng.nextAscii;
-    return ((c >=$space && c <$del) && c !=$backslash)
+    final c = rng.nextAsciiDicomChar;
+    return ((c >= $space && c < $del) && c != $backslash)
         ? c
         : _getDcmStringChar();
   }
@@ -131,7 +134,7 @@ class RSG {
 
   int _getDcmTextChar() {
     final c = rng.nextUtf8;
-    return (c >=$space && c <$del) ? c : _getDcmTextChar();
+    return (c >= $space && c < $del) ? c : _getDcmTextChar();
   }
 
   /// Generates a valid DICOM String for VR.kAE.
@@ -152,7 +155,7 @@ class RSG {
     String letter;
     do {
       final charCode = rng.nextAsciiVChar;
-      letter =  String.fromCharCode(charCode);
+      letter = String.fromCharCode(charCode);
     } while ('DWMY'.contains(letter));
     final count = rng.nextUint(minDays, maxDays);
     return '${count.toString()}$letter';
@@ -163,32 +166,31 @@ class RSG {
       _getString(_getCSChar, minLength, 16);
 
   int _getCSChar() {
-    final c = rng.nextAscii;
+    final c = rng.nextAsciiDicomChar;
     return (_isValidCSChar(c)) ? c : _getCSChar();
   }
 
   bool _isValidCSChar(int c) =>
-      isUppercaseChar(c) || isDigitChar(c) || c ==$space || c ==$underscore;
+      isUppercaseChar(c) || isDigitChar(c) || c == $space || c == $underscore;
 
   /// Generates a valid DICOM String for VR.kDA.
   String getDA([int minLength = 8, int maxLength = 8]) {
-    final us = toValidEpochMicrosecond(rng.nextMicrosecond);
+    final us = toValidEpochMicrosecond(nextMicrosecond);
     print('DA : $us');
- //   assert(us >= kMinEpochMicrosecond && us <= kMaxEpochMicrosecond);
+    //   assert(us >= kMinEpochMicrosecond && us <= kMaxEpochMicrosecond);
     // ignore: only_throw_errors
- //   if (isNotValidDateMicroseconds(us)) throw 'Invalid Date microseconds: $us';
+    //   if (isNotValidDateMicroseconds(us)) throw 'Invalid Date microseconds: $us';
     final date = microsecondToDateString(us);
     return date;
   }
 
   /// Generates an _invalid_ DICOM String for VR.kDA.
   String getInvalidDA([int minLength = 0, int maxLength = 16]) =>
-    //TODO Sharath: implement
-     null;
-
+      //TODO Sharath: implement
+      null;
 
   /// Returns a valid DICOM Date String.
-  String getDateString() => microsecondToDateString(rng.nextMicrosecond);
+  String getDateString() => microsecondToDateString(nextMicrosecond);
 
   /// Generates a valid DICOM String for VR.kDS.
   String getDS([int minLength = 1, int maxLength = 16]) =>
@@ -196,7 +198,7 @@ class RSG {
 
   /// Generates a valid DICOM String for VR.kDT.
   String getDT([int minIndex = 0, int maxIndex = 12]) {
-    final us = toValidEpochMicrosecond(rng.nextMicrosecond);
+    final us = toValidEpochMicrosecond(nextMicrosecond);
     print('DT: $us');
     // ignore: only_throw_errors
 //    if (isNotValidEpochMicroseconds(us)) throw 'Invalid Time microseconds: $us';
@@ -212,14 +214,14 @@ class RSG {
 
   /// Generates an _invalid_ DICOM String for VR.kDA.
   String getInvalidDT([int minLength = 0, int maxLength = 64]) =>
-    //TODO Sharath: implement
-    null;
+      //TODO Sharath: implement
+      null;
 
   static const _validDateTimeLengths = const <int>[
     4, 6, 8, 10, 12, 14, 16, 17, 18, 19, 20, 21, 26 // No reformat
   ];
 
-  static  final kMaxDTLength = _validDateTimeLengths.length;
+  static final kMaxDTLength = _validDateTimeLengths.length;
 
   int _getDateTimeLengthIndex(int minIndex, int maxIndex) {
     RangeError.checkValueInInterval(minIndex, 0, kMaxDTLength);
@@ -230,7 +232,7 @@ class RSG {
 
   /// Returns a valid DICOM Time String.
   String getTimeString() {
-    final us = rng.nextMicrosecond % kMicrosecondsPerDay;
+    final us = rng.nextUint32 % kMicrosecondsPerDay;
     return microsecondToTimeString(us);
   }
 
@@ -257,9 +259,9 @@ class RSG {
   String _getPNString([int minLength = 1, int maxLength = 64]) {
     final nParts = rng.getLength(1, 5);
     const partMax = 13;
-    final sList =  List<String>(nParts);
+    final sList = List<String>(nParts);
     for (var i = 0; i < nParts; i++) {
-      sList[i] = rng.nextAsciiWord(1, partMax);
+      sList[i] = rng.nextDicomKeyword(1, partMax);
     }
     var s = sList.join('^');
     print('s.length: ${s.length}');
@@ -282,7 +284,7 @@ class RSG {
 
   /// Generates a valid DICOM String for VR.kTM.
   String getTM([int minLength = 2, int maxLength = 13]) {
-    final us = toTimeMicroseconds(rng.nextMicrosecond);
+    final us = toTimeMicroseconds(nextMicrosecond);
     print('TM us: $us');
     final time = microsecondToTimeString(us);
     print('TM time: "$time"');
@@ -295,8 +297,8 @@ class RSG {
 
   /// Generates an _invalid_ DICOM String for VR.kTM.
   String getInvalidTM([int minLength = 0, int maxLength = 64]) =>
-    //TODO Sharath: implement
-  null;
+      //TODO Sharath: implement
+      null;
 
   static const _validTimeLengths = <int>[2, 4, 6, 8, 9, 10, 11, 12, 13];
 
@@ -322,8 +324,8 @@ class RSG {
 
   String _getURString(int minLength, int maxLength) {
     final length = rng.getLength(1, 5);
-    final parts =  List<String>(length);
-    for (var i = 0; i < length; i++) parts[i] = rng.nextAsciiWord(3, 8);
+    final parts = List<String>(length);
+    for (var i = 0; i < length; i++) parts[i] = rng.nextDicomKeyword(3, 8);
     final path = parts.join('/');
     return (rng.nextBool) ? 'http:/$path' : '$path';
   }
@@ -386,7 +388,7 @@ class RSG {
     final pLength = _getLength(1, max);
     final v = _nextDouble();
     var s = v.toStringAsPrecision(pLength);
-    s =  _maybePlusPad(s, !v.isNegative, 16);
+    s = _maybePlusPad(s, !v.isNegative, 16);
     assert(s.length <= 16);
     return s;
   }
@@ -419,7 +421,7 @@ class RSG {
   List<String> _getList(String generate([int min, int max]), int minLLength,
       int maxLLength, int minVLength, int maxVLength) {
     final length = _getLength(minLLength, maxLLength);
-    final sList =  List<String>(length);
+    final sList = List<String>(length);
     for (var i = 0; i < length; i++)
       sList[i] = generate(minVLength, maxVLength);
     return sList;
@@ -604,8 +606,6 @@ class RSG {
   String microsecondToDateString(int us) => '12345678';
   String microsecondToTimeString(int us) => '123456';
   String microsecondToDateTimeString(int us) => '12345678654321';
-
-
 }
 
 // Urgent fix DA, TM, and DT generators
