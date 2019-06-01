@@ -122,7 +122,7 @@ class RSG {
       _getString(_getDcmStringChar, minLength, maxLength);
 
   int _getDcmStringChar() {
-    final c = rng.nextAsciiDicomChar;
+    final c = rng.nextAsciiVChar;
     return ((c >= $space && c < $del) && c != $backslash)
         ? c
         : _getDcmStringChar();
@@ -166,7 +166,7 @@ class RSG {
       _getString(_getCSChar, minLength, 16);
 
   int _getCSChar() {
-    final c = rng.nextAsciiDicomChar;
+    final c = rng.nextAsciiVChar;
     return (_isValidCSChar(c)) ? c : _getCSChar();
   }
 
