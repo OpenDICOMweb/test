@@ -81,7 +81,8 @@ class JpegTestFile extends TestFileBase {
       : super(eCount, sqCount, privateCount);
 
   @override
-  TransferSyntaxPhantom get ts => TransferSyntaxPhantom.kJpeg2000ImageCompression;
+  TransferSyntaxPhantom get ts =>
+      TransferSyntaxPhantom.kJpeg2000ImageCompression;
 
   /// First file.
   static EvrTestFile f1 = const EvrTestFile(-1, -1, -1, '');

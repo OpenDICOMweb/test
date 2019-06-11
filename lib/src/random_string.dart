@@ -6,6 +6,7 @@
 import 'dart:math';
 
 import 'package:charcode/ascii.dart';
+import 'package:test_tools/src/string_utils.dart';
 
 /// The Type of a function that generates [String]s, with length
 /// between [min] and max].
@@ -284,3 +285,51 @@ String generateDcmPersonName(
   return listGroup.join('=');
 }
 */
+
+/// Generates DICOM Code String(CS) characters.
+/// Visible ASCII characters, except Backslash.
+String gemerateCSString(int length) {
+  final rand = Random();
+  var iterations = 0;
+  final codeUnits = List.generate(length, (index) {
+    var alpha = rand.nextInt(127);
+    while (!(isUppercaseChar(alpha) ||
+        isDigitChar(alpha) ||
+        alpha == $space ||
+        alpha == $underscore)) {
+      iterations++;
+      if (iterations > 500) break;
+      alpha = rand.nextInt(126);
+    }
+    return alpha;
+  });
+  return String.fromCharCodes(codeUnits);
+}
+
+/// Generates a random Person name with specified number of groups [nGroups],
+/// components [nComponents] and component length [maxComponentLength]
+String generateDcmPersonName(
+    int nGroups, int nComponents, int maxComponentLength) {
+  final listGroup = <String>[];
+  for (var i = 0; i < nGroups; i++) {
+    final listComponent = <String>[];
+    for (var j = 0; j < nComponents; j++) {
+      final rand = Random();
+//      int iterations = 0;
+      final codeUnits = List.generate(maxComponentLength, (index) {
+        var alpha = rand.nextInt(127);
+        while (!(alpha >= $space &&
+            alpha < $del &&
+            alpha != $backslash &&
+            alpha != $circumflex &&
+            alpha != $equal)) {
+          alpha = rand.nextInt(126);
+        }
+        return alpha;
+      });
+      listComponent.add(String.fromCharCodes(codeUnits));
+    }
+    listGroup.add(listComponent.join('^'));
+  }
+  return listGroup.join('=');
+}

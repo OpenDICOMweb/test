@@ -227,7 +227,7 @@ class RSG {
 
   /// Returns a valid DICOM Time String.
   String getTimeString() {
-    final us = rng.nextUint32 % kMicrosecondsPerDay;
+    final us = rng.nextUint32 % _kMicrosecondsPerDay;
     return microsecondToTimeString(us);
   }
 
@@ -609,20 +609,20 @@ class RSG {
 // Urgent fix DA, TM, and DT generators
 
 // Urgent add these
-const kMinEpochMicrosecond = -0xFFFFFFFF;
-const kMaxEpochMicrosecond = 0xFFFFFFFF - 1;
-const kMicrosecondsPerDay = 24 * 60 * 1000000;
+const _kMinEpochMicrosecond = -0xFFFFFFFF;
+const _kMaxEpochMicrosecond = 0xFFFFFFFF - 1;
+const _kMicrosecondsPerDay = 24 * 60 * 1000000;
 
 int toValidEpochMicrosecond(int us) {
-  if (us > kMaxEpochMicrosecond) return kMaxEpochMicrosecond;
-  if (us < kMinEpochMicrosecond) return kMinEpochMicrosecond;
+  if (us > _kMaxEpochMicrosecond) return _kMaxEpochMicrosecond;
+  if (us < _kMinEpochMicrosecond) return _kMinEpochMicrosecond;
   return us;
 }
 
 int toTimeMicroseconds(int us) {
-  if (us > kMaxEpochMicrosecond) return kMicrosecondsPerDay;
-  if (us < kMinEpochMicrosecond) return 0;
+  if (us > _kMaxEpochMicrosecond) return _kMicrosecondsPerDay;
+  if (us < _kMinEpochMicrosecond) return 0;
   return us;
 }
 
-const wkUids = <String>[];
+const wellKnownUids = <String>[];
