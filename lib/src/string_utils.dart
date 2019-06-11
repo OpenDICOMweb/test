@@ -78,6 +78,7 @@ String gemerateSHString([int min = 0, int max = 16]) =>
 String gemerateLOString([int min = 0, int max = 64]) =>
     generateDcmString(min, max);
 
+/// The maximum length of a Long Value Field in DICOM.
 const kMaxLongVF = 0xFFFFFFFF - 1;
 
 /// Generates a valid DICOM String for VR.kUC.

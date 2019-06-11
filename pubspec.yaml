@@ -13,6 +13,7 @@ dependencies:
   charcode: any
   rng:
     path: C:\odw\sdk\rng
+    version: ^0.8.0
 
 dev_dependencies:
   benchmark_harness: any

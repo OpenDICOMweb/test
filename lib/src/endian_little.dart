@@ -6,7 +6,7 @@
 //
 import 'dart:typed_data';
 
-// ignore: public_member_api_docs
+// ignore_for_file: public_member_api_docs
 
 bool isAligned(int index, int size) => (index % size) == 0;
 

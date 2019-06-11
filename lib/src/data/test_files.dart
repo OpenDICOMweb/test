@@ -6,27 +6,26 @@
 //  Primary Author: Jim Philbin <jfphilbin@gmail.edu>
 //  See the AUTHORS file for other contributors.
 
+// ignore_for_file: public_member_api_docs
 
-// ignore_for_file: Type_Annotate_public_APIs
-
-// Urgent Sharath:
-// please create test files for
-
+// Urgent create test files for
 class TransferSyntax {
   final int x;
   const TransferSyntax(this.x);
 
-  static const kImplicitVRLittleEndian = const TransferSyntax(0);
-  static const kExplicitVRLittleEndian = const TransferSyntax(1);
-  static const kJpeg2000ImageCompression = const TransferSyntax(2);
+  static const kImplicitVRLittleEndian = TransferSyntax(0);
+  static const kExplicitVRLittleEndian = TransferSyntax(1);
+  static const kJpeg2000ImageCompression = TransferSyntax(2);
 }
+
 /// A base class for Test Files.
 abstract class TestFileBase {
-
   /// Element count.
   final int eCount;
+
   /// Sequence count.
   final int sqCount;
+
   /// Private Element count.
   final int privateCount;
 
@@ -42,7 +41,6 @@ abstract class TestFileBase {
 
 /// IVR Test Files.
 class IvrTestFile extends TestFileBase {
-
   @override
   final String fPath;
 

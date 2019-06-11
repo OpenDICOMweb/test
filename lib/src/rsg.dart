@@ -12,6 +12,7 @@ import 'package:test_tools/src/string_utils.dart';
 import 'package:rng/rng.dart';
 
 // ignore_for_file only_throw_errors
+// ignore_for_file: public_member_api_docs
 
 //Enhancement: if performance needs to be improved us StringBuffer.
 //Enhancement: show that a normal distribution is generated
@@ -176,12 +177,8 @@ class RSG {
   /// Generates a valid DICOM String for VR.kDA.
   String getDA([int minLength = 8, int maxLength = 8]) {
     final us = toValidEpochMicrosecond(nextMicrosecond);
-    print('DA : $us');
-    //   assert(us >= kMinEpochMicrosecond && us <= kMaxEpochMicrosecond);
-    // ignore: only_throw_errors
-    //   if (isNotValidDateMicroseconds(us)) throw 'Invalid Date microseconds: $us';
-    final date = microsecondToDateString(us);
-    return date;
+//    print('DA : $us');
+    return microsecondToDateString(us);
   }
 
   /// Generates an _invalid_ DICOM String for VR.kDA.
@@ -199,16 +196,14 @@ class RSG {
   /// Generates a valid DICOM String for VR.kDT.
   String getDT([int minIndex = 0, int maxIndex = 12]) {
     final us = toValidEpochMicrosecond(nextMicrosecond);
-    print('DT: $us');
-    // ignore: only_throw_errors
-//    if (isNotValidEpochMicroseconds(us)) throw 'Invalid Time microseconds: $us';
+//    print('DT: $us');
     final dt = microsecondToDateTimeString(us);
-    print('dt $dt');
+//    print('dt $dt');
     final length = _getDateTimeLengthIndex(minIndex, maxIndex);
     //final length = _validDateTimeLengths[index];
-    print('DT: "$dt" length: $length');
+//    print('DT: "$dt" length: $length');
     final dts = dt.substring(0, length);
-    print('DTS: "$dts"');
+//    print('DTS: "$dts"');
     return dts;
   }
 
@@ -217,11 +212,11 @@ class RSG {
       //TODO Sharath: implement
       null;
 
-  static const _validDateTimeLengths = const <int>[
+  static const _validDateTimeLengths = <int>[
     4, 6, 8, 10, 12, 14, 16, 17, 18, 19, 20, 21, 26 // No reformat
   ];
 
-  static final kMaxDTLength = _validDateTimeLengths.length;
+  static final int kMaxDTLength = _validDateTimeLengths.length;
 
   int _getDateTimeLengthIndex(int minIndex, int maxIndex) {
     RangeError.checkValueInInterval(minIndex, 0, kMaxDTLength);
@@ -310,12 +305,15 @@ class RSG {
   /// Generates a valid DICOM String for VR.kUC.
   String getUC([int min = 1, int max = kMaxLongVF]) => getDcmString(min, max);
 
+  // Urgent fix
   /// Generates a valid DICOM String for VR.kUC.
   String getUI([int min = 6, int max = 64]) {
-    final limit = wkUids.length - 1;
-    final index = rng.getLength(1, limit);
-    final v = wkUids[index].asString;
-    print('wkUid: "$v"');
+//    final limit = wkUids.length - 1;
+//    final index = rng.getLength(1, limit);
+// Urgent how to handle this?
+//    final String v = wkUids[index].asString;
+    const v = '1.1.840';
+//    print('wkUid: "$v"');
     return v;
   }
 
@@ -627,4 +625,4 @@ int toTimeMicroseconds(int us) {
   return us;
 }
 
-const wkUids = [];
+const wkUids = <String>[];

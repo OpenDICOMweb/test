@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:path/path.dart';
 
+// ignore_for_file: public_member_api_docs
+
 // Urgent Sharath: fix and document or remove this file.
 
 /// A File to be edited.
