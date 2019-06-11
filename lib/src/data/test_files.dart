@@ -9,13 +9,13 @@
 // ignore_for_file: public_member_api_docs
 
 // Urgent create test files for
-class TransferSyntax {
+class TransferSyntaxPhantom {
   final int x;
-  const TransferSyntax(this.x);
+  const TransferSyntaxPhantom(this.x);
 
-  static const kImplicitVRLittleEndian = TransferSyntax(0);
-  static const kExplicitVRLittleEndian = TransferSyntax(1);
-  static const kJpeg2000ImageCompression = TransferSyntax(2);
+  static const kImplicitVRLittleEndian = TransferSyntaxPhantom(0);
+  static const kExplicitVRLittleEndian = TransferSyntaxPhantom(1);
+  static const kJpeg2000ImageCompression = TransferSyntaxPhantom(2);
 }
 
 /// A base class for Test Files.
@@ -33,7 +33,7 @@ abstract class TestFileBase {
   const TestFileBase(this.eCount, this.sqCount, this.privateCount);
 
   /// Transfer Syntax
-  TransferSyntax get ts;
+  TransferSyntaxPhantom get ts;
 
   /// File path.
   String get fPath;
@@ -49,7 +49,7 @@ class IvrTestFile extends TestFileBase {
       : super(eCount, sqCount, privateCount);
 
   @override
-  TransferSyntax get ts => TransferSyntax.kImplicitVRLittleEndian;
+  TransferSyntaxPhantom get ts => TransferSyntaxPhantom.kImplicitVRLittleEndian;
 
   /// First file.
   static IvrTestFile f1 = const IvrTestFile(-1, -1, -1, '');
@@ -65,7 +65,7 @@ class EvrTestFile extends TestFileBase {
       : super(eCount, sqCount, privateCount);
 
   @override
-  TransferSyntax get ts => TransferSyntax.kExplicitVRLittleEndian;
+  TransferSyntaxPhantom get ts => TransferSyntaxPhantom.kExplicitVRLittleEndian;
 
   /// First file.
   static EvrTestFile f1 = const EvrTestFile(-1, -1, -1, '');
@@ -81,7 +81,7 @@ class JpegTestFile extends TestFileBase {
       : super(eCount, sqCount, privateCount);
 
   @override
-  TransferSyntax get ts => TransferSyntax.kJpeg2000ImageCompression;
+  TransferSyntaxPhantom get ts => TransferSyntaxPhantom.kJpeg2000ImageCompression;
 
   /// First file.
   static EvrTestFile f1 = const EvrTestFile(-1, -1, -1, '');
