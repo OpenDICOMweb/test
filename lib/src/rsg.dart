@@ -17,6 +17,37 @@ import 'package:rng/rng.dart';
 //Enhancement: if performance needs to be improved us StringBuffer.
 //Enhancement: show that a normal distribution is generated
 
+// TODO: Create a package for DICOM constant values.
+// TODO: Create a package for standard constant values.
+// Urgent fix DA, TM, and DT generators
+
+
+// **** Time Related constants ****
+const int kMicrosecondsPerMillisecond = 1000;
+const int kMillisecondsPerSecond = 1000;
+const int kSecondsPerMinute = 60;
+const int kMinutesPerHour = 60;
+const int kHoursPerDay = 24;
+
+const int kMillisecondsPerMinute = kSecondsPerMinute * kMillisecondsPerSecond;
+const int kMillisecondsPerHour = kSecondsPerHour * kMillisecondsPerSecond;
+const int kMillisecondsPerDay = kSecondsPerDay * kMillisecondsPerSecond;
+const int kSecondsPerHour = kMinutesPerHour * kSecondsPerMinute;
+const int kSecondsPerDay = kMinutesPerDay * kSecondsPerMinute;
+const int kMinutesPerDay = kHoursPerDay * kMinutesPerHour;
+
+const int kMicrosecondsPerSecond =
+    kMillisecondsPerSecond * kMicrosecondsPerMillisecond;
+const int kMicrosecondsPerMinute =
+    kMillisecondsPerMinute * kMicrosecondsPerMillisecond;
+const int kMicrosecondsPerHour =
+    kMillisecondsPerHour * kMicrosecondsPerMillisecond;
+const int kMicrosecondsPerDay =
+    kMillisecondsPerDay * kMicrosecondsPerMillisecond;
+const int kMicrosecondsPerYear = kMillisecondsPerDay * 365;
+
+const wellKnownUids = <String>[];
+
 /// Random String Generator for DICOM Strings.
 class RSG {
   /// An [int] that can be used to generate the same values repeatedly.
@@ -25,12 +56,24 @@ class RSG {
   /// The Random Number Generator.
   final DicomRNG rng;
 
+  final int minYear;
+
+  final int maxYear;
+
+  // Urgent add these
+  final int kMinEpochMicrosecond;
+  final int kMaxEpochMicrosecond;
   //TODO implement.
   /// _true_ if [String]s should be padded to even length.
   final bool shouldPad;
 
   /// Creates a Random String Generator ([RSG]) using [RNG] from number.
-  RSG({this.seed, this.shouldPad = true}) : rng = DicomRNG(seed);
+  RSG({this.seed,
+    this.minYear = 1900,
+    this.maxYear = 2050,
+    this.shouldPad = true}) : rng = DicomRNG(seed),
+  kMinEpochMicrosecond = minYear * kMicrosecondsPerYear,
+  kMaxEpochMicrosecond = maxYear * kMicrosecondsPerYear;
 
   /// Returns a valid VR.kAE [String].
   String get aeString => shString;
@@ -174,9 +217,22 @@ class RSG {
   bool _isValidCSChar(int c) =>
       isUppercaseChar(c) || isDigitChar(c) || c == $space || c == $underscore;
 
+  int _toTimeMicroseconds(int us) {
+    if (us > kMaxEpochMicrosecond) return kMaxEpochMicrosecond;
+    if (us < kMinEpochMicrosecond) return kMinEpochMicrosecond;
+    return us;
+  }
+
+  int _toValidEpochMicrosecond(int us) {
+    if (us > kMaxEpochMicrosecond) return kMaxEpochMicrosecond;
+    if (us < kMinEpochMicrosecond) return kMinEpochMicrosecond;
+    return us;
+  }
+
+
   /// Generates a valid DICOM String for VR.kDA.
   String getDA([int minLength = 8, int maxLength = 8]) {
-    final us = toValidEpochMicrosecond(nextMicrosecond);
+    final us = _toValidEpochMicrosecond(nextMicrosecond);
 //    print('DA : $us');
     return microsecondToDateString(us);
   }
@@ -195,7 +251,7 @@ class RSG {
 
   /// Generates a valid DICOM String for VR.kDT.
   String getDT([int minIndex = 0, int maxIndex = 12]) {
-    final us = toValidEpochMicrosecond(nextMicrosecond);
+    final us = _toValidEpochMicrosecond(nextMicrosecond);
 //    print('DT: $us');
     final dt = microsecondToDateTimeString(us);
 //    print('dt $dt');
@@ -227,7 +283,7 @@ class RSG {
 
   /// Returns a valid DICOM Time String.
   String getTimeString() {
-    final us = rng.nextUint32 % _kMicrosecondsPerDay;
+    final us = rng.nextUint32 % kMicrosecondsPerDay;
     return microsecondToTimeString(us);
   }
 
@@ -279,7 +335,7 @@ class RSG {
 
   /// Generates a valid DICOM String for VR.kTM.
   String getTM([int minLength = 2, int maxLength = 13]) {
-    final us = toTimeMicroseconds(nextMicrosecond);
+    final us = _toTimeMicroseconds(nextMicrosecond);
     print('TM us: $us');
     final time = microsecondToTimeString(us);
     print('TM time: "$time"');
@@ -463,8 +519,8 @@ class RSG {
   List<String> getDAList(
           [int minLLength = 1,
           int maxLLength = defaultMaxListLength,
-          int minVLength = 1,
-          int maxVLength = 16]) =>
+          int minVLength = 8,
+          int maxVLength = 8]) =>
       _getList(getDA, minLLength, maxLLength, minVLength, maxVLength);
 
   /// Returns a [List<String>] of _invalid_ VR.kDA values;
@@ -606,23 +662,3 @@ class RSG {
   String microsecondToDateTimeString(int us) => '12345678654321';
 }
 
-// Urgent fix DA, TM, and DT generators
-
-// Urgent add these
-const _kMinEpochMicrosecond = -0xFFFFFFFF;
-const _kMaxEpochMicrosecond = 0xFFFFFFFF - 1;
-const _kMicrosecondsPerDay = 24 * 60 * 1000000;
-
-int toValidEpochMicrosecond(int us) {
-  if (us > _kMaxEpochMicrosecond) return _kMaxEpochMicrosecond;
-  if (us < _kMinEpochMicrosecond) return _kMinEpochMicrosecond;
-  return us;
-}
-
-int toTimeMicroseconds(int us) {
-  if (us > _kMaxEpochMicrosecond) return _kMicrosecondsPerDay;
-  if (us < _kMinEpochMicrosecond) return 0;
-  return us;
-}
-
-const wellKnownUids = <String>[];
