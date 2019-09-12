@@ -11,6 +11,9 @@ environment:
 
 dependencies:
   charcode: any
+  constants:
+    path: ../constants
+    version: ^0.7.6
   rng:
     path: C:\odw\sdk\rng
     version: ^0.8.0

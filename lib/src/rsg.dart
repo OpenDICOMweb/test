@@ -8,6 +8,7 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:charcode/ascii.dart';
+import 'package:constants/constants.dart';
 import 'package:test_tools/src/string_utils.dart';
 import 'package:rng/rng.dart';
 
@@ -21,32 +22,8 @@ import 'package:rng/rng.dart';
 // TODO: Create a package for standard constant values.
 // Urgent fix DA, TM, and DT generators
 
-
-// **** Time Related constants ****
-const int kMicrosecondsPerMillisecond = 1000;
-const int kMillisecondsPerSecond = 1000;
-const int kSecondsPerMinute = 60;
-const int kMinutesPerHour = 60;
-const int kHoursPerDay = 24;
-
-const int kMillisecondsPerMinute = kSecondsPerMinute * kMillisecondsPerSecond;
-const int kMillisecondsPerHour = kSecondsPerHour * kMillisecondsPerSecond;
-const int kMillisecondsPerDay = kSecondsPerDay * kMillisecondsPerSecond;
-const int kSecondsPerHour = kMinutesPerHour * kSecondsPerMinute;
-const int kSecondsPerDay = kMinutesPerDay * kSecondsPerMinute;
-const int kMinutesPerDay = kHoursPerDay * kMinutesPerHour;
-
-const int kMicrosecondsPerSecond =
-    kMillisecondsPerSecond * kMicrosecondsPerMillisecond;
-const int kMicrosecondsPerMinute =
-    kMillisecondsPerMinute * kMicrosecondsPerMillisecond;
-const int kMicrosecondsPerHour =
-    kMillisecondsPerHour * kMicrosecondsPerMillisecond;
-const int kMicrosecondsPerDay =
-    kMillisecondsPerDay * kMicrosecondsPerMillisecond;
-const int kMicrosecondsPerYear = kMillisecondsPerDay * 365;
-
-const wellKnownUids = <String>[];
+// Urgent Move to constants/dicom
+// const wellKnownUids = <String>[];
 
 /// Random String Generator for DICOM Strings.
 class RSG {
@@ -68,12 +45,14 @@ class RSG {
   final bool shouldPad;
 
   /// Creates a Random String Generator ([RSG]) using [RNG] from number.
-  RSG({this.seed,
-    this.minYear = 1900,
-    this.maxYear = 2050,
-    this.shouldPad = true}) : rng = DicomRNG(seed),
-  kMinEpochMicrosecond = minYear * kMicrosecondsPerYear,
-  kMaxEpochMicrosecond = maxYear * kMicrosecondsPerYear;
+  RSG(
+      {this.seed,
+      this.minYear = 1900,
+      this.maxYear = 2050,
+      this.shouldPad = true})
+      : rng = DicomRNG(seed),
+        kMinEpochMicrosecond = minYear * kMicrosecondsPerYear,
+        kMaxEpochMicrosecond = maxYear * kMicrosecondsPerYear;
 
   /// Returns a valid VR.kAE [String].
   String get aeString => shString;
@@ -228,7 +207,6 @@ class RSG {
     if (us < kMinEpochMicrosecond) return kMinEpochMicrosecond;
     return us;
   }
-
 
   /// Generates a valid DICOM String for VR.kDA.
   String getDA([int minLength = 8, int maxLength = 8]) {
@@ -661,4 +639,3 @@ class RSG {
   String microsecondToTimeString(int us) => '123456';
   String microsecondToDateTimeString(int us) => '12345678654321';
 }
-
