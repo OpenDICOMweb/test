@@ -33,13 +33,8 @@ class RSG {
   /// The Random Number Generator.
   final DicomRNG rng;
 
-  final int minYear;
+  final Epoch epoch;
 
-  final int maxYear;
-
-  // Urgent add these
-  final int kMinEpochMicrosecond;
-  final int kMaxEpochMicrosecond;
   //TODO implement.
   /// _true_ if [String]s should be padded to even length.
   final bool shouldPad;
@@ -47,12 +42,11 @@ class RSG {
   /// Creates a Random String Generator ([RSG]) using [RNG] from number.
   RSG(
       {this.seed,
-      this.minYear = 1900,
-      this.maxYear = 2050,
+      int minYear = 1900,
+      int maxYear = 2050,
       this.shouldPad = true})
       : rng = DicomRNG(seed),
-        kMinEpochMicrosecond = minYear * kMicrosecondsPerYear,
-        kMaxEpochMicrosecond = maxYear * kMicrosecondsPerYear;
+        epoch = Epoch(minYear, maxYear);
 
   /// Returns a valid VR.kAE [String].
   String get aeString => shString;
@@ -197,22 +191,22 @@ class RSG {
       isUppercaseChar(c) || isDigitChar(c) || c == $space || c == $underscore;
 
   int _toTimeMicroseconds(int us) {
-    if (us > kMaxEpochMicrosecond) return kMaxEpochMicrosecond;
-    if (us < kMinEpochMicrosecond) return kMinEpochMicrosecond;
+    if (us > epoch.kMinYearInMicroseconds) return epoch.kMinYearInMicroseconds;
+    if (us < epoch.kMaxYearInMicroseconds) return epoch.kMaxYearInMicroseconds;
     return us;
   }
 
   int _toValidEpochMicrosecond(int us) {
-    if (us > kMaxEpochMicrosecond) return kMaxEpochMicrosecond;
-    if (us < kMinEpochMicrosecond) return kMinEpochMicrosecond;
+    if (us > epoch.kMaxYearInMicroseconds) return epoch.kMaxYearInMicroseconds;
+    if (us < epoch.kMinYearInMicroseconds) return epoch.kMinYearInMicroseconds;
     return us;
   }
 
   /// Generates a valid DICOM String for VR.kDA.
   String getDA([int minLength = 8, int maxLength = 8]) {
-    final us = _toValidEpochMicrosecond(nextMicrosecond);
-//    print('DA : $us');
-    return microsecondToDateString(us);
+    final us = epoch.toValidYearInMicroseconds(nextMicrosecond);
+    print('DA : $us');
+    return epoch.microsecondToDateString(us);
   }
 
   /// Generates an _invalid_ DICOM String for VR.kDA.
@@ -221,7 +215,7 @@ class RSG {
       null;
 
   /// Returns a valid DICOM Date String.
-  String getDateString() => microsecondToDateString(nextMicrosecond);
+  String getDateString() => epoch.microsecondToDateString(nextMicrosecond);
 
   /// Generates a valid DICOM String for VR.kDS.
   String getDS([int minLength = 1, int maxLength = 16]) =>
@@ -231,7 +225,7 @@ class RSG {
   String getDT([int minIndex = 0, int maxIndex = 12]) {
     final us = _toValidEpochMicrosecond(nextMicrosecond);
 //    print('DT: $us');
-    final dt = microsecondToDateTimeString(us);
+    final dt = epoch.microsecondToDateTimeString(us);
 //    print('dt $dt');
     final length = _getDateTimeLengthIndex(minIndex, maxIndex);
     //final length = _validDateTimeLengths[index];
@@ -260,10 +254,7 @@ class RSG {
   }
 
   /// Returns a valid DICOM Time String.
-  String getTimeString() {
-    final us = rng.nextUint32 % kMicrosecondsPerDay;
-    return microsecondToTimeString(us);
-  }
+  String getTimeString() => epoch.microsecondToTimeString(rng.nextUint32);
 
   /// Generates a valid DICOM String for VR.kDT.
   String getIS([int minLength = 1, int maxLength = 12]) {
@@ -315,7 +306,7 @@ class RSG {
   String getTM([int minLength = 2, int maxLength = 13]) {
     final us = _toTimeMicroseconds(nextMicrosecond);
     print('TM us: $us');
-    final time = microsecondToTimeString(us);
+    final time = epoch.microsecondToTimeString(us);
     print('TM time: "$time"');
     final length = _getTimeLength(minLength, time.length);
     print('TM string: "$time" length: $length');
@@ -631,11 +622,4 @@ class RSG {
           int minVLength = 1,
           int maxVLength = 10240]) =>
       _getList(getUT, minLLength, maxLLength, minVLength, maxVLength);
-
-  // Urgent add these
-  bool isNotValidEpochMicroseconds(int us) => true;
-  bool isNotValidDateMicroseconds(int us) => true;
-  String microsecondToDateString(int us) => '12345678';
-  String microsecondToTimeString(int us) => '123456';
-  String microsecondToDateTimeString(int us) => '12345678654321';
 }
