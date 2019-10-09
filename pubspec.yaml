@@ -10,7 +10,6 @@ environment:
   sdk: '>=2.0.0 <3.0.0'
 
 dependencies:
-  charcode: any
   constants:
     path: ../constants
     version: ^0.7.6
