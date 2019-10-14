@@ -11,7 +11,7 @@ environment:
 
 dependencies:
   constants:
-    path: ../constants
+    path: C:\odw\base
     version: ^0.7.6
   rng:
     path: C:\odw\sdk\rng
