@@ -6,7 +6,7 @@
 import 'dart:math';
 
 import 'package:charcode/ascii.dart';
-import 'package:constants/constants.dart';
+import 'package:base/base.dart';
 
 Random _rng = Random();
 

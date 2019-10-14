@@ -10,7 +10,7 @@ environment:
   sdk: '>=2.0.0 <3.0.0'
 
 dependencies:
-  constants:
+  base:
     path: C:\odw\base
     version: ^0.7.6
   rng:

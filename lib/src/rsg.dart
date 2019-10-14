@@ -8,7 +8,7 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:charcode/ascii.dart';
-import 'package:constants/constants.dart';
+import 'package:base/base.dart';
 import 'package:rng/rng.dart';
 
 // ignore_for_file only_throw_errors
